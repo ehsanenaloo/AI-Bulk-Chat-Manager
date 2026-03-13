@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!-- Copyright (c) 2026 Ehsan Enaloo. Released under the MIT License. -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatGPT Bulk Tools Clean+</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">Clean local-only extension</div>
+          <h1>ChatGPT Bulk Tools</h1>
+        </div>
+        <a href="#" class="version-badge" id="version-badge" title="Version">v</a>
+      </div>
+
+      <div id="stats" class="stats-card">Visible: — <span>•</span> Selected: —</div>
+      <div id="status-card" class="status-card idle">
+        <div class="status-top">
+          <span class="status-label">Status</span>
+          <span id="status-percent" class="status-percent">Idle</span>
+        </div>
+        <div id="status-text" class="status-text">Ready. No bulk operation is running.</div>
+        <div class="status-progress"><div id="status-progress-fill" class="status-progress-fill"></div></div>
+      </div>
+
+      <section class="section hero-section">
+        <div class="section-head">
+          <h2>Checkboxes</h2>
+          <span class="helper-text">Shift-click selects a range</span>
+        </div>
+        <div class="grid two">
+          <button id="add-checkboxes" class="primary">Add Checkboxes</button>
+          <button id="remove-checkboxes">Remove Checkboxes</button>
+        </div>
+        <div class="grid four">
+          <button id="select-visible">Select visible</button>
+          <button id="clear-selection">Clear</button>
+          <button id="invert-selection">Invert</button>
+          <button id="toggle-checkboxes">Show/Hide</button>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Filter tools</h2>
+          <span class="helper-text">Match visible chat titles without touching the fast delete core</span>
+        </div>
+        <div class="filter-box">
+          <input id="filter-query" class="filter-input" type="text" placeholder="Type part of a title…" />
+        </div>
+        <div class="grid two compact-top">
+          <button id="select-filtered">Select filtered</button>
+          <button id="clear-filtered">Clear filtered</button>
+        </div>
+      </section>
+
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Smart selection</h2>
+          <span class="helper-text">Select the oldest visible chats by position in the sidebar. Bottom = older.</span>
+        </div>
+        <div class="smart-box">
+          <label class="smart-label" for="oldest-count">Oldest visible chats</label>
+          <div class="smart-row">
+            <input id="oldest-count" class="smart-input" type="number" min="1" max="500" value="10" />
+            <button id="select-oldest">Select oldest</button>
+            <button id="clear-oldest">Clear oldest</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Dry run</h2>
+          <span class="helper-text">Preview exactly what will be touched before you pull the trigger.</span>
+        </div>
+        <div class="grid two compact-top">
+          <button id="dry-run-preview">Preview selected</button>
+          <button id="clear-preview">Clear preview</button>
+        </div>
+        <div id="preview-box" class="preview-box empty">No preview yet.</div>
+      </section>
+      <section class="section">
+        <div class="section-head">
+          <h2>Utilities</h2>
+          <span class="helper-text">Attach to newly loaded chats while you scroll</span>
+        </div>
+        <div class="toggle-card" id="auto-attach-card">
+          <div>
+            <div class="toggle-title">Auto attach on scroll</div>
+            <div class="toggle-subtitle">When the sidebar loads more chats, add checkboxes automatically.</div>
+          </div>
+          <button id="auto-attach-scroll" class="switch" aria-pressed="false" title="Toggle auto attach">
+            <span class="switch-track"><span class="switch-thumb"></span></span>
+            <span class="switch-label">OFF</span>
+          </button>
+        </div>
+        <div class="grid three">
+          <button id="refresh-stats">Refresh</button>
+          <button id="export-json">Export JSON</button>
+          <button id="export-csv">Export CSV</button>
+        </div>
+      </section>
+
+      <section class="section danger-section">
+        <div class="section-head">
+          <h2>Bulk operations</h2>
+          <span class="helper-text">Uses the original fast delete/archive workflow with a safety prompt</span>
+        </div>
+        <div class="stack">
+          <button id="bulk-archive" data-progress="0">Bulk Archive</button>
+          <button id="bulk-delete" class="danger" data-progress="0">Bulk Delete</button>
+          <button id="stop-operation" class="ghost-danger">Stop Current Run</button>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <h2>Operation log</h2>
+          <span class="helper-text">Live events from the popup and bulk workflow. Keeps the last 80 entries.</span>
+        </div>
+        <div class="grid two compact-top">
+          <button id="copy-log">Copy log</button>
+          <button id="clear-log">Clear log</button>
+        </div>
+        <div id="operation-log" class="log-box empty">No log entries yet.</div>
+      </section>
+
+      <footer class="footer">
+        <img src="icon48.png" alt="Extension icon" class="footer-icon" />
+        <div>
+          <div class="footer-title">ChatGPT Bulk Tools Clean+</div>
+          <div class="footer-copy">© 2026 Ehsan Enaloo · MIT License · Local-only build</div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="popup.js"></script>
+    <script src="utils.js"></script>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "action": {
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_popup": "popup.html",
+    "default_title": "ChatGPT Bulk Tools Clean+"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "extensionCore.js",
+        "config.js",
+        "globals.js",
+        "utils.js",
+        "domHandler.js",
+        "conversationHandler.js",
+        "checkboxManager.js"
+      ],
+      "matches": [
+        "*://chat.openai.com/*",
+        "*://chatgpt.com/*"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "description": "Local-only bulk delete and archive for ChatGPT conversations, with previews, logging, and GitHub-ready packaging.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "manifest_version": 3,
+  "name": "ChatGPT Bulk Tools Clean+",
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+  "version": "6.9"
+}

@@ -1,0 +1,15 @@
+# macOS / Windows noise
+.DS_Store
+Thumbs.db
+
+# archives and temp build output
+*.zip
+release/
+dist/
+
+# editor
+.vscode/
+.idea/
+
+# generated metadata
+_metadata/
