@@ -1,5 +1,5 @@
 <!-- Copyright (c) 2026 Ehsan Enaloo. Released under the MIT License. -->
-# ChatGPT Bulk Tools Clean+
+# ChatGPT Bulk Chat Manager
 
 A local-only Chrome extension for bulk-selecting, archiving, and deleting ChatGPT conversations.
 
