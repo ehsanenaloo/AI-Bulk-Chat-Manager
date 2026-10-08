@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keyboard and shortcuts | AI Bulk Chat Manager user guide</title>
+<meta name="description" content="The Alt+Shift+B shortcut, how to change it, and the keys that work inside the panel and the confirmation dialog.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+<link rel="stylesheet" href="../styles.css">
+<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script defer src="../app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
+<main id="main">
+<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Reference</p><h1>Keyboard and shortcuts</h1><p class="lead">The one global shortcut, and the keys you can use inside the panel.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
+<div class="shell doc-layout has-toc">
+<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html">Selecting chats</a><a href="../guides/deleting-and-archiving.html">Deleting and archiving</a><a href="../guides/exporting.html">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html">The toolbar popup</a><a href="../guides/settings-reference.html">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html" aria-current="page">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html">Troubleshooting and FAQ</a><a href="../guides/limits.html">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
+<article class="prose">
+<h2 id="the-global-shortcut">The global shortcut<a class="anchor" href="#the-global-shortcut" aria-label="Link to this section">#</a></h2>
+<p>The extension has one shortcut, set up through your browser.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Table 1"><table><thead><tr><th scope="col">Action</th><th scope="col">Default key</th></tr></thead><tbody>
+<tr><td>Open or close the panel (start or finish selecting)</td><td><kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd></td></tr>
+</tbody></table></div>
+<ul>
+  <li>It works on ChatGPT, Claude, Gemini and Grok. On any other page it does nothing.</li>
+  <li>It works in a tab that was open before you installed the extension. The extension attaches itself to the tab first.</li>
+  <li>While a run is going, pressing it to finish does not close the panel. The panel tells you to <strong>Stop the running action first.</strong></li>
+  <li>On a Mac, <kbd>Alt</kbd> is the Option key.</li>
+</ul>
+
+<h2 id="change-the-shortcut">Change the shortcut<a class="anchor" href="#change-the-shortcut" aria-label="Link to this section">#</a></h2>
+<ol>
+  <li>Open the Options page and go to <strong>Keyboard shortcut</strong>.</li>
+  <li>Click <strong>Change shortcut</strong>. Your browser&rsquo;s shortcut page opens: <code>chrome://extensions/shortcuts</code> in Chrome, <code>edge://extensions/shortcuts</code> in Edge, and the Add-ons manager in Firefox (<code>about:addons</code>).</li>
+  <li>Find <strong>Open or close the selection panel</strong> under AI Bulk Chat Manager and set your key.</li>
+</ol>
+<p>If the Options page shows <strong>Not set</strong>, the default key was probably taken by another extension or by the browser. Set a key in the same place. Some browsers block a link to their own pages. If that happens, the Options page tells you where to go by hand.</p>
+
+<h2 id="inside-the-panel">Inside the panel<a class="anchor" href="#inside-the-panel" aria-label="Link to this section">#</a></h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Table 2"><table><thead><tr><th scope="col">Key</th><th scope="col">What it does</th></tr></thead><tbody>
+<tr><td><kbd>Tab</kbd> and <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Move between the panel&rsquo;s buttons and boxes.</td></tr>
+<tr><td><kbd>Enter</kbd> or <kbd>Space</kbd></td><td>Press the focused button.</td></tr>
+<tr><td><kbd>Enter</kbd> in <strong>Part of a chat title</strong></td><td>Runs <strong>Select</strong> for that text.</td></tr>
+<tr><td><kbd>Esc</kbd> with the Export menu open</td><td>Closes the menu and returns to <strong>Export</strong>.</td></tr>
+<tr><td><kbd>Shift</kbd> + click on a chat</td><td>Ticks every shown chat between it and the last one you ticked.</td></tr>
+</tbody></table></div>
+<p>Keys you type in the panel do not reach the site, so they do not trigger the site&rsquo;s own shortcuts.</p>
+
+<h2 id="inside-the-confirmation-dialog">Inside the confirmation dialog<a class="anchor" href="#inside-the-confirmation-dialog" aria-label="Link to this section">#</a></h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Table 3"><table><thead><tr><th scope="col">Key</th><th scope="col">What it does</th></tr></thead><tbody>
+<tr><td><kbd>Esc</kbd></td><td>Closes the dialog without doing anything.</td></tr>
+<tr><td><kbd>Tab</kbd> and <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Move around inside the dialog. The focus does not leave it.</td></tr>
+<tr><td><kbd>Enter</kbd> when it opens</td><td>Presses <strong>Cancel</strong>, because <strong>Cancel</strong> has the focus. To confirm, move to the red button or click it.</td></tr>
+</tbody></table></div>
+
+<h2 id="in-the-toolbar-popup">In the toolbar popup<a class="anchor" href="#in-the-toolbar-popup" aria-label="Link to this section">#</a></h2>
+<p>The popup has no shortcuts of its own. Use <kbd>Tab</kbd> and <kbd>Enter</kbd> like on any page. It shows the current shortcut under the main button.</p>
+
+<h2 id="on-this-guide-site">On this guide site<a class="anchor" href="#on-this-guide-site" aria-label="Link to this section">#</a></h2>
+<p>Press <kbd>/</kbd> to jump to the search box.</p>
+
+<div class="reading-footer"><a class="prev" href="../guides/languages-and-appearance.html"><small>Previous</small>Languages and appearance</a><a class="next" href="../guides/privacy-and-permissions.html"><small>Next</small>Privacy and permissions</a></div>
+<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/keyboard-and-shortcuts.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
+</article>
+<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#the-global-shortcut">The global shortcut</a></li><li><a href="#change-the-shortcut">Change the shortcut</a></li><li><a href="#inside-the-panel">Inside the panel</a></li><li><a href="#inside-the-confirmation-dialog">Inside the confirmation dialog</a></li><li><a href="#in-the-toolbar-popup">In the toolbar popup</a></li><li><a href="#on-this-guide-site">On this guide site</a></li></ol></nav>
+</div>
+</main>
+<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+</body>
+</html>

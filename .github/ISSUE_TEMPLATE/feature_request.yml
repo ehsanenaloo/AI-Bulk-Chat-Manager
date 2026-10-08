@@ -1,0 +1,55 @@
+name: Feature request
+description: Suggest an improvement or a new capability.
+title: "[Feature]: "
+labels: ["enhancement", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        AI Bulk Chat Manager is intentionally local, small and permission-light. It only works on ChatGPT, Claude, Gemini and Grok, and it never reads conversation text. Ideas that need new permissions, new sites, network requests to other services or access to conversation content are unlikely to fit, but describing the problem helps us find another way.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: Describe your situation and what is hard today, rather than the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: dropdown
+    id: site
+    attributes:
+      label: Which site is this about?
+      options:
+        - All supported sites
+        - ChatGPT
+        - Claude
+        - Gemini
+        - Grok
+        - A site that is not supported yet
+  - type: dropdown
+    id: size
+    attributes:
+      label: How many chats do you usually manage at once?
+      options:
+        - Fewer than 50
+        - 50 to 500
+        - More than 500
+        - Prefer not to say
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and did not find this request.
+          required: true
+        - label: I understand that features needing new permissions, new sites or network access need extra discussion.
+          required: true

@@ -1,0 +1,120 @@
+name: Release
+
+# Runs when a version tag such as v9.0.0 is pushed.
+# `node scripts/build.mjs` builds two zips into dist/ (manifest.json at the zip root, LICENSE and
+# THIRD_PARTY_NOTICES.md in each):
+#   ai-bulk-chat-manager-<version>.zip           Chrome and Edge, straight from extension/
+#   ai-bulk-chat-manager-<version>-firefox.zip   Firefox, from scripts/build-firefox.mjs
+# and a .sha256 file for each. This workflow attaches all four to a GitHub Release.
+# It does NOT publish to the Chrome Web Store, Microsoft Edge Add-ons or Firefox Add-ons; that remains a manual step.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish GitHub Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TAG: ${{ github.ref_name }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install test dependencies
+        run: npm ci
+
+      - name: Validate repository
+        run: node scripts/validate.mjs
+
+      - name: Run unit tests
+        run: node scripts/test.mjs
+
+      - name: Assert tag matches manifest version
+        run: |
+          manifest_version="$(node -p "JSON.parse(require('fs').readFileSync('extension/manifest.json','utf8')).version")"
+          if [ "${TAG}" != "v${manifest_version}" ]; then
+            echo "::error::Tag '${TAG}' does not match extension/manifest.json version '${manifest_version}'. Expected tag 'v${manifest_version}'."
+            exit 1
+          fi
+          echo "VERSION=${manifest_version}" >> "$GITHUB_ENV"
+
+      - name: Build the packages
+        run: node scripts/build.mjs
+
+      - name: Check the packages
+        run: |
+          chrome_zip="dist/ai-bulk-chat-manager-${VERSION}.zip"
+          firefox_zip="dist/ai-bulk-chat-manager-${VERSION}-firefox.zip"
+          for zip in "${chrome_zip}" "${firefox_zip}"; do
+            [ -f "${zip}" ] || { echo "::error::${zip} was not built"; exit 1; }
+            entries="$(unzip -Z1 "${zip}")"
+            for required in manifest.json LICENSE THIRD_PARTY_NOTICES.md; do
+              echo "${entries}" | grep -qx "${required}" || { echo "::error::${required} is missing at the root of ${zip}"; exit 1; }
+            done
+            if echo "${entries}" | grep -qE '^(extension/|dist/|tests/|docs/|scripts/|\.github/|node_modules/)'; then
+              echo "::error::${zip} contains a project folder; manifest.json must be at the zip root."
+              exit 1
+            fi
+          done
+          unzip -p "${firefox_zip}" manifest.json | VERSION="${VERSION}" node -e "
+            const m = JSON.parse(require('fs').readFileSync(0, 'utf8'));
+            const problems = [];
+            if (!m.background || !Array.isArray(m.background.scripts) || !m.background.scripts.length) problems.push('background.scripts is missing');
+            if (m.background && m.background.service_worker) problems.push('background.service_worker must not be present');
+            if (!m.browser_specific_settings || !m.browser_specific_settings.gecko || !m.browser_specific_settings.gecko.id) problems.push('browser_specific_settings.gecko.id is missing');
+            if (m.version !== process.env.VERSION) problems.push('version ' + m.version + ' does not match ' + process.env.VERSION);
+            if (problems.length) { console.error('::error::Firefox manifest: ' + problems.join('; ')); process.exit(1); }
+          "
+          (cd dist && sha256sum -c ./*.sha256)
+
+      - name: Extract release notes from CHANGELOG
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const version = process.env.VERSION;
+          const lines = fs.readFileSync('CHANGELOG.md', 'utf8').split(/\r?\n/);
+          // The heading is "## [9.0.0] - date" or "## 9.0.0 - date" (the same two forms scripts/validate.mjs accepts).
+          const isHeading = (line) => line === '## [' + version + ']' || line.startsWith('## [' + version + '] ')
+            || line === '## ' + version || line.startsWith('## ' + version + ' ');
+          const start = lines.findIndex(isHeading);
+          let notes = '';
+          if (start !== -1) {
+            let end = lines.findIndex((line, index) => index > start && line.startsWith('## '));
+            if (end === -1) end = lines.length;
+            notes = lines.slice(start + 1, end).join('\n').trim();
+          }
+          if (!notes) {
+            console.log('No CHANGELOG section found for ' + version + '; falling back to a short note.');
+            notes = 'Release ' + version + '. See CHANGELOG.md for details.';
+          }
+          fs.writeFileSync('dist/notes.md', notes + '\n');
+          EOF
+          cat dist/notes.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${TAG}" \
+            "dist/ai-bulk-chat-manager-${VERSION}.zip" \
+            "dist/ai-bulk-chat-manager-${VERSION}.zip.sha256" \
+            "dist/ai-bulk-chat-manager-${VERSION}-firefox.zip" \
+            "dist/ai-bulk-chat-manager-${VERSION}-firefox.zip.sha256" \
+            --title "AI Bulk Chat Manager ${VERSION}" \
+            --notes-file dist/notes.md \
+            --verify-tag

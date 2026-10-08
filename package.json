@@ -1,0 +1,22 @@
+{
+  "name": "ai-bulk-chat-manager",
+  "version": "9.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "AI Bulk Chat Manager browser extension (Chrome, Edge, Firefox). This package.json only provides shortcuts for the repository scripts; it is not published to npm.",
+  "repository": { "type": "git", "url": "git+https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager.git" },
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node scripts/test.mjs",
+    "validate": "node scripts/validate.mjs",
+    "check": "npm run validate && npm test",
+    "test:e2e": "node tests/e2e/run.mjs",
+    "test:firefox": "node tests/e2e/firefox.mjs",
+    "build": "node scripts/build.mjs",
+    "build:firefox": "node scripts/build-firefox.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

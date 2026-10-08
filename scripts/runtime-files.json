@@ -1,0 +1,5 @@
+{
+  "comment": "What ships in the extension package, relative to extension/. Everything under the directories is included; nothing else is.",
+  "files": ["manifest.json", "background.js", "THIRD_PARTY_NOTICES.md"],
+  "directories": ["_locales", "icons", "src"]
+}

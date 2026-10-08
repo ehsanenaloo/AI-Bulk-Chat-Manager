@@ -1,0 +1,57 @@
+# Labels used by this project.
+# The "Sync labels" workflow (Actions tab, Run workflow) creates or updates these labels.
+# You can also run: node scripts/sync-labels.mjs --dry-run   (print only)  or without the flag (needs the GitHub CLI and a login).
+# Colors are hex values without the leading #.
+
+- name: bug
+  color: d73a4a
+  description: Something does not work as expected
+- name: site-changed
+  color: f9a03f
+  description: A supported site changed its page and an action stopped working
+- name: enhancement
+  color: a2eeef
+  description: New feature or improvement
+- name: documentation
+  color: 0075ca
+  description: Improvements to docs, guides or screenshots
+- name: translation
+  color: 0e8a16
+  description: Translation fix or new language
+- name: good first issue
+  color: 7057ff
+  description: Small and well described, good for a first contribution
+- name: help wanted
+  color: 008672
+  description: The maintainer would welcome help with this
+- name: question
+  color: d876e3
+  description: A usage question, not a bug
+- name: duplicate
+  color: cfd3d7
+  description: This already exists in another issue or pull request
+- name: invalid
+  color: e4e669
+  description: This is not a valid report or does not apply
+- name: wontfix
+  color: ffffff
+  description: This will not be worked on
+- name: security
+  color: b60205
+  description: Security related. Use private reporting for vulnerabilities
+- name: accessibility
+  color: 1d76db
+  description: Keyboard, screen reader, contrast or right-to-left issues
+- name: performance
+  color: fbca04
+  description: Speed or memory use, especially with very long chat lists
+- name: needs triage
+  color: ededed
+  description: Not reviewed by the maintainer yet
+- name: blocked
+  color: 5319e7
+  description: Waiting on something else before work can continue
+# Used by Dependabot (see dependabot.yml).
+- name: dependencies
+  color: 0366d6
+  description: Updates to GitHub Actions versions and test dependencies

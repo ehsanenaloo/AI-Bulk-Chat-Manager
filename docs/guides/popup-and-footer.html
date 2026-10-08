@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The toolbar popup | AI Bulk Chat Manager user guide</title>
+<meta name="description" content="The status card, the two switches, the rotating About, GitHub, Rate and Support footer, and the monthly support note.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+<link rel="stylesheet" href="../styles.css">
+<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script defer src="../app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
+<main id="main">
+<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Reference</p><h1>The toolbar popup</h1><p class="lead">The small window that opens when you click the toolbar icon: what its status card says, what the switches do and what the footer is.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
+<div class="shell doc-layout has-toc">
+<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html">Selecting chats</a><a href="../guides/deleting-and-archiving.html">Deleting and archiving</a><a href="../guides/exporting.html">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html" aria-current="page">The toolbar popup</a><a href="../guides/settings-reference.html">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html">Troubleshooting and FAQ</a><a href="../guides/limits.html">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
+<article class="prose">
+<p>The popup is a small control center. It does not hold the selection tools. Those are in the <a href="selecting-chats.html">panel</a> inside the chat page. The popup starts and ends selecting, and holds two quick switches.</p>
+<figure class="shot small"><div class="frame"><img class="for-light" src="../assets/screenshots/popup-light.png" alt="The toolbar popup showing Selecting on ChatGPT, 2 chats selected, a Finish selecting button, the Fast mode and Add checkboxes as you scroll switches and the About footer (light theme)" width="340" height="453" loading="lazy" decoding="async"><img class="for-dark" src="../assets/screenshots/popup-dark.png" alt="The toolbar popup showing Selecting on ChatGPT, 2 chats selected, a Finish selecting button, the Fast mode and Add checkboxes as you scroll switches and the About footer (dark theme)" width="340" height="453" loading="lazy" decoding="async"></div><figcaption>The popup while selecting is on.</figcaption></figure>
+
+<h2 id="the-status-card">The status card<a class="anchor" href="#the-status-card" aria-label="Link to this section">#</a></h2>
+<p>The card at the top tells you what the extension sees on the current tab.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Table 1"><table><thead><tr><th scope="col">The card says</th><th scope="col">What it means</th><th scope="col">What to do</th></tr></thead><tbody>
+<tr><td><strong>Checking this page&hellip;</strong></td><td>It is looking at the tab.</td><td>Wait a moment.</td></tr>
+<tr><td><strong>Ready on ChatGPT</strong> and <strong>Start selecting to put a checkbox next to each chat.</strong></td><td>A supported site, not selecting yet.</td><td>Click <strong>Start selecting chats</strong>.</td></tr>
+<tr><td><strong>Selecting on ChatGPT</strong> and <strong>2 chats selected</strong></td><td>Selecting is on in this tab.</td><td>Click <strong>Finish selecting</strong> to end it.</td></tr>
+<tr><td><strong>Can&rsquo;t reach ChatGPT yet</strong> and <strong>Reload the page, then try again.</strong></td><td>The extension could not attach to this tab.</td><td>Click <strong>Reload page</strong>.</td></tr>
+<tr><td><strong>This page isn&rsquo;t supported</strong> and <strong>Works on ChatGPT, Claude, Gemini and Grok.</strong></td><td>You are on some other page.</td><td>Click one of the four site buttons shown to open that site in a new tab. Then click the icon again.</td></tr>
+</tbody></table></div>
+<p>The site name in the card is the real site (ChatGPT, Claude, Gemini or Grok). When you click the main button, the popup closes so it does not get in the way of the page. Under the button, <strong>Shortcut:</strong> shows the current keyboard shortcut if one is set. See <a href="keyboard-and-shortcuts.html">Keyboard and shortcuts</a>.</p>
+
+<h2 id="the-header">The header<a class="anchor" href="#the-header" aria-label="Link to this section">#</a></h2>
+<p>The header shows the name and the version, for example <strong>v9.0.0</strong>. The sliders button (<strong>Settings</strong>) opens the Options page in a new tab.</p>
+
+<h2 id="the-two-switches">The two switches<a class="anchor" href="#the-two-switches" aria-label="Link to this section">#</a></h2>
+<dl>
+  <dt>Fast mode</dt><dd><strong>Ask the site directly first, then fall back to its menus.</strong> The same setting as in the Options page. See <a href="deleting-and-archiving.html#how-the-work-is-done">How the work is done</a>.</dd>
+  <dt>Add checkboxes as you scroll</dt><dd><strong>Newly loaded chats get a checkbox automatically.</strong> The same setting as in the Options page.</dd>
+</dl>
+<p>Both save at once. Changes also show in the open panel.</p>
+
+<h2 id="the-rotating-footer">The rotating footer<a class="anchor" href="#the-rotating-footer" aria-label="Link to this section">#</a></h2>
+<p>At the bottom of the popup, a short message and a button rotate through four items. The four tabs under them are <strong>About</strong>, <strong>GitHub</strong>, <strong>Rate</strong> and <strong>Support</strong>.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Table 2"><table><thead><tr><th scope="col">Tab</th><th scope="col">Message</th><th scope="col">Button</th></tr></thead><tbody>
+<tr><td>About</td><td>Copyright (c) 2026 Ehsan Enaloo. Released under the MIT License.</td><td><strong>Learn More</strong> opens the developer's website, www.enaloo.com. The About section of the Options page also links to it.</td></tr>
+<tr><td>GitHub</td><td>Source code, releases, and project details.</td><td><strong>Open GitHub</strong> opens the repository.</td></tr>
+<tr><td>Rate</td><td>Enjoying the extension? A good rating helps the extension build trust faster.</td><td><strong>Rate on Store</strong> opens the review page for your browser&rsquo;s store.</td></tr>
+<tr><td>Support</td><td>Saving you time? Support the project with a small coffee.</td><td><strong>Buy Me a Coffee</strong> opens the donation page.</td></tr>
+</tbody></table></div>
+<ul>
+  <li>The footer moves to the next item every five seconds. A thin line under the tabs shows the time left.</li>
+  <li>It pauses while the pointer is over it or a footer control has the keyboard focus.</li>
+  <li>Click a tab to show that item and restart the timer.</li>
+  <li>If your system asks for reduced motion, the footer stays on the first item and does not rotate.</li>
+</ul>
+<p>The buttons open web pages in a new tab only when you click them.</p>
+
+<h2 id="the-monthly-support-note">The monthly support note<a class="anchor" href="#the-monthly-support-note" aria-label="Link to this section">#</a></h2>
+<p>The extension is free and has no ads. About two weeks after you install it, and then at most once every 30 days, it does two things:</p>
+<ul>
+  <li>A small heart appears on the toolbar icon.</li>
+  <li>The next time you open the popup, a note titled <strong>Free and ad-free</strong> appears. It reads: <strong>If this saves you time, a small coffee helps keep it updated. Shown at most once a month.</strong></li>
+</ul>
+<p>The note has these choices:</p>
+<ul>
+  <li><strong>Buy me a coffee</strong> opens the donation page.</li>
+  <li><strong>Rate</strong> opens the store review page.</li>
+  <li><strong>Not now</strong> hides the note until the next reminder.</li>
+  <li><strong>Don&rsquo;t show again</strong> turns the reminder off for good, including the heart.</li>
+</ul>
+<p>Nothing is sent when the note appears. The only thing stored is a small timer on your device. See <a href="privacy-and-permissions.html">Privacy and permissions</a>.</p>
+
+<div class="reading-footer"><a class="prev" href="../guides/exporting.html"><small>Previous</small>Exporting a list of chats</a><a class="next" href="../guides/settings-reference.html"><small>Next</small>Settings reference</a></div>
+<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/popup-and-footer.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
+</article>
+<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#the-status-card">The status card</a></li><li><a href="#the-header">The header</a></li><li><a href="#the-two-switches">The two switches</a></li><li><a href="#the-rotating-footer">The rotating footer</a></li><li><a href="#the-monthly-support-note">The monthly support note</a></li></ol></nav>
+</div>
+</main>
+<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+</body>
+</html>

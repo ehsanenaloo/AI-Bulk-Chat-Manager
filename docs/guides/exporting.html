@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exporting a list of chats | AI Bulk Chat Manager user guide</title>
+<meta name="description" content="Save the titles and links of the selected chats as JSON, CSV or Markdown. What the file contains and where it goes.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+<link rel="stylesheet" href="../styles.css">
+<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script defer src="../app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
+<main id="main">
+<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Everyday use</p><h1>Exporting a list of chats</h1><p class="lead">Save the titles and links of the chats you selected as a file, before you delete anything or just to keep a list.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
+<div class="shell doc-layout has-toc">
+<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html">Selecting chats</a><a href="../guides/deleting-and-archiving.html">Deleting and archiving</a><a href="../guides/exporting.html" aria-current="page">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html">The toolbar popup</a><a href="../guides/settings-reference.html">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html">Troubleshooting and FAQ</a><a href="../guides/limits.html">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
+<article class="prose">
+<p><strong>What it does:</strong> creates a file from the chats you ticked and saves it to your computer. It changes nothing on the site.</p>
+
+<h2 id="export-step-by-step">Export step by step<a class="anchor" href="#export-step-by-step" aria-label="Link to this section">#</a></h2>
+<ol class="steps">
+  <li><h3>Tick the chats</h3><p>Select the chats you want in the list. Export is disabled until at least one chat is ticked. It works on all four sites.</p></li>
+  <li><h3>Open the Export menu</h3><p>Click <strong>Export</strong> in the panel. A small menu opens with three choices.</p></li>
+  <li><h3>Choose a format</h3><p>Click <strong>JSON</strong>, <strong>CSV</strong> or <strong>Markdown</strong>. Your browser saves the file and the panel shows a message such as <strong>Exported 5 chats as Markdown</strong>.</p></li>
+</ol>
+<figure class="shot small"><div class="frame"><img class="for-light" src="../assets/screenshots/export-light.png" alt="The panel with the Export menu open, listing JSON, CSV and Markdown (light theme)" width="400" height="420" loading="lazy" decoding="async"><img class="for-dark" src="../assets/screenshots/export-dark.png" alt="The panel with the Export menu open, listing JSON, CSV and Markdown (dark theme)" width="400" height="420" loading="lazy" decoding="async"></div><figcaption>The Export menu has three formats.</figcaption></figure>
+<p>Press <kbd>Esc</kbd> to close the menu without exporting.</p>
+
+<h2 id="what-is-in-the-file">What is in the file<a class="anchor" href="#what-is-in-the-file" aria-label="Link to this section">#</a></h2>
+<p>Each exported chat has three things: its <strong>title</strong>, its full <strong>link</strong> (starting with <code>https://</code>) and its <strong>id</strong>. The file also records the site name and the time of the export.</p>
+<p>The file never contains your conversation text. The extension does not read conversations, only the chat list that the sidebar shows.</p>
+<aside class="callout"><span class="callout-title">Titles can be private</span><p>A chat title can reveal a lot. Read the file before you share it or attach it to a bug report.</p></aside>
+
+<h2 id="the-three-formats">The three formats<a class="anchor" href="#the-three-formats" aria-label="Link to this section">#</a></h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Table 1"><table><thead><tr><th scope="col">Format</th><th scope="col">Use it for</th><th scope="col">What it looks like</th></tr></thead><tbody>
+<tr><td><strong>JSON</strong></td><td>Scripts and other programs.</td><td>An object with <code>exportedAt</code>, <code>site</code>, <code>count</code> and a <code>chats</code> list. Each chat has <code>title</code>, <code>url</code> and <code>id</code>.</td></tr>
+<tr><td><strong>CSV</strong></td><td>Spreadsheets such as Excel.</td><td>A header line <code>title,url,id</code>, then one line per chat. The file starts with a byte order mark so Excel reads non-Latin titles correctly. A title that begins with <code>=</code>, <code>+</code>, <code>-</code> or <code>@</code> gets a leading apostrophe so a spreadsheet does not run it as a formula.</td></tr>
+<tr><td><strong>Markdown</strong></td><td>Notes apps and readable lists.</td><td>A heading with the site name and the count, then one bullet per chat as a link: <code>- [Title](link)</code>.</td></tr>
+</tbody></table></div>
+
+<h2 id="file-name-and-location">File name and location<a class="anchor" href="#file-name-and-location" aria-label="Link to this section">#</a></h2>
+<p>Files are named <code>ai-chats-&lt;site&gt;-&lt;date and time&gt;.&lt;format&gt;</code>, for example <code>ai-chats-chatgpt-2026-10-08T12-30-00.json</code>. Your browser decides where the file goes. By default that is your downloads folder. If you set your browser to ask where to save each file, it asks.</p>
+<p>The file is made on your device and is not uploaded anywhere.</p>
+
+<h2 id="tips">Tips<a class="anchor" href="#tips" aria-label="Link to this section">#</a></h2>
+<ul>
+  <li>Export before a big delete. The file is a record of titles and links, not a backup of the conversations. After you delete a chat, its link stops working.</li>
+  <li>Use <strong>Load all older chats</strong> first if you want your whole history in the file.</li>
+</ul>
+
+<div class="reading-footer"><a class="prev" href="../guides/deleting-and-archiving.html"><small>Previous</small>Deleting and archiving</a><a class="next" href="../guides/popup-and-footer.html"><small>Next</small>The toolbar popup</a></div>
+<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/exporting.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
+</article>
+<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#export-step-by-step">Export step by step</a></li><li><a href="#what-is-in-the-file">What is in the file</a></li><li><a href="#the-three-formats">The three formats</a></li><li><a href="#file-name-and-location">File name and location</a></li><li><a href="#tips">Tips</a></li></ol></nav>
+</div>
+</main>
+<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "app_name": {
+    "message": "AI Bulk Chat Manager",
+    "description": "Extension name shown in the browser and the stores. Keep it short."
+  },
+  "app_description": {
+    "message": "ChatGPT, Claude, Gemini और Grok की चैट एक साथ चुनें, हटाएँ, आर्काइव और एक्सपोर्ट करें। मुफ़्त, ओपन सोर्स, लोकल।",
+    "description": "Short description shown in the stores and on the extensions page (132 characters maximum)."
+  },
+  "action_title": {
+    "message": "AI Bulk Chat Manager",
+    "description": "Tooltip of the toolbar button."
+  },
+  "command_toggle_panel": {
+    "message": "चयन पैनल खोलें या बंद करें",
+    "description": "Label of the keyboard shortcut in the browser's shortcut settings."
+  }
+}

@@ -1,15 +1,24 @@
-# macOS / Windows noise
+# Dependencies and local tooling
+node_modules/
+
+# Build output and scratch work
+dist/
+dist-firefox/
+build/
+.legacy/
+*.zip
+*.crx
+*.xpi
+
+# Secrets and signing material
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# OS and editor files
 .DS_Store
 Thumbs.db
-
-# archives and temp build output
-*.zip
-release/
-dist/
-
-# editor
 .vscode/
 .idea/
-
-# generated metadata
-_metadata/

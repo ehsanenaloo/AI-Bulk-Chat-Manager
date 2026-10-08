@@ -1,0 +1,22 @@
+# Code owners are asked to review pull requests that touch the files they own.
+# AI Bulk Chat Manager has one maintainer, so every rule below names the same person.
+# The last matching pattern wins, so keep the specific paths after the default.
+
+# Default owner for everything in the repository.
+* @ehsanenaloo
+
+# User guide, privacy policy and screenshots.
+/docs/ @ehsanenaloo
+
+# Interface translations and browser-level strings.
+/extension/src/i18n/ @ehsanenaloo
+/extension/_locales/ @ehsanenaloo
+
+# The page selectors and labels for each supported site, and the permission list.
+/extension/src/shared/sites.js @ehsanenaloo
+/extension/src/content/config.js @ehsanenaloo
+/extension/manifest.json @ehsanenaloo
+
+# Build, validation and release automation.
+/scripts/ @ehsanenaloo
+/.github/ @ehsanenaloo

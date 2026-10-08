@@ -1,0 +1,76 @@
+name: Deploy guide site
+
+# Publishes the user guide (the docs/ folder) to GitHub Pages: https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/
+# It runs when docs/ changes on main, and by hand from the Actions tab.
+# One-time setting: Settings, Pages, Source must be "GitHub Actions".
+# Until docs/index.html exists, the run finishes without deploying anything.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - docs/**
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Let a running deployment finish; newer ones wait in line.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check that the guide exists
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      has_docs: ${{ steps.docs.outputs.has_docs }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Look for docs/index.html
+        id: docs
+        run: |
+          if [ -f docs/index.html ]; then
+            echo "has_docs=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_docs=false" >> "$GITHUB_OUTPUT"
+            echo "docs/index.html does not exist yet; nothing to deploy."
+          fi
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: check
+    if: needs.check.outputs.has_docs == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload the docs folder
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

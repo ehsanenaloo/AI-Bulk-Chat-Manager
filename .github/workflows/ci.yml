@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install test dependencies
+        # The only dependency is jsdom, used by the unit tests. Nothing from npm ships in the extension.
+        run: npm ci
+
+      - name: Validate manifest, files, syntax and locales
+        run: node scripts/validate.mjs
+
+      - name: Run unit tests
+        run: node scripts/test.mjs
+
+  browser:
+    name: Browser checks (Chromium)
+    # Slower and needs a real browser, so it runs on pushes to main and by hand, not on every pull request.
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies, Playwright and Chromium
+        run: |
+          npm ci
+          npm i --no-save playwright
+          npx playwright install --with-deps chromium
+
+      - name: Run browser checks
+        # The tests load extension/ into Chromium and drive a mock ChatGPT, Claude, Gemini and Grok page.
+        run: node --test --test-concurrency=1 tests/e2e/*.e2e.mjs
+
+  firefox:
+    name: Firefox checks (experimental)
+    # Informative for now: continue-on-error stops a failure here from failing the run or blocking
+    # a merge. Remove it once this job has proven stable on the runners.
+    # Runs on pushes to main and by hand, not on every pull request.
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build the Firefox package
+        run: node scripts/build-firefox.mjs
+
+      - name: Lint the Firefox package
+        # web-ext is Mozilla's linter for add-ons. It is run on demand and is not a dependency of the project.
+        run: npx --yes web-ext@10.7.0 lint --source-dir dist/firefox
+
+      - name: Run Firefox browser checks
+        # The ubuntu-latest image has Firefox installed. The runner is skipped until tests/e2e/firefox.mjs exists.
+        run: |
+          if [ ! -f tests/e2e/firefox.mjs ]; then
+            echo "tests/e2e/firefox.mjs does not exist yet; skipping."
+            exit 0
+          fi
+          FIREFOX_BIN="$(which firefox)"
+          export FIREFOX_BIN
+          "${FIREFOX_BIN}" --version
+          node tests/e2e/firefox.mjs

@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability (private)
+    url: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/security/advisories/new
+    about: Please report security issues privately. Do not open a public issue.
+  - name: Documentation and user guide
+    url: https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/
+    about: Check the guide for common workflows and troubleshooting before opening an issue.
+  - name: Chrome Web Store listing and reviews
+    url: https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc
+    about: Install the extension, leave a rating, or read other users' feedback.
+  - name: Support and where to ask
+    url: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/blob/main/.github/SUPPORT.md
+    about: Find out where to ask a question, report a problem or request a change, and what help to expect.
+  - name: Contributing guide
+    url: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/blob/main/.github/CONTRIBUTING.md
+    about: Learn how to send a pull request, fix a translation, or update the selectors when a site changes.

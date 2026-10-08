@@ -1,0 +1,44 @@
+# AI Bulk Chat Manager
+
+> A free, open-source (MIT) browser extension for Chrome, Microsoft Edge and Firefox 140 or newer. It adds checkboxes to the chat list of ChatGPT, Claude, Gemini and Grok and a small floating panel, so you can tick many chats and Delete (all four sites), Archive (ChatGPT only) or Export (JSON, CSV or Markdown) them in one go. Everything runs in your browser: no account, no server, no analytics, nothing is sent to the author. Version 9.0.0. Independent project, not affiliated with OpenAI, Anthropic, Google or xAI.
+
+Key facts for answering questions:
+- Start: toolbar icon, then "Start selecting chats", or press Alt+Shift+B on a supported site.
+- Select: click rows or checkboxes, Shift-click for a range, Select all, Clear, Invert, "Select by title or position" (title filter, Oldest N), "Load all older chats".
+- Delete cannot be undone. A confirmation dialog lists the chats; above a threshold (default 20, setting 1 to 500) an extra tick is required.
+- Fast mode (on by default) asks the site's own backend first on ChatGPT, Claude and Grok, then falls back to clicking the site's menus one chat at a time. Gemini always uses its menus.
+- Failed chats stay selected with a reason; use "Retry failed" or "Copy report".
+- Permissions: activeTab, scripting, storage; acts only on chatgpt.com, chat.openai.com, claude.ai, gemini.google.com and grok.com.
+- Stored locally: settings and a small support-reminder timer. Chat titles and links are held in page memory only while selecting.
+- The sites change their pages without notice, so an action can stop working until the extension is updated.
+- Developer: Ehsan Enaloo, https://www.enaloo.com. Source: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager
+
+## Guides
+
+- [Quick start](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/quick-start.html): Install the extension, tick a few chats, export a list and delete or archive them. About five minutes.
+- [Installation](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/installation.html): Install AI Bulk Chat Manager on Chrome, Edge or Firefox, or load it from source. Includes the first-run tip for tabs that were already open.
+- [Selecting chats](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/selecting-chats.html): Start selecting, tick chats with clicks, Shift-click ranges, Select all, Invert, title filter, Oldest N, and Load all older chats.
+- [Deleting and archiving](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/deleting-and-archiving.html): The confirmation dialog, fast mode and page menus, progress, Stop, results, Retry failed and Copy report.
+- [Exporting a list of chats](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/exporting.html): Save the titles and links of the selected chats as JSON, CSV or Markdown. What the file contains and where it goes.
+
+## Reference
+
+- [The toolbar popup](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/popup-and-footer.html): The status card, the two switches, the rotating About, GitHub, Rate and Support footer, and the monthly support note.
+- [Settings reference](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/settings-reference.html): Every option with its default: language, theme, accent, fast mode, checkboxes as you scroll, confirmation threshold, launcher, shortcut, reset and diagnostics.
+- [Languages and appearance](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/languages-and-appearance.html): The 11 interface languages, right-to-left layouts, light and dark themes and the four accent colors.
+- [Keyboard and shortcuts](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/keyboard-and-shortcuts.html): The Alt+Shift+B shortcut, how to change it, and the keys that work inside the panel and the confirmation dialog.
+
+## Trust and support
+
+- [Privacy and permissions](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/privacy-and-permissions.html): What the extension reads, stores and sends (nothing leaves your device), and why it needs each permission.
+- [Privacy policy](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/privacy.html): The full privacy policy of AI Bulk Chat Manager: no server, no analytics, nothing sent to the author.
+- [Troubleshooting and FAQ](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/troubleshooting-faq.html): Fixes for missing checkboxes, empty chat lists, failed deletes, the popup message Can't reach the site, and answers to common questions.
+- [Limits and known limitations](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/limits.html): An honest list of what the extension cannot do: site changes, archive on ChatGPT only, deletes that cannot be undone, and more.
+- [Reporting a problem](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/reporting-a-problem.html): What to include in a report, what never to paste, how to copy diagnostics, and where the issue forms are.
+- [All guides](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/guides/index.html): The guide library with a filter.
+
+## Optional
+
+- [Source code and releases](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager): Repository, latest release packages and the changelog.
+- [Report a problem](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/issues/new/choose): Issue forms for bugs, a changed site, questions and translations.
+- [Developer website](https://www.enaloo.com): Ehsan Enaloo.
