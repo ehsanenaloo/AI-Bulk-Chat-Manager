@@ -119,18 +119,17 @@ Deleting is permanent, so the code is strict about it. The page-menu route choos
 
 ## Contributing
 
-Bug reports, site-change reports, translation fixes and pull requests are welcome; start with [CONTRIBUTING](.github/CONTRIBUTING.md). Checks you can run (Node 22 or newer):
+Bug reports, site-change reports, translation fixes and small pull requests are welcome. Read [CONTRIBUTING.md](.github/CONTRIBUTING.md) first; it explains how to run the checks (`npm install`, `node scripts/validate.mjs`, `node scripts/test.mjs`, and the browser tests).
 
-```text
-npm install
-node scripts/validate.mjs     # manifest, permissions, files, syntax, policy rules
-node scripts/test.mjs         # unit tests
-node --test --test-concurrency=1 tests/e2e/*.e2e.mjs   # real Chromium against test doubles of the four sites
-```
+The translations (except English) are machine-assisted and have not been reviewed by native speakers. If you speak one of the 11 languages natively and can improve a translation, please [open an issue](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/issues/new/choose) or send a pull request. See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
-## Support the project
+If AI Bulk Chat Manager saves you time, you can [buy me a coffee](https://buymeacoffee.com/enaloo). A rating on the [Chrome Web Store](https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc) also helps other people find it.
 
-It is free and ad-free. If it saves you time, a coffee helps keep it updated: [buymeacoffee.com/enaloo](https://buymeacoffee.com/enaloo). A rating on the store helps too.
+### Contributors
+
+Thanks to everyone who has helped. Your name appears here after your first merged contribution.
+
+<a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/graphs/contributors"><img src="https://contrib.rocks/image?repo=ehsanenaloo/AI-Bulk-Chat-Manager" alt="Contributors"></a>
 
 ## License
 
