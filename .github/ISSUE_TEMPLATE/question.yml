@@ -1,0 +1,41 @@
+name: Question
+description: Ask how to use AI Bulk Chat Manager.
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check the user guide first (https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/).
+        This is a volunteer project, so replies are best effort. Do not paste chat titles, chat links or conversation text.
+  - type: textarea
+    id: question
+    attributes:
+      label: What do you want to do?
+      description: Say what you are trying to do and what you tried so far.
+    validations:
+      required: true
+  - type: dropdown
+    id: site
+    attributes:
+      label: Which site?
+      options:
+        - ChatGPT
+        - Claude
+        - Gemini
+        - Grok
+        - Not about a specific site
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+      description: Shown at the top of the Options page.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I read the user guide and searched existing issues.
+          required: true
+        - label: I did not include chat titles, chat links or other personal data.
+          required: true

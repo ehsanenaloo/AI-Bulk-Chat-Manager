@@ -1,0 +1,116 @@
+name: Bug report
+description: Something in AI Bulk Chat Manager does not work as expected.
+title: "[Bug]: "
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please do **not** paste your chat titles, chat links or any conversation text. A description or a screenshot with the sidebar cropped out is enough.
+        If an action stopped working after ChatGPT, Claude, Gemini or Grok changed their page, use the **Supported site changed** form instead.
+        For security problems, use the private link on the issue chooser instead of this form.
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+      description: Shown at the top of the Options page, and on the browser's extensions page.
+      placeholder: "9.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Another Chromium browser (Brave, Opera, Vivaldi, ...)
+    validations:
+      required: true
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser version and operating system
+      placeholder: "Chrome 150 on Windows 11"
+    validations:
+      required: true
+  - type: dropdown
+    id: site
+    attributes:
+      label: Which site?
+      options:
+        - ChatGPT
+        - Claude
+        - Gemini
+        - Grok
+        - Not tied to a site (popup or Options page)
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does the problem happen?
+      options:
+        - Toolbar popup
+        - In-page panel
+        - Checkboxes or selecting chats
+        - Load all older chats
+        - Delete
+        - Archive
+        - Export
+        - Options page
+        - Keyboard shortcut
+        - Support reminder (heart badge)
+        - Translations or layout
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe what you saw and what you expected instead. If a result screen listed failed chats, quote the reason texts (not the chat titles).
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open chatgpt.com
+        2. Click the extension icon and choose "Start selecting chats"
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: fast-mode
+    attributes:
+      label: Is Fast mode on?
+      description: Options page, Behavior. It is on by default.
+      options:
+        - "On"
+        - "Off"
+        - "I don't know"
+  - type: input
+    id: language
+    attributes:
+      label: Interface language
+      description: Only if the problem looks language-specific.
+  - type: textarea
+    id: extra
+    attributes:
+      label: Diagnostics, screenshots or console errors
+      description: |
+        Paste the text from **Options, Privacy, Copy diagnostics**. It contains the extension version, browser, language and settings, and no chat titles or links.
+        Crop screenshots so that no chat titles are visible. Do not paste the "Copy report" text from the result screen unless you have removed the chat titles from it.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and did not find this problem.
+          required: true
+        - label: I did not include chat titles, chat links, conversation text or other personal data.
+          required: true

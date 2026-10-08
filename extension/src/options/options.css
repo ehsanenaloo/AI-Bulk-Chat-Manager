@@ -1,0 +1,62 @@
+/* Copyright (c) 2026 Ehsan Enaloo. Released under the MIT License. */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 14px/1.5 var(--font); -webkit-font-smoothing: antialiased; }
+
+.layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 48px; max-width: 920px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.side { position: sticky; top: 40px; align-self: start; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand img { border-radius: 9px; }
+.brand-name { margin: 0; font-weight: 700; font-size: 15px; line-height: 1.25; }
+.brand-version { font-size: var(--text-xs); color: var(--text-3); }
+.nav { display: flex; flex-direction: column; gap: 2px; margin-top: 28px; }
+.nav a { padding: 8px 12px; border-radius: var(--radius-sm); color: var(--text-2); font-weight: 600; text-decoration: none; }
+.nav a:hover { background: var(--surface-2); color: var(--text); }
+.nav a[aria-current="true"] { background: var(--accent-soft); color: var(--accent); }
+
+.content section { padding-bottom: 36px; margin-bottom: 36px; border-bottom: 1px solid var(--line); }
+.content section:last-child { border-bottom: 0; }
+h2 { margin: 0 0 8px; font-size: 20px; font-weight: 700; letter-spacing: -0.015em; }
+
+.row { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px 0; border-top: 1px solid var(--line); }
+.row:first-of-type { border-top: 0; }
+h2 + .row { border-top: 0; }
+.row-text { min-width: 0; max-width: 460px; }
+.row-title { font-weight: 600; font-size: 14px; }
+.row-hint { margin-top: 2px; color: var(--text-2); font-size: var(--text-sm); line-height: 1.5; }
+.row-end { display: flex; align-items: center; gap: 10px; }
+
+.select { width: 220px; }
+.num { width: 88px; text-align: center; }
+
+.segmented { display: inline-flex; padding: 3px; gap: 2px; border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--line); }
+.segmented button { padding: 6px 14px; border: 0; border-radius: 7px; background: none; color: var(--text-2); font: 600 var(--text-md)/1.2 var(--font); cursor: pointer; }
+.segmented button:hover { color: var(--text); }
+.segmented button[aria-checked="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-1), 0 0 0 1px var(--control-border); }
+@media (forced-colors: active) { .segmented button[aria-checked="true"] { outline: 2px solid Highlight; } .swatch { forced-color-adjust: none; } }
+
+.swatches { display: flex; gap: 10px; }
+.swatch { width: 28px; height: 28px; padding: 0; border-radius: 50%; border: 2px solid var(--surface); background: var(--sw); box-shadow: 0 0 0 1px var(--control-border); cursor: pointer; }
+.swatch[data-value="teal"] { --sw: #0b6f86; }
+.swatch[data-value="blue"] { --sw: #2563c9; }
+.swatch[data-value="indigo"] { --sw: #5046d6; }
+.swatch[data-value="neutral"] { --sw: #2f3f47; }
+.swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--text); }
+
+.facts { margin: 8px 0 16px; padding: 0; list-style: none; display: grid; gap: 8px; }
+.facts li { position: relative; padding-inline-start: 20px; color: var(--text-2); max-width: 560px; }
+.facts li::before { content: ""; position: absolute; inset-inline-start: 2px; top: 0.55em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.note { min-height: 1.4em; margin: 10px 0 0; color: var(--text-2); font-size: var(--text-sm); }
+.about-text { margin: 0 0 14px; max-width: 560px; color: var(--text-2); }
+.byline { margin: 18px 0 0; color: var(--text-2); font-size: var(--text-sm); }
+.legal { margin: 16px 0 0; max-width: 560px; color: var(--text-3); font-size: var(--text-xs); line-height: 1.6; }
+
+@media (max-width: 720px) {
+  .layout { grid-template-columns: 1fr; gap: 24px; padding-top: 24px; }
+  .side { position: static; }
+  .nav { flex-direction: row; flex-wrap: wrap; margin-top: 16px; }
+  .row { flex-direction: column; align-items: flex-start; gap: 10px; }
+}

@@ -1,0 +1,18 @@
+{
+  "app_name": {
+    "message": "AI Bulk Chat Manager",
+    "description": "Extension name shown in the browser and the stores. Keep it short."
+  },
+  "app_description": {
+    "message": "Массовый выбор, удаление, архивация и экспорт чатов в ChatGPT, Claude, Gemini и Grok. Бесплатно, открытый код, локально.",
+    "description": "Short description shown in the stores and on the extensions page (132 characters maximum)."
+  },
+  "action_title": {
+    "message": "AI Bulk Chat Manager",
+    "description": "Tooltip of the toolbar button."
+  },
+  "command_toggle_panel": {
+    "message": "Открыть или закрыть панель выбора",
+    "description": "Label of the keyboard shortcut in the browser's shortcut settings."
+  }
+}

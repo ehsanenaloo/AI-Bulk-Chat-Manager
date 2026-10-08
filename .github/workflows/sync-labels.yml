@@ -1,0 +1,38 @@
+name: Sync labels
+
+# Run this by hand from the Actions tab (or it runs when labels.yml changes on main).
+# It creates or updates the issue labels listed in .github/labels.yml.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/labels.yml
+      - scripts/sync-labels.mjs
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  labels:
+    name: Create or update labels
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Sync labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: node scripts/sync-labels.mjs

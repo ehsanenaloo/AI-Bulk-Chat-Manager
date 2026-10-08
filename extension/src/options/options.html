@@ -1,0 +1,160 @@
+<!doctype html>
+<!-- Copyright (c) 2026 Ehsan Enaloo. Released under the MIT License. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AI Bulk Chat Manager</title>
+    <link rel="stylesheet" href="../shared/tokens.css">
+    <link rel="stylesheet" href="../shared/components.css">
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="side">
+        <div class="brand">
+          <img src="../../icons/icon-48.png" alt="" width="36" height="36">
+          <div>
+            <h1 class="brand-name" data-i18n="popup.title">AI Bulk Chat Manager</h1>
+            <div class="brand-version tnum" id="version"></div>
+          </div>
+        </div>
+        <nav class="nav" data-i18n-attr="aria-label:options.nav.label">
+          <a href="#appearance" data-i18n="options.nav.appearance"></a>
+          <a href="#behavior" data-i18n="options.nav.behavior"></a>
+          <a href="#shortcut" data-i18n="options.nav.shortcut"></a>
+          <a href="#privacy" data-i18n="options.nav.privacy"></a>
+          <a href="#about" data-i18n="options.nav.about"></a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section id="appearance" aria-labelledby="h-appearance">
+          <h2 id="h-appearance" data-i18n="options.appearance.title"></h2>
+
+          <div class="row">
+            <div class="row-text">
+              <label class="row-title" for="language" data-i18n="options.language"></label>
+              <div class="row-hint" data-i18n="options.languageHint"></div>
+            </div>
+            <select class="input select" id="language"></select>
+          </div>
+
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title" id="l-theme" data-i18n="options.theme"></div>
+            </div>
+            <div class="segmented" id="theme" role="radiogroup" aria-labelledby="l-theme">
+              <button type="button" role="radio" data-value="system" data-i18n="options.theme.system"></button>
+              <button type="button" role="radio" data-value="light" data-i18n="options.theme.light"></button>
+              <button type="button" role="radio" data-value="dark" data-i18n="options.theme.dark"></button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title" id="l-accent" data-i18n="options.accent"></div>
+            </div>
+            <div class="swatches" id="accent" role="radiogroup" aria-labelledby="l-accent">
+              <button type="button" role="radio" data-value="teal" class="swatch" data-i18n-attr="aria-label:options.accent.teal;title:options.accent.teal"></button>
+              <button type="button" role="radio" data-value="blue" class="swatch" data-i18n-attr="aria-label:options.accent.blue;title:options.accent.blue"></button>
+              <button type="button" role="radio" data-value="indigo" class="swatch" data-i18n-attr="aria-label:options.accent.indigo;title:options.accent.indigo"></button>
+              <button type="button" role="radio" data-value="neutral" class="swatch" data-i18n-attr="aria-label:options.accent.neutral;title:options.accent.neutral"></button>
+            </div>
+          </div>
+        </section>
+
+        <section id="behavior" aria-labelledby="h-behavior">
+          <h2 id="h-behavior" data-i18n="options.behavior.title"></h2>
+
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title" id="l-fast" data-i18n="settings.fastMode"></div>
+              <div class="row-hint" data-i18n="options.fastModeLong"></div>
+            </div>
+            <button class="switch" id="sw-fast" type="button" role="switch" aria-checked="true" aria-labelledby="l-fast"></button>
+          </div>
+
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title" id="l-auto" data-i18n="settings.autoLoad"></div>
+              <div class="row-hint" data-i18n="options.autoLoadLong"></div>
+            </div>
+            <button class="switch" id="sw-auto" type="button" role="switch" aria-checked="true" aria-labelledby="l-auto"></button>
+          </div>
+
+          <div class="row">
+            <div class="row-text">
+              <label class="row-title" for="threshold" data-i18n="options.threshold"></label>
+              <div class="row-hint" data-i18n="options.thresholdHint"></div>
+            </div>
+            <input class="input num" id="threshold" type="number" min="1" max="500" inputmode="numeric">
+          </div>
+
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title" id="l-launcher" data-i18n="options.launcher"></div>
+              <div class="row-hint" data-i18n="options.launcherHint"></div>
+            </div>
+            <button class="switch" id="sw-launcher" type="button" role="switch" aria-checked="false" aria-labelledby="l-launcher"></button>
+          </div>
+        </section>
+
+        <section id="shortcut" aria-labelledby="h-shortcut">
+          <h2 id="h-shortcut" data-i18n="options.shortcut.title"></h2>
+          <div class="row">
+            <div class="row-text">
+              <div class="row-title" data-i18n="options.shortcut.action"></div>
+              <div class="row-hint" data-i18n="options.shortcut.hint"></div>
+            </div>
+            <div class="row-end">
+              <kbd class="kbd" id="shortcut-key"></kbd>
+              <button class="btn btn-sm" id="shortcut-change" type="button" data-i18n="options.shortcut.change"></button>
+            </div>
+          </div>
+        </section>
+
+        <section id="privacy" aria-labelledby="h-privacy">
+          <h2 id="h-privacy" data-i18n="options.privacy.title"></h2>
+          <ul class="facts">
+            <li data-i18n="options.privacy.local"></li>
+            <li data-i18n="options.privacy.noAccount"></li>
+            <li data-i18n="options.privacy.permissions"></li>
+            <li data-i18n="options.privacy.storage"></li>
+          </ul>
+          <div class="actions">
+            <button class="btn btn-sm" id="open-privacy" type="button" data-i18n="options.privacy.policy"></button>
+            <button class="btn btn-sm" id="copy-diagnostics" type="button" data-i18n="options.diagnostics"></button>
+            <button class="btn btn-sm btn-outline-danger" id="reset" type="button" data-i18n="options.reset"></button>
+          </div>
+          <p class="note" id="note" role="status"></p>
+        </section>
+
+        <section id="about" aria-labelledby="h-about">
+          <h2 id="h-about" data-i18n="options.about.title"></h2>
+          <p class="about-text" data-i18n="options.about.body"></p>
+          <div class="actions">
+            <button class="btn btn-sm" type="button" data-link="guide"></button>
+            <button class="btn btn-sm" type="button" data-link="repo"></button>
+            <button class="btn btn-sm" type="button" data-link="issues"></button>
+            <button class="btn btn-sm" type="button" data-link="rate"></button>
+            <button class="btn btn-sm" type="button" data-link="support"></button>
+            <button class="btn btn-sm" type="button" data-link="website"></button>
+          </div>
+          <p class="byline">&copy; 2026 Ehsan Enaloo &middot; <button class="link" id="byline-site" type="button">www.enaloo.com</button></p>
+          <p class="legal" data-i18n="options.about.legal"></p>
+        </section>
+      </main>
+    </div>
+
+    <script src="../shared/namespace.js"></script>
+    <script src="../shared/ext.js"></script>
+    <script src="../shared/sites.js"></script>
+    <script src="../shared/links.js"></script>
+    <script src="../shared/settings.js"></script>
+    <script src="../shared/i18n.js"></script>
+    <script src="../shared/icons.js"></script>
+    <script src="../shared/page.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+name: Translation fix
+description: Report a wrong, awkward or missing translation.
+title: "[Translation]: "
+labels: ["translation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping with translations. The interface is available in English, Persian, Spanish, French, German, Brazilian Portuguese, Russian, Simplified Chinese, Japanese, Arabic and Hindi. Most of these have not been reviewed by a native speaker yet, so your report is useful.
+        You can also send a pull request. See the Translations section of CONTRIBUTING.md.
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - Persian (fa)
+        - Spanish (es)
+        - French (fr)
+        - German (de)
+        - Portuguese, Brazil (pt-BR)
+        - Russian (ru)
+        - Chinese, Simplified (zh-CN)
+        - Japanese (ja)
+        - Arabic (ar)
+        - Hindi (hi)
+        - English (en)
+        - Another language (a request for a new one)
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Where the text appears
+      description: The screen and button or message where you see it (toolbar popup, in-page panel, confirmation dialog, result screen, Options page). If you know it, add the key, for example `panel.deleteN`. A screenshot with the chat list cropped out also helps.
+      placeholder: "In-page panel, the Delete button"
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current text
+      description: Copy the text as it appears now.
+    validations:
+      required: true
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested text
+      description: Keep placeholders such as {count} and {site} exactly as they are. If the text is a plural form (for example "1 chat" and "5 chats"), give every form your language needs.
+    validations:
+      required: true
+  - type: dropdown
+    id: native
+    attributes:
+      label: Are you a native speaker of this language?
+      options:
+        - "Yes, I am a native speaker"
+        - "I am fluent but not a native speaker"
+        - "No, I used a translation tool"
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: For example, why the current text is wrong, or other strings with the same problem.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I did not include chat titles, chat links or other personal data.
+          required: true

@@ -1,0 +1,132 @@
+/* Copyright (c) 2026 Ehsan Enaloo. Released under the MIT License. */
+/*
+  Design tokens shared by the popup, the options page and the in-page panel (which loads this file
+  inside its shadow root, where :host takes the place of :root).
+
+  Theme and accent are chosen with attributes on the root element: data-theme="light|dark" and
+  data-accent="teal|blue|indigo|neutral". Neutrals are tinted toward the teal hue of the logo so
+  surfaces feel related to the accent instead of generic gray.
+*/
+
+:root,
+:host {
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Arial, "Noto Sans Arabic", "Noto Sans Devanagari", "Noto Sans JP", "Noto Sans SC", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+
+  /* type scale (px at 16px root; pages set their own base) */
+  --text-xs: 11.5px;
+  --text-sm: 12.5px;
+  --text-md: 13.5px;
+  --text-lg: 15px;
+  --text-xl: 19px;
+  --text-2xl: 26px;
+
+  /* space, radius, motion */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 20px; --space-6: 28px;
+  --radius-sm: 6px; --radius: 9px; --radius-lg: 14px; --radius-pill: 999px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms; --dur: 180ms;
+
+  /* light theme */
+  --bg: #f4f7f8;
+  --surface: #ffffff;
+  --surface-2: #eef3f5;
+  --surface-hover: #e6edf0;
+  --line: #d9e2e7;
+  --line-strong: #bccad2;
+  --control-border: #7b8d96; /* edges of inputs, switches and other controls: at least 3:1 (WCAG 1.4.11) */
+  --text: #0e1a20;
+  --text-2: #43565f;
+  --text-3: #5e717a;
+  --accent: #0b6f86;
+  --accent-hover: #085c70;
+  --accent-press: #064c5d;
+  --accent-soft: #e0f1f5;
+  --accent-line: #a9d6e0;
+  --on-accent: #ffffff;
+  --danger: #bf2d35;
+  --danger-hover: #a3262d;
+  --danger-text: #bf2d35;
+  --danger-soft: #fbe8e9;
+  --danger-line: #efb9bd;
+  --on-danger: #ffffff;
+  --success: #1c7a4b;
+  --success-soft: #e1f3ea;
+  --warning: #96580a;
+  --warning-soft: #fcefd9;
+  --focus: #0e7c95;
+  --scrim: rgba(10, 22, 28, 0.46);
+  --shadow-1: 0 1px 2px rgba(10, 30, 40, 0.08);
+  --shadow-2: 0 10px 28px -10px rgba(10, 30, 40, 0.28), 0 2px 6px rgba(10, 30, 40, 0.1);
+  --shadow-3: 0 24px 56px -16px rgba(10, 30, 40, 0.42), 0 4px 12px rgba(10, 30, 40, 0.14);
+  color-scheme: light;
+}
+
+:root[data-theme="dark"],
+:host([data-theme="dark"]) {
+  --bg: #0e1518;
+  --surface: #151f24;
+  --surface-2: #1b282e;
+  --surface-hover: #23343b;
+  --line: #27383f;
+  --line-strong: #3a4f58;
+  --control-border: #6b8590;
+  --text: #e7f0f3;
+  --text-2: #a7b9c1;
+  --text-3: #8aa0a9;
+  --accent: #3fc4de;
+  --accent-hover: #6cd3e7;
+  --accent-press: #8fdeed;
+  --accent-soft: #123239;
+  --accent-line: #1f5663;
+  --on-accent: #03222a;
+  --danger: #c9363d;
+  --danger-hover: #b52f36;
+  --danger-text: #ee6a70;
+  --danger-soft: #3a1a1d;
+  --danger-line: #6b2b30;
+  --on-danger: #ffffff;
+  --success: #52c78a;
+  --success-soft: #14301f;
+  --warning: #e5a64a;
+  --warning-soft: #33260d;
+  --focus: #6cd3e7;
+  --scrim: rgba(0, 0, 0, 0.62);
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 10px 28px -10px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.4);
+  --shadow-3: 0 24px 56px -16px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+/* Follow the system until script has resolved a theme (pages only). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #0e1518; --surface: #151f24; --surface-2: #1b282e; --surface-hover: #23343b;
+    --line: #27383f; --line-strong: #3a4f58; --text: #e7f0f3; --text-2: #a7b9c1; --text-3: #8aa0a9;
+    --accent: #3fc4de; --accent-hover: #6cd3e7; --accent-press: #8fdeed; --accent-soft: #123239; --accent-line: #1f5663; --on-accent: #03222a;
+    --danger: #c9363d; --danger-hover: #b52f36; --danger-text: #ee6a70; --danger-soft: #3a1a1d; --danger-line: #6b2b30; --control-border: #6b8590;
+    --success: #52c78a; --success-soft: #14301f; --warning: #e5a64a; --warning-soft: #33260d;
+    --focus: #6cd3e7; --scrim: rgba(0, 0, 0, 0.62);
+    color-scheme: dark;
+  }
+}
+
+/* Accent palettes. Each has a light and a dark value set. */
+:root[data-accent="blue"], :host([data-accent="blue"]) {
+  --accent: #2563c9; --accent-hover: #1d4fa6; --accent-press: #173f84; --accent-soft: #e3ecfb; --accent-line: #b3c9f0; --focus: #2563c9;
+}
+:root[data-accent="indigo"], :host([data-accent="indigo"]) {
+  --accent: #5046d6; --accent-hover: #4038b4; --accent-press: #322c91; --accent-soft: #e9e8fb; --accent-line: #c2bff1; --focus: #5046d6;
+}
+:root[data-accent="neutral"], :host([data-accent="neutral"]) {
+  --accent: #2f3f47; --accent-hover: #1f2d34; --accent-press: #121d22; --accent-soft: #e4eaed; --accent-line: #bac6cc; --focus: #2f3f47;
+}
+:root[data-theme="dark"][data-accent="blue"], :host([data-theme="dark"][data-accent="blue"]) {
+  --accent: #6fa3f5; --accent-hover: #93bcf8; --accent-press: #b4d0fa; --accent-soft: #15284a; --accent-line: #254a86; --on-accent: #06142b; --focus: #93bcf8;
+}
+:root[data-theme="dark"][data-accent="indigo"], :host([data-theme="dark"][data-accent="indigo"]) {
+  --accent: #928af7; --accent-hover: #aaa4f9; --accent-press: #c3bffb; --accent-soft: #1f1c4a; --accent-line: #3c378a; --on-accent: #0d0a33; --focus: #aaa4f9;
+}
+:root[data-theme="dark"][data-accent="neutral"], :host([data-theme="dark"][data-accent="neutral"]) {
+  --accent: #c4d1d7; --accent-hover: #dbe4e8; --accent-press: #eef3f5; --accent-soft: #232f35; --accent-line: #43555d; --on-accent: #0b1317; --focus: #dbe4e8;
+}

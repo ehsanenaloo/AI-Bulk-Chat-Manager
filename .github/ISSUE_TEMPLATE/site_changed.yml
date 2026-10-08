@@ -1,0 +1,115 @@
+name: Supported site changed
+description: ChatGPT, Claude, Gemini or Grok changed its page and an action stopped working.
+title: "[Site changed]: "
+labels: ["site-changed", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The extension works with each site's own page, so it can break when a site redesigns its sidebar, menus or dialogs. These reports are the fastest way for the selectors in `extension/src/shared/sites.js` to get fixed.
+        **Please do not paste chat titles, chat links or conversation text.** Everything below can be answered without them.
+  - type: dropdown
+    id: site
+    attributes:
+      label: Which site?
+      options:
+        - ChatGPT (chatgpt.com)
+        - ChatGPT (chat.openai.com)
+        - Claude (claude.ai)
+        - Gemini (gemini.google.com)
+        - Grok (grok.com)
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Firefox
+        - Another Chromium browser (Brave, Opera, Vivaldi, ...)
+    validations:
+      required: true
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser version and operating system
+      placeholder: "Chrome 150 on Windows 11"
+    validations:
+      required: true
+  - type: dropdown
+    id: action
+    attributes:
+      label: Which action stopped working?
+      options:
+        - The panel or checkboxes do not appear
+        - Checkboxes appear on the wrong things, or on only some chats
+        - Select all finds no chats, or too few
+        - Load all older chats
+        - Delete
+        - Archive (ChatGPT)
+        - Export
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: what-happens
+    attributes:
+      label: What happens?
+      description: What you did, what you saw and what you expected. If the result screen shows a reason for a failed chat (for example "Couldn't find the chat's menu button" or "The site refused the request (404)"), quote the reason text. Do not include the chat title.
+    validations:
+      required: true
+  - type: dropdown
+    id: fast-mode
+    attributes:
+      label: Is Fast mode on?
+      description: Options page, Behavior. Try the other setting and tell us if the result changes.
+      options:
+        - "On"
+        - "Off"
+        - "I don't know"
+    validations:
+      required: true
+  - type: dropdown
+    id: when
+    attributes:
+      label: When did it stop working?
+      options:
+        - It never worked for me
+        - It worked until recently
+        - It works only sometimes
+        - I don't know
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+      description: Shown at the top of the Options page.
+      placeholder: "9.0.0"
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: |
+        Open **Options, Privacy, Copy diagnostics** and paste the text here. It contains the extension version, browser, language and settings. It contains no chat titles, links or page content.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: For example a screenshot with the sidebar cropped out, or console errors that mention the extension (the lines that start with `[ABCM]`). Please check that no chat titles are visible.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I reloaded the chat page and tried again.
+          required: true
+        - label: I searched existing issues and did not find this problem.
+          required: true
+        - label: I did not paste chat titles, chat links, conversation text or other personal data.
+          required: true
