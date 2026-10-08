@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troubleshooting and FAQ | AI Bulk Chat Manager user guide</title>
+<meta name="description" content="Fixes for missing checkboxes, empty chat lists, failed deletes, the popup message Can't reach the site, and answers to common questions.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
+<link rel="stylesheet" href="../styles.css">
+<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script defer src="../app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html" aria-current="page">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
+<main id="main">
+<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Trust and support</p><h1>Troubleshooting and FAQ</h1><p class="lead">Find your symptom, read the likely cause and try the fix. Common questions are at the end.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
+<div class="shell doc-layout has-toc">
+<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html">Selecting chats</a><a href="../guides/deleting-and-archiving.html">Deleting and archiving</a><a href="../guides/exporting.html">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html">The toolbar popup</a><a href="../guides/settings-reference.html">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html" aria-current="page">Troubleshooting and FAQ</a><a href="../guides/limits.html">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
+<article class="prose">
+<p>Find the symptom that matches, then try the fix. If nothing helps, see <a href="reporting-a-problem.html">Reporting a problem</a>. Read <a href="limits.html">Limits</a> too: the sites change their pages, and that is the most common cause of trouble.</p>
+
+<h2 id="the-panel-or-the-checkboxes-do-not-appear">The panel or the checkboxes do not appear<a class="anchor" href="#the-panel-or-the-checkboxes-do-not-appear" aria-label="Link to this section">#</a></h2>
+<dl>
+  <dt>The popup says &ldquo;This page isn&rsquo;t supported&rdquo;</dt>
+  <dd>You are not on ChatGPT, Claude, Gemini or Grok. Go to one of them, on its normal address (<code>chatgpt.com</code>, <code>chat.openai.com</code>, <code>claude.ai</code>, <code>gemini.google.com</code>, <code>grok.com</code>). Other addresses, including other subdomains, are not supported.</dd>
+  <dt>The popup says &ldquo;Can&rsquo;t reach&rdquo; the site</dt>
+  <dd>The tab was open before the install or an update and could not be attached. Click <strong>Reload page</strong>, then click the toolbar icon again. In Firefox, check that you allowed access to the chat sites.</dd>
+  <dt>The shortcut does nothing</dt>
+  <dd>The shortcut works only on the four supported sites. Check that you are on one. In the Options page, <strong>Keyboard shortcut</strong> may show <strong>Not set</strong> because another extension uses the key. Set a different key. See <a href="keyboard-and-shortcuts.html">Keyboard and shortcuts</a>.</dd>
+  <dt>The panel opens but there are no checkboxes</dt>
+  <dd>The panel says <strong>No chats found yet. Open the chat list in the sidebar or scroll it, and they will appear here.</strong> Open the sidebar. On a narrow window the site hides it. Scroll the list a little. If the sidebar is open and the list is full of chats but nothing is found, the site may have changed. See <a href="limits.html">Limits</a>.</dd>
+  <dt>Checkboxes appear only on some chats</dt>
+  <dd>Turn on <strong>Add checkboxes as you scroll</strong> and scroll down, or click <strong>Load all older chats</strong>.</dd>
+  <dt>I cannot see the panel</dt>
+  <dd>If you closed it with the X, selecting has ended. Start again from the toolbar icon or the shortcut. If you minimized it, look for its small title bar in the page and click <strong>Expand</strong>. <strong>Options, Privacy, Reset settings</strong> puts it back in its default corner. You can also turn on the launcher button in the <a href="settings-reference.html#behavior">settings</a>.</dd>
+</dl>
+
+<h2 id="select-all-does-not-reach-every-chat">Select all does not reach every chat<a class="anchor" href="#select-all-does-not-reach-every-chat" aria-label="Link to this section">#</a></h2>
+<p><strong>Select all</strong> ticks the chats that are in the page right now. The sites load a long history in pages. Click <strong>Load all older chats</strong>, wait for it to finish, then click <strong>Select all</strong>. The same goes for <strong>Oldest</strong>.</p>
+
+<h2 id="clicking-a-chat-does-not-open-it">Clicking a chat does not open it<a class="anchor" href="#clicking-a-chat-does-not-open-it" aria-label="Link to this section">#</a></h2>
+<p>That is on purpose while you are selecting. A click on a row ticks it. Click <strong>Finish selecting</strong> (or the X in the panel) to get normal clicking back.</p>
+
+<h2 id="deleting-or-archiving-did-not-work">Deleting or archiving did not work<a class="anchor" href="#deleting-or-archiving-did-not-work" aria-label="Link to this section">#</a></h2>
+<dl>
+  <dt>Some chats failed</dt>
+  <dd>Failed chats stay selected, with a reason. Read the reason, then click <strong>Retry failed</strong>. The table of reasons is in <a href="deleting-and-archiving.html#the-result">Deleting and archiving</a>.</dd>
+  <dt>&ldquo;The site rejected the session&rdquo;</dt>
+  <dd>You signed out, or the site renewed your session. Reload the page, sign in again and retry.</dd>
+  <dt>&ldquo;The site asked to slow down (rate limit)&rdquo;</dt>
+  <dd>The site limits how fast you can delete. Wait a few minutes and retry with a smaller batch.</dd>
+  <dt>Everything fails in fast mode</dt>
+  <dd>The site may have changed its internal requests. Turn <strong>Fast mode</strong> off (popup, panel settings or Options) and retry. Chats are then handled through the site&rsquo;s menus, which is slower. Please <a href="reporting-a-problem.html">report it</a>.</dd>
+  <dt>Gemini is slow</dt>
+  <dd>Gemini always uses its menus, one chat at a time. That is expected.</dd>
+  <dt>&ldquo;Couldn&rsquo;t find the menu item&rdquo; and similar menu messages</dt>
+  <dd>The site&rsquo;s menus changed, or your site language is one the extension cannot read. Retry once. Then <a href="reporting-a-problem.html">report it</a>.</dd>
+  <dt>The Archive button is missing</dt>
+  <dd>Archive exists on ChatGPT only. The other sites do not offer archiving.</dd>
+  <dt>The delete button is disabled</dt>
+  <dd>Nothing is ticked. Tick a chat. In the confirmation dialog, the red button stays disabled until you tick <strong>I understand this can&rsquo;t be undone.</strong> when you delete many chats.</dd>
+  <dt>The chats are back after I reloaded</dt>
+  <dd>Check the result screen. A chat listed as failed was not deleted. If the result said everything was deleted and a chat still shows, reload once more and <a href="reporting-a-problem.html">report it</a>.</dd>
+</dl>
+
+<h2 id="claudes-recents-page">Claude&rsquo;s Recents page<a class="anchor" href="#claudes-recents-page" aria-label="Link to this section">#</a></h2>
+<p>Claude has its own Recents page with checkboxes and a delete button built into the site. Those are Claude&rsquo;s, not this extension&rsquo;s. This extension works on the chat list in the sidebar. Use whichever you like.</p>
+
+<h2 id="export-problems">Export problems<a class="anchor" href="#export-problems" aria-label="Link to this section">#</a></h2>
+<dl>
+  <dt>Export is disabled</dt><dd>Tick at least one chat first.</dd>
+  <dt>I cannot find the file</dt><dd>It is in your browser&rsquo;s download location, named <code>ai-chats-&lt;site&gt;-&lt;date and time&gt;.json</code> (or <code>.csv</code>, <code>.md</code>). Open your browser&rsquo;s downloads list.</dd>
+  <dt>Strange characters in Excel</dt><dd>Open the CSV through <strong>Data, From Text/CSV</strong> and choose UTF-8, or use JSON or Markdown. The CSV starts with a marker that most Excel versions use to detect UTF-8.</dd>
+</dl>
+
+<h2 id="language-and-look">Language and look<a class="anchor" href="#language-and-look" aria-label="Link to this section">#</a></h2>
+<dl>
+  <dt>The extension shows the wrong language</dt><dd>Change it in <strong>Options, Appearance, Language</strong>. <strong>Automatic</strong> follows the browser language.</dd>
+  <dt>The panel does not match my dark mode</dt><dd>Set <strong>Theme</strong> to <strong>System</strong>, or choose <strong>Light</strong> or <strong>Dark</strong> in the Options page.</dd>
+</dl>
+
+<h2 id="frequently-asked-questions">Frequently asked questions<a class="anchor" href="#frequently-asked-questions" aria-label="Link to this section">#</a></h2>
+<dl>
+  <dt>Is it safe to delete hundreds of chats?</dt>
+  <dd>Review the list in the confirmation dialog. Large deletes need an extra tick. Export first if you may want the titles and links later. Deleting cannot be undone.</dd>
+  <dt>Can I undo a delete?</dt>
+  <dd>No. Deleting is the site&rsquo;s own delete. On ChatGPT, <strong>Archive</strong> is reversible from ChatGPT&rsquo;s settings.</dd>
+  <dt>Why is Archive only on ChatGPT?</dt>
+  <dd>The other sites do not offer archiving.</dd>
+  <dt>Does it read my conversations?</dt>
+  <dd>No. It reads the chat list that the sidebar shows (titles and links), only while you select, and keeps it only in the page&rsquo;s memory. See <a href="privacy-and-permissions.html">Privacy and permissions</a>.</dd>
+  <dt>Does it send my chats anywhere?</dt>
+  <dd>No. It has no server. The only requests it causes go to the site you are on, to delete or archive the chats you chose.</dd>
+  <dt>Does it work on Brave, Opera or Vivaldi?</dt>
+  <dd>On any Chromium browser that installs Chrome extensions, yes. Firefox needs version 140 or newer.</dd>
+  <dt>Does it work on a phone?</dt>
+  <dd>It is built for desktop browsers. Nothing in this guide covers phone browsers.</dd>
+  <dt>Why checkboxes in the sidebar and a floating panel, not just a popup?</dt>
+  <dd>Browsers close a popup when you click the page, which made selecting chats clumsy. The panel lives in the page instead.</dd>
+  <dt>I used version 8. What changed?</dt>
+  <dd>Version 9 is a rebuild. The selecting tools moved from the popup into the in-page panel, and the extension now also runs on Edge and Firefox. The permissions did not change. The <a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/blob/main/CHANGELOG.md" rel="noopener">changelog</a> has the details.</dd>
+  <dt>Is it affiliated with OpenAI, Anthropic, Google or xAI?</dt>
+  <dd>No. It is an independent project. The names are trademarks of their owners.</dd>
+  <dt>How do I support it?</dt>
+  <dd>It is free and has no ads. A rating on the store helps, and so does a coffee: use <strong>Support</strong> in the popup footer. The developer&rsquo;s website is <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a>.</dd>
+</dl>
+
+<div class="reading-footer"><a class="prev" href="../privacy.html"><small>Previous</small>Privacy policy</a><a class="next" href="../guides/limits.html"><small>Next</small>Limits and known limitations</a></div>
+<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/troubleshooting-faq.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
+</article>
+<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#the-panel-or-the-checkboxes-do-not-appear">The panel or the checkboxes do not appear</a></li><li><a href="#select-all-does-not-reach-every-chat">Select all does not reach every chat</a></li><li><a href="#clicking-a-chat-does-not-open-it">Clicking a chat does not open it</a></li><li><a href="#deleting-or-archiving-did-not-work">Deleting or archiving did not work</a></li><li><a href="#claudes-recents-page">Claude's Recents page</a></li><li><a href="#export-problems">Export problems</a></li><li><a href="#language-and-look">Language and look</a></li><li><a href="#frequently-asked-questions">Frequently asked questions</a></li></ol></nav>
+</div>
+</main>
+<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+</body>
+</html>

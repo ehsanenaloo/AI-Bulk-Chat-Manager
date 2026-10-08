@@ -1,0 +1,59 @@
+/* Copyright (c) 2026 Ehsan Enaloo. Released under the MIT License. */
+
+html, body { margin: 0; background: var(--bg); color: var(--text); font: 400 var(--text-md)/1.45 var(--font); -webkit-font-smoothing: antialiased; }
+body { width: 340px; min-height: 120px; } /* a fixed width: a popup sizes itself from its content, so a viewport-relative width would collapse it */
+
+.popup { padding: 14px 16px 12px; }
+
+.top { display: flex; align-items: center; gap: 10px; }
+.top-logo { border-radius: 8px; flex: none; }
+.top-text { flex: 1; min-width: 0; }
+.top h1 { margin: 0; font-size: var(--text-lg); font-weight: 700; letter-spacing: -0.01em; line-height: 1.2; }
+.top-version { font-size: var(--text-xs); color: var(--text-3); }
+
+.status { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; padding: 12px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
+.status-icon { display: grid; place-items: center; flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--surface-2); color: var(--text-2); }
+.status[data-state="ready"] .status-icon, .status[data-state="active"] .status-icon { background: var(--success-soft); color: var(--success); }
+.status[data-state="problem"] .status-icon { background: var(--warning-soft); color: var(--warning); }
+.status-title { font-weight: 700; }
+.status-sub { margin-top: 1px; font-size: var(--text-sm); color: var(--text-2); }
+
+#supported, #unsupported { margin-top: 12px; }
+.btn-lg { min-height: 42px; font-size: var(--text-lg); border-radius: 11px; }
+.shortcut { margin: 8px 0 0; text-align: center; font-size: var(--text-sm); color: var(--text-2); }
+.lead { margin: 0 0 10px; color: var(--text-2); font-size: var(--text-sm); line-height: 1.5; }
+.site-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.site-grid .btn { justify-content: flex-start; gap: 9px; }
+.site-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+
+.prefs { margin-top: 10px; padding-top: 4px; border-top: 1px solid var(--line); }
+.prefs .setting + .setting { border-top: 1px solid var(--line); }
+
+.nudge { margin-top: 10px; padding: 12px; border-radius: var(--radius); background: var(--accent-soft); border: 1px solid var(--accent-line); }
+.nudge-head { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.nudge-head .icon { color: var(--danger-text); }
+.nudge p { margin: 6px 0 10px; color: var(--text-2); font-size: var(--text-sm); line-height: 1.5; }
+.nudge-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.nudge-off { margin-top: 8px; font-size: var(--text-xs); color: var(--text-3); }
+
+/* ── rotating footer ───────────────────────────────────────────────────────────────────────── */
+.footer-dock { padding: 9px 16px 10px; border-top: 1px solid var(--line); background: var(--bg); }
+.footer-message-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 30px; }
+.footer-message { min-width: 0; font-size: 11px; color: var(--text-3); line-height: 1.4; }
+.footer-cta {
+  flex: none; font: inherit; font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-soft);
+  border: 1px solid var(--accent-line); border-radius: var(--radius-pill); padding: 4px 11px; cursor: pointer; white-space: nowrap;
+  transition: background var(--dur-fast) ease;
+}
+.footer-cta:hover { background: var(--accent-line); }
+.footer-nav-wrap { margin-top: 8px; }
+.footer-nav { display: flex; gap: 2px; position: relative; }
+.footer-nav-btn {
+  flex: 1; font: inherit; font-size: 10.5px; font-weight: 600; color: var(--text-3); background: none; border: 0; padding: 5px 2px;
+  cursor: pointer; border-radius: 5px; transition: color var(--dur-fast) ease;
+}
+.footer-nav-btn:hover { color: var(--text-2); }
+.footer-nav-btn.active { color: var(--accent); }
+.footer-indicator-track { position: relative; height: 2px; margin-top: 4px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.footer-indicator { position: absolute; top: 0; inset-inline-start: 0; height: 2px; width: 0; background: var(--accent-line); border-radius: 999px; transition: inset-inline-start 0.35s ease, width 0.35s ease; }
+.footer-indicator-progress { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 999px; }

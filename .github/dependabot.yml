@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: ci
+    labels:
+      - dependencies
+  # The only npm package is jsdom, used by the unit tests. Nothing from npm ships in the extension.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: chore
+    labels:
+      - dependencies

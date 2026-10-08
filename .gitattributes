@@ -1,0 +1,21 @@
+# Normalize line endings to LF so checksums and diffs are stable on every OS.
+* text=auto eol=lf
+
+# Text
+*.js text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.svg text eol=lf
+
+# Binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.zip binary

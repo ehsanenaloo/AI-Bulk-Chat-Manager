@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="AI Bulk Chat Manager logo">
+  <defs>
+    <linearGradient id="bg" x1="14" y1="8" x2="116" y2="122" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#19B0CC"/>
+      <stop offset="1" stop-color="#0A5570"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="url(#bg)"/>
+  <!-- back bubble: "many chats" -->
+  <rect x="50" y="22" width="60" height="44" rx="13" fill="#fff" fill-opacity=".42"/>
+  <!-- front bubble with tail -->
+  <path d="M34 42h34c8.3 0 15 6.7 15 15v20c0 8.3-6.7 15-15 15H48.5L33.4 107.6a2 2 0 0 1-3.4-1.5V92c-7.2-1-12-7.200-12-14.600V57c0-8.300 6.700-15 16-15z" fill="#fff"/>
+  <!-- check mark: "selected" -->
+  <path d="M38.500 68.500l9.500 9.500 19-21" fill="none" stroke="#0E7C95" stroke-width="8.500" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
