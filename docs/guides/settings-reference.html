@@ -1,81 +1,14 @@
 <!doctype html>
-<html lang="en" data-root="../">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Settings reference | AI Bulk Chat Manager user guide</title>
-<meta name="description" content="Every option with its default: language, theme, accent, fast mode, checkboxes as you scroll, confirmation threshold, launcher, shortcut, reset and diagnostics.">
-<meta name="color-scheme" content="light dark">
-<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-<link rel="stylesheet" href="../styles.css">
-<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<script defer src="../app.js"></script>
+<title>This page moved</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/settings-reference/">
+<meta http-equiv="refresh" content="0; url=https://enaloo.com/apps/ai-bulk-chat-manager/docs/settings-reference/">
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
-<main id="main">
-<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Reference</p><h1>Settings reference</h1><p class="lead">Every setting, where to find it and its default value.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
-<div class="shell doc-layout has-toc">
-<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html">Selecting chats</a><a href="../guides/deleting-and-archiving.html">Deleting and archiving</a><a href="../guides/exporting.html">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html">The toolbar popup</a><a href="../guides/settings-reference.html" aria-current="page">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html">Troubleshooting and FAQ</a><a href="../guides/limits.html">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
-<article class="prose">
-<p>Settings live on the Options page. They save the moment you change them and apply to the popup, the panel and every open chat tab.</p>
-
-<h2 id="open-the-options-page">Open the Options page<a class="anchor" href="#open-the-options-page" aria-label="Link to this section">#</a></h2>
-<ul>
-  <li>Click the toolbar icon, then the sliders button (<strong>Settings</strong>) in the popup header.</li>
-  <li>Or open the panel&rsquo;s <strong>Panel settings</strong> box and click <strong>All settings</strong>.</li>
-  <li>Or use the <strong>Options</strong> link of the extension on your browser&rsquo;s extensions page.</li>
-</ul>
-<figure class="shot"><div class="frame"><img class="for-light" src="../assets/screenshots/options-light.png" alt="The Options page with the Appearance and Behavior sections: language, theme, accent color, fast mode, checkboxes as you scroll, extra confirmation and launcher button (light theme)" width="1040" height="940" loading="lazy" decoding="async"><img class="for-dark" src="../assets/screenshots/options-dark.png" alt="The Options page with the Appearance and Behavior sections: language, theme, accent color, fast mode, checkboxes as you scroll, extra confirmation and launcher button (dark theme)" width="1040" height="940" loading="lazy" decoding="async"></div><figcaption>The Options page. The left list jumps to each section.</figcaption></figure>
-
-<h2 id="appearance">Appearance<a class="anchor" href="#appearance" aria-label="Link to this section">#</a></h2>
-<div class="table-wrap" tabindex="0" role="region" aria-label="Table 1"><table><thead><tr><th scope="col">Setting</th><th scope="col">Choices</th><th scope="col">Default</th></tr></thead><tbody>
-<tr><td><strong>Language</strong></td><td><strong>Automatic (browser language)</strong> or one of 11 languages. The language of this extension&rsquo;s screens. See <a href="languages-and-appearance.html">Languages and appearance</a>.</td><td>Automatic</td></tr>
-<tr><td><strong>Theme</strong></td><td><strong>System</strong>, <strong>Light</strong>, <strong>Dark</strong></td><td>System</td></tr>
-<tr><td><strong>Accent color</strong></td><td><strong>Teal</strong>, <strong>Blue</strong>, <strong>Indigo</strong>, <strong>Graphite</strong></td><td>Teal</td></tr>
-</tbody></table></div>
-
-<h2 id="behavior">Behavior<a class="anchor" href="#behavior" aria-label="Link to this section">#</a></h2>
-<div class="table-wrap" tabindex="0" role="region" aria-label="Table 2"><table><thead><tr><th scope="col">Setting</th><th scope="col">What it does</th><th scope="col">Default</th></tr></thead><tbody>
-<tr><td><strong>Fast mode</strong></td><td>Deletes and archives through the site&rsquo;s own request, which is much faster and does not need its menus on screen. If a request fails, the extension falls back to clicking through the page&rsquo;s menus, one chat at a time. Turn it off to always use the menus. Has no effect on Gemini, which always uses its menus.</td><td>On</td></tr>
-<tr><td><strong>Add checkboxes as you scroll</strong></td><td>While you are selecting, chats that the site loads as you scroll get checkboxes automatically.</td><td>On</td></tr>
-<tr><td><strong>Extra confirmation above</strong></td><td>When you delete more chats than this number, you must also tick a box in the confirmation dialog. Accepts 1 to 500. A number outside that range is brought back into it.</td><td>20</td></tr>
-<tr><td><strong>Show a launcher button on chat pages</strong></td><td>A small button in the corner of ChatGPT, Claude, Gemini and Grok that opens the panel.</td><td>Off</td></tr>
-</tbody></table></div>
-<p>The two switches <strong>Fast mode</strong> and <strong>Add checkboxes as you scroll</strong> are also in the popup and in the panel&rsquo;s <strong>Panel settings</strong> box. They are the same settings.</p>
-
-<h3>The launcher button</h3>
-<p>With the launcher on, a small round button with the extension&rsquo;s logo sits in the corner of the supported chat pages. Click it to start selecting without using the toolbar. It shows when the panel is closed and hides while the panel is open. Its tooltip reads <strong>Open AI Bulk Chat Manager</strong>.</p>
-
-<h2 id="keyboard-shortcut">Keyboard shortcut<a class="anchor" href="#keyboard-shortcut" aria-label="Link to this section">#</a></h2>
-<p>Shows the current key for <strong>Open or close the panel</strong>, or <strong>Not set</strong>. The button <strong>Change shortcut</strong> opens your browser&rsquo;s own shortcut settings page. If your browser blocks that, the extension tells you where to go. The default is <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd>. See <a href="keyboard-and-shortcuts.html">Keyboard and shortcuts</a>.</p>
-
-<h2 id="privacy">Privacy<a class="anchor" href="#privacy" aria-label="Link to this section">#</a></h2>
-<p>This section lists the main privacy facts and has three buttons.</p>
-<dl>
-  <dt>Privacy policy</dt><dd>Opens the policy.</dd>
-  <dt>Copy diagnostics</dt><dd>Copies a short text for bug reports and shows <strong>Diagnostics copied. Paste them into a bug report.</strong> It holds the extension version, your browser name and its user-agent text, the interface language, your settings, and a note that it contains no chat titles or links. See <a href="reporting-a-problem.html">Reporting a problem</a>.</dd>
-  <dt>Reset settings</dt><dd>Asks <strong>Reset all settings to their defaults?</strong> After you confirm, every setting above returns to its default, including where you dragged the panel, and you see <strong>Settings were reset.</strong> It does not touch your chats or the monthly support reminder timer.</dd>
-</dl>
-
-<h2 id="about">About<a class="anchor" href="#about" aria-label="Link to this section">#</a></h2>
-<p>The About section has a short description, the independence notice and these buttons: <strong>Guide</strong> (this site), <strong>Source</strong> (GitHub), <strong>Report a problem</strong> (the issue forms), <strong>Rate</strong>, <strong>Support</strong> and <strong>Website</strong>. <strong>Website</strong> and the byline under the buttons link to the developer&rsquo;s website, <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a>. All of them open in a new tab only when you click them.</p>
-
-<h2 id="remembered-automatically">Remembered automatically<a class="anchor" href="#remembered-automatically" aria-label="Link to this section">#</a></h2>
-<p>Two more things are remembered without a setting you can see:</p>
-<ul>
-  <li>Where you last dragged the panel.</li>
-  <li>The timer for the <a href="popup-and-footer.html#the-monthly-support-note">monthly support note</a>, and whether you chose <strong>Don&rsquo;t show again</strong>.</li>
-</ul>
-<p>Settings are stored in your browser on this device, not in browser sync. They do not follow you to another computer. See <a href="privacy-and-permissions.html">Privacy and permissions</a>.</p>
-
-<div class="reading-footer"><a class="prev" href="../guides/popup-and-footer.html"><small>Previous</small>The toolbar popup</a><a class="next" href="../guides/languages-and-appearance.html"><small>Next</small>Languages and appearance</a></div>
-<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/settings-reference.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
-</article>
-<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#open-the-options-page">Open the Options page</a></li><li><a href="#appearance">Appearance</a></li><li><a href="#behavior">Behavior</a></li><li><a href="#keyboard-shortcut">Keyboard shortcut</a></li><li><a href="#privacy">Privacy</a></li><li><a href="#about">About</a></li><li><a href="#remembered-automatically">Remembered automatically</a></li></ol></nav>
-</div>
-</main>
-<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+<p>This page moved to <a href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/settings-reference/">https://enaloo.com/apps/ai-bulk-chat-manager/docs/settings-reference/</a>.</p>
 </body>
 </html>

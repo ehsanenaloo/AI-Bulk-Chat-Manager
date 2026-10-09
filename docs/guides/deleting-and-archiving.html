@@ -1,133 +1,14 @@
 <!doctype html>
-<html lang="en" data-root="../">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Deleting and archiving | AI Bulk Chat Manager user guide</title>
-<meta name="description" content="The confirmation dialog, fast mode and page menus, progress, Stop, results, Retry failed and Copy report.">
-<meta name="color-scheme" content="light dark">
-<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-<link rel="stylesheet" href="../styles.css">
-<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<script defer src="../app.js"></script>
+<title>This page moved</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/deleting-and-archiving/">
+<meta http-equiv="refresh" content="0; url=https://enaloo.com/apps/ai-bulk-chat-manager/docs/deleting-and-archiving/">
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
-<main id="main">
-<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Everyday use</p><h1>Deleting and archiving</h1><p class="lead">What happens between pressing Delete and seeing the result: the confirmation, how the work is done, how to stop it and what to do about failures.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
-<div class="shell doc-layout has-toc">
-<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html">Selecting chats</a><a href="../guides/deleting-and-archiving.html" aria-current="page">Deleting and archiving</a><a href="../guides/exporting.html">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html">The toolbar popup</a><a href="../guides/settings-reference.html">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html">Troubleshooting and FAQ</a><a href="../guides/limits.html">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
-<article class="prose">
-<aside class="callout danger"><span class="callout-title">Deleting cannot be undone</span><p>The extension asks the site to delete your chats. Once a site has deleted a chat, neither you nor this extension can bring it back. If you might want the titles and links later, <a href="exporting.html">export them first</a>. On ChatGPT, <strong>Archive</strong> is reversible.</p></aside>
-
-<h2 id="delete-or-archive">Delete or archive<a class="anchor" href="#delete-or-archive" aria-label="Link to this section">#</a></h2>
-<p>Both actions work on the chats you ticked. Press the button at the bottom of the panel.</p>
-<dl>
-  <dt>Delete</dt><dd>Available on ChatGPT, Claude, Gemini and Grok. With chats selected the button shows the count, for example <strong>Delete 5</strong>.</dd>
-  <dt>Archive</dt><dd>Available on ChatGPT only. The chats leave your chat list and you can restore them from ChatGPT&rsquo;s archive. The other three sites do not offer archiving, so the <strong>Archive</strong> button is hidden there.</dd>
-</dl>
-<p>Both buttons are disabled until you tick at least one chat.</p>
-
-<h2 id="the-confirmation-dialog">The confirmation dialog<a class="anchor" href="#the-confirmation-dialog" aria-label="Link to this section">#</a></h2>
-<p>Nothing happens until you confirm. A dialog opens over the page.</p>
-<figure class="shot"><div class="frame"><img class="for-light" src="../assets/screenshots/confirm-light.png" alt="The confirmation dialog asking Delete 5 chats, with the list of chats and the Cancel and Delete 5 chats buttons (light theme)" width="1280" height="800" loading="lazy" decoding="async"><img class="for-dark" src="../assets/screenshots/confirm-dark.png" alt="The confirmation dialog asking Delete 5 chats, with the list of chats and the Cancel and Delete 5 chats buttons (dark theme)" width="1280" height="800" loading="lazy" decoding="async"></div><figcaption>The dialog names the site, lists each chat and puts focus on Cancel.</figcaption></figure>
-<ul>
-  <li>The title asks <strong>Delete 5 chats?</strong> (or <strong>Archive 5 chats?</strong>). The text under it says where the chats will be removed from. For a delete it adds <strong>This can&rsquo;t be undone.</strong></li>
-  <li>The list shows the title of every selected chat. With more than eight chats a search box appears, labelled <strong>Search the selected chats</strong>, to find a title in the list.</li>
-  <li><strong>Cancel</strong> has the focus when the dialog opens, not the destructive button. Pressing <kbd>Enter</kbd> at once cancels.</li>
-  <li><kbd>Esc</kbd> closes the dialog. So does a click outside it. <kbd>Tab</kbd> stays inside the dialog.</li>
-</ul>
-
-<h3>The extra tick for big deletes</h3>
-<p>When you delete more chats than a threshold, the dialog also shows <strong>I understand this can&rsquo;t be undone.</strong> The red button stays disabled until you tick it. The default threshold is 20, so deleting 21 or more needs the tick. Change it in <a href="settings-reference.html#behavior">Options, Behavior</a>, in <strong>Extra confirmation above</strong> (1 to 500). Archiving never needs the tick.</p>
-
-<h2 id="how-the-work-is-done">How the work is done<a class="anchor" href="#how-the-work-is-done" aria-label="Link to this section">#</a></h2>
-<p>There are two routes. The extension picks one for each chat.</p>
-
-<h3>Fast mode (the default)</h3>
-<p>On ChatGPT, Claude and Grok, fast mode asks the site directly to delete or archive each chat. It sends the same kind of request the site&rsquo;s own buttons send, from the page you are on, using the session you are already signed in with. A few chats are handled at a time with short pauses between requests, and the chat disappears from the sidebar when it is done. This is much faster and does not need the site&rsquo;s menus on screen.</p>
-<p>If the site asks the extension to slow down, it waits and tries that chat once more.</p>
-
-<h3>Page menus (the fallback)</h3>
-<p>The extension clicks through the site&rsquo;s own menus like a person: it opens the chat&rsquo;s three-dot menu, chooses <strong>Delete</strong> (or <strong>Archive</strong>) and confirms in the site&rsquo;s dialog. It does this one chat at a time, so it is slower.</p>
-<p>It is used when:</p>
-<ul>
-  <li>you turned <strong>Fast mode</strong> off;</li>
-  <li>the site is Gemini, which has no request the extension can use, so Gemini always uses its menus (the <strong>Fast mode</strong> switch is disabled there);</li>
-  <li>a fast request failed for a chat: the site refused it, the network failed, the session was rejected, or the site changed the way the request works.</li>
-</ul>
-<p>Only the chats that failed fast go through the menus. The rest are not repeated.</p>
-
-<h3>How it avoids clicking the wrong thing</h3>
-<ul>
-  <li>It looks for the three-dot button inside that chat&rsquo;s own row, never elsewhere in the sidebar.</li>
-  <li>It picks a menu item by its label, never by its position. It knows the words for Delete and Archive in more than two dozen interface languages. An item such as <strong>Remove from project</strong> is never chosen for Delete.</li>
-  <li>The confirm button in the site&rsquo;s dialog must also match. If the dialog only offers <strong>Cancel</strong> or unknown buttons, it clicks nothing and reports a failure.</li>
-  <li>After a page-menu delete it checks that the chat really left the list. If it is still there, the chat counts as failed.</li>
-  <li>Only real clicks and keys from you drive the panel. A script on the site cannot press <strong>Delete</strong> for you.</li>
-</ul>
-
-<h2 id="progress-and-stop">Progress and Stop<a class="anchor" href="#progress-and-stop" aria-label="Link to this section">#</a></h2>
-<figure class="shot small"><div class="frame"><img class="for-light" src="../assets/screenshots/progress-light.png" alt="The panel showing Deleting chats, 4 of 6, a progress bar, the title of the current chat and a Stop button (light theme)" width="388" height="283" loading="lazy" decoding="async"><img class="for-dark" src="../assets/screenshots/progress-dark.png" alt="The panel showing Deleting chats, 4 of 6, a progress bar, the title of the current chat and a Stop button (dark theme)" width="388" height="283" loading="lazy" decoding="async"></div><figcaption>Progress while a run is under way.</figcaption></figure>
-<p>While it works, the panel shows <strong>Deleting chats&hellip;</strong> (or <strong>Archiving chats&hellip;</strong>), a count such as <strong>4 of 6</strong>, a progress bar, the title of the chat in progress and, if any failed, a line like <strong>1 failed</strong>.</p>
-<p>Click <strong>Stop</strong> to end the run early. The request already in flight finishes. No more are started. The result says <strong>Stopped after 3 of 6</strong> and <strong>Chats you didn&rsquo;t get to are still selected.</strong></p>
-<p>While a run is going:</p>
-<ul>
-  <li>Keep the tab open, and keep it in front. The work happens inside the page.</li>
-  <li>Do not change the chat list yourself. Unticking a chat skips it. It is then listed as failed with the reason <strong>You unticked it during the run.</strong></li>
-  <li>You cannot close the panel until the run ends. Click <strong>Stop</strong> first.</li>
-</ul>
-
-<h2 id="the-result">The result<a class="anchor" href="#the-result" aria-label="Link to this section">#</a></h2>
-<figure class="shot small"><div class="frame"><img class="for-light" src="../assets/screenshots/result-light.png" alt="The result panel reading 5 of 6 done, 1 failed, with the failed chat and its reason and the Copy report, Retry failed and Done buttons (light theme)" width="388" height="300" loading="lazy" decoding="async"><img class="for-dark" src="../assets/screenshots/result-dark.png" alt="The result panel reading 5 of 6 done, 1 failed, with the failed chat and its reason and the Copy report, Retry failed and Done buttons (dark theme)" width="388" height="300" loading="lazy" decoding="async"></div><figcaption>When a chat fails, it stays selected and its reason is listed.</figcaption></figure>
-<p>The summary title is one of these:</p>
-<div class="table-wrap" tabindex="0" role="region" aria-label="Table 1"><table><thead><tr><th scope="col">Title</th><th scope="col">Meaning</th></tr></thead><tbody>
-<tr><td><strong>5 chats deleted</strong> or <strong>5 chats archived</strong></td><td>Everything worked. The chats are gone from the list and deselected.</td></tr>
-<tr><td><strong>5 of 6 done, 1 failed</strong></td><td>Some worked. The failed ones are listed with a reason and stay selected.</td></tr>
-<tr><td><strong>Nothing was changed. 3 chats failed.</strong></td><td>Every chat failed. Nothing was deleted or archived.</td></tr>
-<tr><td><strong>Stopped after 3 of 6</strong></td><td>You pressed <strong>Stop</strong>. The rest are still selected.</td></tr>
-</tbody></table></div>
-
-<h3>Retry failed and Copy report</h3>
-<ul>
-  <li><strong>Retry failed</strong> goes back to selecting and opens the confirmation again for the chats that are still selected, which includes the failed ones. Confirm to try again.</li>
-  <li><strong>Copy report</strong> copies one line per failed chat (its title and the reason) to your clipboard and shows <strong>Report copied</strong>. The report contains chat titles, so read it before you paste it somewhere public.</li>
-  <li><strong>Done</strong> goes back to selecting.</li>
-</ul>
-
-<h3>Failure reasons and what to try</h3>
-<div class="table-wrap" tabindex="0" role="region" aria-label="Table 2"><table><thead><tr><th scope="col">Reason shown</th><th scope="col">What it means and what to try</th></tr></thead><tbody>
-<tr><td>The chat is no longer in the list.</td><td>The site removed or redrew the row. Reload the page, start selecting again and retry.</td></tr>
-<tr><td>The chat is hidden in the sidebar.</td><td>The row was collapsed or filtered out. Show it, then retry.</td></tr>
-<tr><td>Couldn&rsquo;t read the chat&rsquo;s id.</td><td>The site changed its links. Update the extension and <a href="reporting-a-problem.html">report it</a> if it persists.</td></tr>
-<tr><td>You unticked it during the run.</td><td>Not an error. You removed it from the selection.</td></tr>
-<tr><td>The page changed while working.</td><td>The site redrew the list during the run. Retry.</td></tr>
-<tr><td>The site asked to slow down (rate limit).</td><td>Wait a minute, then retry a smaller batch.</td></tr>
-<tr><td>The site rejected the session. Reload the page and sign in again.</td><td>Your sign-in expired. Reload, sign in, retry.</td></tr>
-<tr><td>Network error.</td><td>Check your connection and retry.</td></tr>
-<tr><td>The site refused the request (404).</td><td>The site refused it. The number is the HTTP code. The chat may already be gone, or the site changed. Try turning <strong>Fast mode</strong> off.</td></tr>
-<tr><td>Couldn&rsquo;t find your Claude organization.</td><td>Reload claude.ai, make sure you are signed in, retry.</td></tr>
-<tr><td>This site can&rsquo;t archive chats.</td><td>Archive exists on ChatGPT only. Use <strong>Delete</strong> or <strong>Export</strong>.</td></tr>
-<tr><td>Couldn&rsquo;t find the chat&rsquo;s menu button.<br>The chat&rsquo;s menu didn&rsquo;t open.<br>Couldn&rsquo;t find the menu item.<br>Couldn&rsquo;t find the confirmation button.<br>The confirmation didn&rsquo;t complete.</td><td>The page-menu route could not follow the site&rsquo;s page. The site may have changed. Retry once. If it keeps failing, see <a href="limits.html">Limits</a> and <a href="reporting-a-problem.html">report it</a>.</td></tr>
-<tr><td>The chat was still in the list after deleting.</td><td>The site did not remove the chat. Reload the page to see the real state, then retry.</td></tr>
-<tr><td>The action didn&rsquo;t complete.<br>Something went wrong (code).</td><td>Retry. If it repeats, report it with the text shown.</td></tr>
-</tbody></table></div>
-
-<h2 id="before-you-delete-a-lot">Before you delete a lot<a class="anchor" href="#before-you-delete-a-lot" aria-label="Link to this section">#</a></h2>
-<ol>
-  <li>Click <strong>Load all older chats</strong> if you want to reach your whole history.</li>
-  <li>Tick a small batch first, for example 10 chats, to see how the site behaves.</li>
-  <li><strong>Export</strong> the list if you may need the titles later.</li>
-  <li>Read the list in the confirmation dialog, not just the count.</li>
-</ol>
-
-<div class="reading-footer"><a class="prev" href="../guides/selecting-chats.html"><small>Previous</small>Selecting chats</a><a class="next" href="../guides/exporting.html"><small>Next</small>Exporting a list of chats</a></div>
-<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/deleting-and-archiving.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
-</article>
-<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#delete-or-archive">Delete or archive</a></li><li><a href="#the-confirmation-dialog">The confirmation dialog</a></li><li><a href="#how-the-work-is-done">How the work is done</a></li><li><a href="#progress-and-stop">Progress and Stop</a></li><li><a href="#the-result">The result</a></li><li><a href="#before-you-delete-a-lot">Before you delete a lot</a></li></ol></nav>
-</div>
-</main>
-<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+<p>This page moved to <a href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/deleting-and-archiving/">https://enaloo.com/apps/ai-bulk-chat-manager/docs/deleting-and-archiving/</a>.</p>
 </body>
 </html>

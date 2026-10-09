@@ -1,89 +1,14 @@
 <!doctype html>
-<html lang="en" data-root="../">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Limits and known limitations | AI Bulk Chat Manager user guide</title>
-<meta name="description" content="An honest list of what the extension cannot do: site changes, archive on ChatGPT only, deletes that cannot be undone, and more.">
-<meta name="color-scheme" content="light dark">
-<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-<link rel="stylesheet" href="../styles.css">
-<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<script defer src="../app.js"></script>
+<title>This page moved</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/limits/">
+<meta http-equiv="refresh" content="0; url=https://enaloo.com/apps/ai-bulk-chat-manager/docs/limits/">
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
-<main id="main">
-<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Trust and support</p><h1>Limits and known limitations</h1><p class="lead">What the extension cannot do, and what can go wrong. Read this before you delete a lot of chats.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
-<div class="shell doc-layout has-toc">
-<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html">Selecting chats</a><a href="../guides/deleting-and-archiving.html">Deleting and archiving</a><a href="../guides/exporting.html">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html">The toolbar popup</a><a href="../guides/settings-reference.html">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html">Troubleshooting and FAQ</a><a href="../guides/limits.html" aria-current="page">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
-<article class="prose">
-<p>This page is the honest list. It is better to know these before a big clean-up than after.</p>
-
-<h2 id="deleting-cannot-be-undone">Deleting cannot be undone<a class="anchor" href="#deleting-cannot-be-undone" aria-label="Link to this section">#</a></h2>
-<p>When the extension deletes a chat, the site deletes it. There is no recycle bin and no undo, in the extension or, in general, on the sites. Archived ChatGPT chats can be restored from ChatGPT. Deleted chats generally cannot. The confirmation dialog, the extra tick for big deletes and <strong>Export</strong> exist for this reason. Use them.</p>
-
-<h2 id="the-sites-change-and-then-things-can-break">The sites change, and then things can break<a class="anchor" href="#the-sites-change-and-then-things-can-break" aria-label="Link to this section">#</a></h2>
-<p>This is an independent project. The four sites do not work with it and do not promise to keep their pages the same. It reads each site&rsquo;s page the way you see it, and it uses the same internal requests that the site&rsquo;s own buttons use. The sites do not document those, and they change them without notice.</p>
-<p>When a site redesigns its sidebar or its menus, one of these can stop working until the extension is updated:</p>
-<ul>
-  <li>checkboxes appear on the wrong things, or not at all;</li>
-  <li><strong>Select all</strong> or <strong>Load all older chats</strong> finds no chats or too few;</li>
-  <li><strong>Delete</strong> or <strong>Archive</strong> fails, with a reason on the result screen;</li>
-  <li>the page-menu route cannot find a button or a menu item.</li>
-</ul>
-<p>The extension is built to fail safely. If it cannot find the right button, it stops and reports a failure rather than guess. It counts a delete as done only after the chat is really gone from the list. Failed chats stay selected so nothing is lost track of.</p>
-<aside class="callout warn"><span class="callout-title">What was checked for version 9.0.0</span><p>The sidebar of Claude was checked against the real site on 2026-10-08. The pages of ChatGPT, Gemini and Grok could not be checked against the real sites for this release. For those three, the code was tested against test copies of the sites, and the approach is carried over from version 8, which real people used. So there is a higher chance that one of them has changed since. If something fails, update the extension, try turning <strong>Fast mode</strong> off, and <a href="reporting-a-problem.html">report it</a>. Reports are the fastest way to get a site fixed.</p></aside>
-
-<h2 id="where-each-action-works">Where each action works<a class="anchor" href="#where-each-action-works" aria-label="Link to this section">#</a></h2>
-<div class="table-wrap" tabindex="0" role="region" aria-label="Table 1"><table><thead><tr><th scope="col">Site</th><th scope="col">Delete</th><th scope="col">Archive</th><th scope="col">Export</th><th scope="col">Fast mode</th></tr></thead><tbody>
-<tr><td>ChatGPT</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-<tr><td>Claude</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td></tr>
-<tr><td>Gemini</td><td>Yes, through its menus</td><td>No</td><td>Yes</td><td>No (always menus)</td></tr>
-<tr><td>Grok</td><td>Yes</td><td>No</td><td>Yes</td><td>Yes</td></tr>
-</tbody></table></div>
-
-<h2 id="archive-is-for-chatgpt-only">Archive is for ChatGPT only<a class="anchor" href="#archive-is-for-chatgpt-only" aria-label="Link to this section">#</a></h2>
-<p>The other sites do not offer archiving, so the extension does not either. The button is hidden there.</p>
-
-<h2 id="fast-mode-uses-undocumented-requests">Fast mode uses undocumented requests<a class="anchor" href="#fast-mode-uses-undocumented-requests" aria-label="Link to this section">#</a></h2>
-<p>Fast mode depends on the sites&rsquo; internal requests. They can change or be refused. The extension then falls back to the page menus for the chats that failed. The page-menu route is slower, and depends on the site&rsquo;s menus. If both fail, the chat is reported as failed.</p>
-
-<h2 id="very-long-histories-need-loading-first">Very long histories need loading first<a class="anchor" href="#very-long-histories-need-loading-first" aria-label="Link to this section">#</a></h2>
-<p>The sites load chats a page at a time. The extension can only select what is in the page. For a long history, click <strong>Load all older chats</strong> before <strong>Select all</strong> or <strong>Oldest</strong>. Loading takes longer the more chats you have, and you can stop it at any time.</p>
-
-<h2 id="the-chat-list-must-be-visible">The chat list must be visible<a class="anchor" href="#the-chat-list-must-be-visible" aria-label="Link to this section">#</a></h2>
-<p>If the sidebar is closed, collapsed or hidden by a small window, the extension sees no chats and the panel says so. Open the sidebar. Chats in collapsed parts of the list are not selected by <strong>Select all</strong>.</p>
-
-<h2 id="claudes-recents-page-has-its-own-selection">Claude&rsquo;s Recents page has its own selection<a class="anchor" href="#claudes-recents-page-has-its-own-selection" aria-label="Link to this section">#</a></h2>
-<p>Claude has a Recents page with checkboxes and a delete button built into the site. They are Claude&rsquo;s own tools. This extension works on the chat list in the sidebar.</p>
-
-<h2 id="tabs-open-before-the-install">Tabs open before the install<a class="anchor" href="#tabs-open-before-the-install" aria-label="Link to this section">#</a></h2>
-<p>A chat tab that was open when you installed or updated the extension has no extension in it yet. Click the toolbar icon (or use the shortcut) and the extension attaches itself. If it cannot, reload the tab. See <a href="installation.html#first-run-tabs-that-were-already-open">Installation</a>.</p>
-
-<h2 id="firefox">Firefox<a class="anchor" href="#firefox" aria-label="Link to this section">#</a></h2>
-<p>Firefox needs version 140 or newer, on desktop. Firefox asks for access to the five chat sites when you add the extension, and the extension cannot work without it. A temporary add-on is removed when Firefox closes.</p>
-
-<h2 id="other-limits">Other limits<a class="anchor" href="#other-limits" aria-label="Link to this section">#</a></h2>
-<ul>
-  <li>It works only on <code>chatgpt.com</code>, <code>chat.openai.com</code>, <code>claude.ai</code>, <code>gemini.google.com</code> and <code>grok.com</code>.</li>
-  <li>It is built for desktop browsers.</li>
-  <li>The selection exists only in the open page. Reloading the tab loses it.</li>
-  <li>Export is a list of titles and links, not a backup of conversations.</li>
-  <li>It handles chats in the sidebar list. It does not manage projects, folders, shared links or other site features.</li>
-  <li>While a run is going, keep the tab open. Closing it ends the run, and the chats not yet handled stay as they were.</li>
-</ul>
-
-<h2 id="independence">Independence<a class="anchor" href="#independence" aria-label="Link to this section">#</a></h2>
-<p>AI Bulk Chat Manager is an independent project. It is not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p>
-
-<div class="reading-footer"><a class="prev" href="../guides/troubleshooting-faq.html"><small>Previous</small>Troubleshooting and FAQ</a><a class="next" href="../guides/reporting-a-problem.html"><small>Next</small>Reporting a problem</a></div>
-<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/limits.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
-</article>
-<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#deleting-cannot-be-undone">Deleting cannot be undone</a></li><li><a href="#the-sites-change-and-then-things-can-break">The sites change, and then things can break</a></li><li><a href="#where-each-action-works">Where each action works</a></li><li><a href="#archive-is-for-chatgpt-only">Archive is for ChatGPT only</a></li><li><a href="#fast-mode-uses-undocumented-requests">Fast mode uses undocumented requests</a></li><li><a href="#very-long-histories-need-loading-first">Very long histories need loading first</a></li><li><a href="#the-chat-list-must-be-visible">The chat list must be visible</a></li><li><a href="#claudes-recents-page-has-its-own-selection">Claude's Recents page has its own selection</a></li><li><a href="#tabs-open-before-the-install">Tabs open before the install</a></li><li><a href="#firefox">Firefox</a></li><li><a href="#other-limits">Other limits</a></li><li><a href="#independence">Independence</a></li></ol></nav>
-</div>
-</main>
-<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+<p>This page moved to <a href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/limits/">https://enaloo.com/apps/ai-bulk-chat-manager/docs/limits/</a>.</p>
 </body>
 </html>

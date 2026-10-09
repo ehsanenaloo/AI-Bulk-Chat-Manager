@@ -1,99 +1,14 @@
 <!doctype html>
-<html lang="en" data-root="../">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Selecting chats | AI Bulk Chat Manager user guide</title>
-<meta name="description" content="Start selecting, tick chats with clicks, Shift-click ranges, Select all, Invert, title filter, Oldest N, and Load all older chats.">
-<meta name="color-scheme" content="light dark">
-<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-<link rel="stylesheet" href="../styles.css">
-<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<script defer src="../app.js"></script>
+<title>This page moved</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/selecting-chats/">
+<meta http-equiv="refresh" content="0; url=https://enaloo.com/apps/ai-bulk-chat-manager/docs/selecting-chats/">
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
-<main id="main">
-<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Everyday use</p><h1>Selecting chats</h1><p class="lead">Every way to pick chats: clicking, ranges, Select all, a title filter, the oldest N, and loading your whole history first.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
-<div class="shell doc-layout has-toc">
-<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html" aria-current="page">Selecting chats</a><a href="../guides/deleting-and-archiving.html">Deleting and archiving</a><a href="../guides/exporting.html">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html">The toolbar popup</a><a href="../guides/settings-reference.html">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html">Troubleshooting and FAQ</a><a href="../guides/limits.html">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
-<article class="prose">
-<p>Selecting happens in two places: the checkboxes in the site&rsquo;s sidebar, and the panel. This page covers both.</p>
-
-<h2 id="start-and-finish-selecting">Start and finish selecting<a class="anchor" href="#start-and-finish-selecting" aria-label="Link to this section">#</a></h2>
-<p>Selecting is off until you turn it on. Nothing changes on the site before that. You have three ways to start:</p>
-<ul>
-  <li>Click the toolbar icon, then <strong>Start selecting chats</strong>.</li>
-  <li>Press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd> on a supported site.</li>
-  <li>Click the optional launcher button, if you turned it on in the <a href="settings-reference.html#behavior">settings</a>.</li>
-</ul>
-<p>When selecting starts, each chat in the sidebar gets a checkbox and the panel opens. To stop, click <strong>X</strong> in the panel (<strong>Finish and close</strong>), press the shortcut again, or click <strong>Finish selecting</strong> in the popup. Finishing removes every checkbox and forgets the selection.</p>
-<aside class="callout"><span class="callout-title">Keep the chat list visible</span><p>The extension only sees chats that the page shows. If the sidebar is closed, the panel says <strong>No chats found yet. Open the chat list in the sidebar or scroll it, and they will appear here.</strong> Open the sidebar and the chats appear.</p></aside>
-
-<h2 id="the-panel">The panel<a class="anchor" href="#the-panel" aria-label="Link to this section">#</a></h2>
-<p>The panel floats over the page. It shows the site name, a big count of <strong>selected</strong> chats, and a line such as <strong>of 20 chats shown</strong>. That second number counts the chats that are currently in the page and not hidden.</p>
-<ul>
-  <li><strong>Drag</strong> the panel by its title bar. It remembers where you left it.</li>
-  <li><strong>Minimize</strong> shrinks it to the title bar and the count. The button then changes to <strong>Expand</strong>.</li>
-  <li><strong>Panel settings</strong> (the sliders icon) opens a small box with the <strong>Add checkboxes as you scroll</strong> and <strong>Fast mode</strong> switches and an <strong>All settings</strong> link to the Options page.</li>
-  <li><strong>Finish and close</strong> (the X) ends selecting.</li>
-</ul>
-
-<h2 id="tick-chats-with-clicks">Tick chats with clicks<a class="anchor" href="#tick-chats-with-clicks" aria-label="Link to this section">#</a></h2>
-<p>Click the checkbox of a chat, or click anywhere on its row. Both tick it.</p>
-<aside class="callout"><span class="callout-title">Rows do not open while you select</span><p>While selecting, a click on a chat row ticks it instead of opening the chat. This is on purpose, so you cannot open a chat by accident. The site&rsquo;s own buttons inside the row, such as its three-dot menu, still work. Click <strong>Finish selecting</strong> to get normal clicking back.</p></aside>
-<p>A ticked chat is highlighted. The selection survives when the site redraws its list.</p>
-
-<h2 id="select-a-range-with-shift-click">Select a range with Shift-click<a class="anchor" href="#select-a-range-with-shift-click" aria-label="Link to this section">#</a></h2>
-<ol>
-  <li>Tick one chat.</li>
-  <li>Hold <kbd>Shift</kbd> and click another chat, either its checkbox or its row.</li>
-</ol>
-<p>Every chat shown between the two is ticked. Shift-click only ticks. It does not untick a range.</p>
-
-<h2 id="select-all-clear-and-invert">Select all, Clear and Invert<a class="anchor" href="#select-all-clear-and-invert" aria-label="Link to this section">#</a></h2>
-<dl>
-  <dt>Select all</dt><dd>Ticks every chat that is shown.</dd>
-  <dt>Clear</dt><dd>Unticks everything.</dd>
-  <dt>Invert</dt><dd>Ticks the chats that are not ticked and unticks the ones that are, among the chats shown.</dd>
-</dl>
-<p><strong>Select all</strong> and <strong>Invert</strong> work on the chats currently in the page. A long history is not all in the page. See <a href="#load-all-older-chats">Load all older chats</a> below.</p>
-
-<h2 id="select-by-title-or-position">Select by title or position<a class="anchor" href="#select-by-title-or-position" aria-label="Link to this section">#</a></h2>
-<p>Click <strong>Select by title or position</strong> to open two extra tools.</p>
-<h3>By title</h3>
-<p>Type part of a title in <strong>Part of a chat title</strong>, then click <strong>Select</strong> (or press <kbd>Enter</kbd>). Every shown chat whose title contains that text is ticked. Capital letters do not matter. The text is also compared with the chat&rsquo;s link. Click <strong>Unselect</strong> to untick the matching chats instead. A message such as <strong>3 chats matched</strong> tells you how many were found.</p>
-<h3>By position: Oldest</h3>
-<p>Type a number in the <strong>Oldest</strong> box (1 to 500, default 10), then click <strong>Select</strong> or <strong>Unselect</strong>. The extension takes the last N chats in the list. The sites list newest chats first, so those are the oldest ones.</p>
-<aside class="callout warn"><span class="callout-title">Load first, then pick the oldest</span><p><strong>Oldest</strong> counts from the bottom of the chats that are in the page right now. If your history is not fully loaded, the bottom of the page is not your oldest chat. Click <strong>Load all older chats</strong> first.</p></aside>
-
-<h2 id="load-all-older-chats">Load all older chats<a class="anchor" href="#load-all-older-chats" aria-label="Link to this section">#</a></h2>
-<p>The sites load a chat list in pages as you scroll. Most of a long history is not in the page until you scroll down to it. <strong>Load all older chats</strong> does the scrolling for you.</p>
-<ol>
-  <li>Click <strong>Load all older chats</strong> in the panel.</li>
-  <li>The button shows progress, for example <strong>Loading chats&hellip; 140 (click to stop)</strong>. The sidebar scrolls to the bottom again and again until nothing new arrives.</li>
-  <li>When it ends, a message such as <strong>320 chats in the list</strong> appears. The sidebar goes back to where it was, and every loaded chat has a checkbox.</li>
-</ol>
-<p>Click the button again at any time to stop. It scrolls only the chat list, never a conversation. The button is disabled until at least one chat is shown.</p>
-
-<h2 id="checkboxes-while-you-scroll">Checkboxes while you scroll<a class="anchor" href="#checkboxes-while-you-scroll" aria-label="Link to this section">#</a></h2>
-<p>With <strong>Add checkboxes as you scroll</strong> on (the default), chats that the site loads while you scroll get checkboxes automatically. The extension also notices when the site replaces the whole sidebar. Turn the switch off in the panel settings, the popup or the Options page if you prefer to add checkboxes only when you start.</p>
-
-<h2 id="selection-tips">Selection tips<a class="anchor" href="#selection-tips" aria-label="Link to this section">#</a></h2>
-<ul>
-  <li>The count in the panel is the truth. Look at it before you press <strong>Delete</strong>.</li>
-  <li>Chats inside collapsed or hidden parts of the sidebar are not &ldquo;shown&rdquo;. <strong>Select all</strong> skips them.</li>
-  <li>Only real clicks count. Clicks that a script on the site sends are ignored, so a page cannot build a selection for you.</li>
-  <li>Selection lives in the page. Reloading the tab loses it.</li>
-</ul>
-
-<div class="reading-footer"><a class="prev" href="../guides/installation.html"><small>Previous</small>Installation</a><a class="next" href="../guides/deleting-and-archiving.html"><small>Next</small>Deleting and archiving</a></div>
-<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/selecting-chats.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
-</article>
-<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#start-and-finish-selecting">Start and finish selecting</a></li><li><a href="#the-panel">The panel</a></li><li><a href="#tick-chats-with-clicks">Tick chats with clicks</a></li><li><a href="#select-a-range-with-shift-click">Select a range with Shift-click</a></li><li><a href="#select-all-clear-and-invert">Select all, Clear and Invert</a></li><li><a href="#select-by-title-or-position">Select by title or position</a></li><li><a href="#load-all-older-chats">Load all older chats</a></li><li><a href="#checkboxes-while-you-scroll">Checkboxes while you scroll</a></li><li><a href="#selection-tips">Selection tips</a></li></ol></nav>
-</div>
-</main>
-<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+<p>This page moved to <a href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/selecting-chats/">https://enaloo.com/apps/ai-bulk-chat-manager/docs/selecting-chats/</a>.</p>
 </body>
 </html>
