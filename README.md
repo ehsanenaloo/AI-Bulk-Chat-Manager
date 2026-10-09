@@ -12,7 +12,7 @@ A free, open-source browser extension for ChatGPT, Claude, Gemini and Grok.<br>
 It runs on your device only. No account, no tracking, no server.
 
 [![Get it for Chrome](https://img.shields.io/badge/Chrome%20Web%20Store-Add%20to%20Chrome-4285F4?logo=googlechrome&logoColor=white&style=for-the-badge)](https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc)
-[![User guide](https://img.shields.io/badge/User%20guide-Read%20online-0f766e?logo=readthedocs&logoColor=white&style=for-the-badge)](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/)
+[![User guide](https://img.shields.io/badge/User%20guide-Read%20online-0f766e?logo=readthedocs&logoColor=white&style=for-the-badge)](https://enaloo.com/apps/ai-bulk-chat-manager/)
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/enaloo)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -76,7 +76,7 @@ The first time, open a chat tab that was already open before you installed and c
 2. Tick chats in the sidebar. Click a row, or use **Select all**, a title filter, the oldest N, or Shift-click a range.
 3. Press **Delete**, check the list, confirm. Or **Archive**, or **Export** a file first.
 
-The [user guide](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/) walks through every screen, and the options page holds language, theme, fast mode and the confirmation threshold.
+The [user guide](https://enaloo.com/apps/ai-bulk-chat-manager/) walks through every screen, and the options page holds language, theme, fast mode and the confirmation threshold.
 
 ## Privacy and permissions
 
@@ -111,7 +111,7 @@ Deleting is permanent, so the code is strict about it. The page-menu route choos
 
 | | |
 | --- | --- |
-| [User guide](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/) | Every feature, settings, privacy, troubleshooting |
+| [User guide](https://enaloo.com/apps/ai-bulk-chat-manager/) | Every feature, settings, privacy, troubleshooting |
 | [Privacy policy](docs/PRIVACY.md) | What is stored and what is not |
 | [Changelog](CHANGELOG.md) | What changed in each release |
 | [Contributing](.github/CONTRIBUTING.md) | Setup, tests, translations, adding a site |

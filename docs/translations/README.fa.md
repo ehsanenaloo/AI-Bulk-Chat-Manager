@@ -14,7 +14,7 @@
 فقط روی دستگاه خودتان اجرا می‌شود؛ بدون حساب کاربری، بدون ردیابی، بدون سرور.
 
 [![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Add%20to%20Chrome-4285F4?logo=googlechrome&logoColor=white&style=for-the-badge)](https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc)
-[![راهنما](https://img.shields.io/badge/User%20guide-Read%20online-0f766e?logo=readthedocs&logoColor=white&style=for-the-badge)](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/)
+[![راهنما](https://img.shields.io/badge/User%20guide-Read%20online-0f766e?logo=readthedocs&logoColor=white&style=for-the-badge)](https://enaloo.com/apps/ai-bulk-chat-manager/)
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/enaloo)
 
 </div>
