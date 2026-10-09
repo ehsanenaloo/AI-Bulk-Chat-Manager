@@ -53,7 +53,7 @@ Rules for the text:
 
 - Name buttons and messages exactly as the extension shows them, in **bold**. The English labels are in `extension/src/i18n/locales/en.json`.
 - Write for people who are not developers: short sentences, steps that start with a verb, no marketing words, no emoji.
-- Say what is not known. If a statement cannot be traced to the code or to `technical-docs/`, do not publish it.
+- Say what is not known. If a statement cannot be traced to the code, do not publish it.
 - Do not use logos or styling of ChatGPT, Claude, Gemini or Grok. Mention them as plain text and keep the independence notice in the footer.
 
 ## Keep `privacy.html` in sync
