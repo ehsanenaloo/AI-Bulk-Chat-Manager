@@ -1,102 +1,14 @@
 <!doctype html>
-<html lang="en" data-root="../">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Privacy and permissions | AI Bulk Chat Manager user guide</title>
-<meta name="description" content="What the extension reads, stores and sends (nothing leaves your device), and why it needs each permission.">
-<meta name="color-scheme" content="light dark">
-<link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-<link rel="stylesheet" href="../styles.css">
-<script>try{var t=localStorage.getItem("abcm-docs-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
-<script defer src="../app.js"></script>
+<title>This page moved</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/privacy-and-permissions/">
+<meta http-equiv="refresh" content="0; url=https://enaloo.com/apps/ai-bulk-chat-manager/docs/privacy-and-permissions/">
 </head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="site-header"><div class="shell header-inner"><a class="brand" href="../index.html"><img src="../assets/logo.svg" width="34" height="34" alt=""><span>AI Bulk Chat Manager<small>User guide</small></span></a><nav class="top-nav" aria-label="Primary"><a href="../index.html">Overview</a><a href="../guides/quick-start.html">Quick start</a><a href="../guides/index.html">All guides</a><a href="../guides/troubleshooting-faq.html">Help</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">GitHub &#8599;</a></nav><div class="header-tools"><span data-search-host></span><button type="button" class="icon-button" data-theme-toggle hidden>Theme</button></div></div></header>
-<main id="main">
-<div class="shell page-intro"><p class="breadcrumbs"><a href="../index.html">Home</a> / <a href="../guides/index.html">Guides</a> / Trust and support</p><h1>Privacy and permissions</h1><p class="lead">In plain words: what the extension can see, what it keeps, what it sends and why it asks for each permission.</p><p class="meta-line">Guide for version 9.0.0. Last updated 2026-10-08.</p></div>
-<div class="shell doc-layout has-toc">
-<aside class="sidebar"><details open><summary>Browse the guides</summary><nav aria-label="Guides"><a href="../guides/index.html">All guides</a><p>Get started</p><a href="../guides/quick-start.html">Quick start</a><a href="../guides/installation.html">Installation</a><p>Everyday use</p><a href="../guides/selecting-chats.html">Selecting chats</a><a href="../guides/deleting-and-archiving.html">Deleting and archiving</a><a href="../guides/exporting.html">Exporting a list of chats</a><p>Reference</p><a href="../guides/popup-and-footer.html">The toolbar popup</a><a href="../guides/settings-reference.html">Settings reference</a><a href="../guides/languages-and-appearance.html">Languages and appearance</a><a href="../guides/keyboard-and-shortcuts.html">Keyboard and shortcuts</a><p>Trust and support</p><a href="../guides/privacy-and-permissions.html" aria-current="page">Privacy and permissions</a><a href="../privacy.html">Privacy policy</a><a href="../guides/troubleshooting-faq.html">Troubleshooting and FAQ</a><a href="../guides/limits.html">Limits and known limitations</a><a href="../guides/reporting-a-problem.html">Reporting a problem</a></nav></details></aside>
-<article class="prose">
-<p>This page is the friendly version. The legal text is the <a href="../privacy.html">privacy policy</a>, which is the same as <code>docs/PRIVACY.md</code> in the repository. If the two ever differ, the policy wins.</p>
-
-<h2 id="the-short-version">The short version<a class="anchor" href="#the-short-version" aria-label="Link to this section">#</a></h2>
-<ul>
-  <li>The extension has no server. It collects nothing about you and sends nothing to its author or to anyone else.</li>
-  <li>No account, no sign-in, no analytics, no telemetry, no ads, no crash reports.</li>
-  <li>It never reads the text of your conversations. It reads the chat list in the sidebar (titles and links), and only while you are selecting.</li>
-  <li>Only two things are stored, in your browser: your settings and a small timer for the monthly support reminder.</li>
-  <li>When you delete or archive, the request goes to the site you are on, using the session you are already signed in with, and nowhere else.</li>
-  <li>It acts only on <code>chatgpt.com</code>, <code>chat.openai.com</code>, <code>claude.ai</code>, <code>gemini.google.com</code> and <code>grok.com</code>.</li>
-</ul>
-
-<h2 id="what-it-reads">What it reads<a class="anchor" href="#what-it-reads" aria-label="Link to this section">#</a></h2>
-<div class="table-wrap" tabindex="0" role="region" aria-label="Table 1"><table><thead><tr><th scope="col">What</th><th scope="col">Why</th><th scope="col">Where it goes</th></tr></thead><tbody>
-<tr><td>The chat list in the sidebar: each chat&rsquo;s title, link and id</td><td>To add checkboxes, count your selection and tell the site which chats to delete or archive.</td><td>Held in the page&rsquo;s memory while you select. Not saved, not sent. Forgotten when you finish selecting or close the page.</td></tr>
-<tr><td>The address and tab of the page you are on</td><td>To know whether it is a supported site and to start the panel there.</td><td>Used on your device. Not sent.</td></tr>
-<tr><td>Your settings</td><td>To remember your choices.</td><td>Your browser&rsquo;s local extension storage.</td></tr>
-<tr><td>The clipboard (write only)</td><td>To copy a failure report or diagnostics when you click <strong>Copy report</strong> or <strong>Copy diagnostics</strong>.</td><td>Written on your click. The extension never reads your clipboard.</td></tr>
-</tbody></table></div>
-<p>It does not read messages or conversation content, your account details, payment details or cookies. It does not read pages other than the five supported sites. Titles are shown as plain text and never run as page code.</p>
-
-<h2 id="what-it-stores">What it stores<a class="anchor" href="#what-it-stores" aria-label="Link to this section">#</a></h2>
-<p>Two small items in your browser&rsquo;s local extension storage, on this device. It does not use browser sync storage, so the extension itself does not copy them to your other devices.</p>
-<ol>
-  <li><strong>Your settings:</strong> language, theme, accent color, Fast mode, checkboxes as you scroll, the confirmation threshold, whether the launcher shows, and where you last dragged the panel. No chat titles, links or account details.</li>
-  <li><strong>The support-reminder timer:</strong> when you installed, when the note was last shown, how many times, and whether you chose <strong>Don&rsquo;t show again</strong>.</li>
-</ol>
-<p>It keeps no history of your chats, selections or deletions, and no export files or logs.</p>
-
-<h2 id="what-it-sends">What it sends<a class="anchor" href="#what-it-sends" aria-label="Link to this section">#</a></h2>
-<p>The extension makes no requests to its author or to any third party. Its translations and styles are packaged inside it.</p>
-<p>The only network requests it causes happen after you select chats and confirm <strong>Delete</strong> or <strong>Archive</strong>. They go from the chat page to the same site, with the session you are signed in with, the way the site&rsquo;s own buttons work. They contain no chat titles. The ones that change a chat contain only that chat&rsquo;s id and, for ChatGPT, a short &ldquo;hidden&rdquo; or &ldquo;archived&rdquo; flag.</p>
-<div class="table-wrap" tabindex="0" role="region" aria-label="Table 2"><table><thead><tr><th scope="col">Site</th><th scope="col">What happens in fast mode</th></tr></thead><tbody>
-<tr><td>ChatGPT</td><td>It asks the site for the short-lived access token that the site&rsquo;s own page uses (kept in memory for up to five minutes, never stored), then sends one request per chat to hide (delete) or archive it.</td></tr>
-<tr><td>Claude</td><td>It asks the site for your organization id, then sends one delete request per chat. There is no archive.</td></tr>
-<tr><td>Grok</td><td>It sends one delete request per chat. There is no archive.</td></tr>
-<tr><td>Gemini</td><td>No request. It clicks through the page&rsquo;s own menu and dialog, as a person would.</td></tr>
-</tbody></table></div>
-<p>Those requests use the sites&rsquo; own internal addresses, which are not public or documented and can change without notice. If you turn <strong>Fast mode</strong> off, or a request fails, the extension clicks through the site&rsquo;s menus instead and makes no extra request.</p>
-<p>What the sites do with these requests is up to them. For example, how long a site keeps a deleted or archived chat is the site&rsquo;s decision.</p>
-<p>Two more things use the network, but not on the extension&rsquo;s initiative: links you choose to click (the guide, GitHub, the privacy policy, the developer&rsquo;s website, the donation page and the store review page, which open in a new tab only when you click them), and your browser&rsquo;s own check for extension updates.</p>
-
-<h2 id="permissions-and-why">Permissions and why<a class="anchor" href="#permissions-and-why" aria-label="Link to this section">#</a></h2>
-<div class="table-wrap" tabindex="0" role="region" aria-label="Table 3"><table><thead><tr><th scope="col">Permission</th><th scope="col">Why it is needed</th></tr></thead><tbody>
-<tr><td><code>storage</code></td><td>Keeps your settings and the reminder timer on your device.</td></tr>
-<tr><td><code>activeTab</code></td><td>Lets the extension work with the tab you are on when you click the toolbar icon or use the shortcut.</td></tr>
-<tr><td><code>scripting</code></td><td>Loads the extension&rsquo;s own scripts into a chat tab that was open before the install, so you do not have to reload. Only the extension&rsquo;s packaged files are loaded.</td></tr>
-<tr><td>Access to the five chat sites</td><td>Lets the extension add checkboxes to the chat list and send the delete or archive request on those sites. Your browser may word it as &ldquo;Read and change your data on&rdquo; those sites. The extension uses it only as described here. Firefox asks for the same five sites when you add the extension.</td></tr>
-<tr><td>The keyboard shortcut</td><td>Not a permission. It opens or closes the panel. You can change it.</td></tr>
-</tbody></table></div>
-<p>The extension does not ask for your browsing history, bookmarks, downloads, cookies, list of tabs or access to any other website.</p>
-
-<h2 id="export-files-reports-and-diagnostics">Export files, reports and diagnostics<a class="anchor" href="#export-files-reports-and-diagnostics" aria-label="Link to this section">#</a></h2>
-<ul>
-  <li><strong>Export</strong> makes a file on your device with each chat&rsquo;s title, link and id. It is not uploaded. See <a href="exporting.html">Exporting</a>.</li>
-  <li><strong>Copy report</strong> copies the titles of failed chats and the reasons. It contains titles, so read it before you paste it in public.</li>
-  <li><strong>Copy diagnostics</strong> copies the version, your browser, the language and your settings. It contains no chat titles, links or page content.</li>
-</ul>
-<p>The extension sends none of these anywhere.</p>
-
-<h2 id="third-parties">Third parties<a class="anchor" href="#third-parties" aria-label="Link to this section">#</a></h2>
-<p>There are none. No analytics, ads or crash reporting, and no remote code, fonts or images. This guide website also loads nothing from other sites: no fonts, scripts, trackers or analytics.</p>
-
-<h2 id="removing-your-data">Removing your data<a class="anchor" href="#removing-your-data" aria-label="Link to this section">#</a></h2>
-<ul>
-  <li><strong>Settings:</strong> <strong>Options, Privacy, Reset settings</strong> restores the defaults.</li>
-  <li><strong>Everything:</strong> uninstall the extension. The browser then deletes its storage.</li>
-  <li><strong>Chats you deleted or archived:</strong> those changes were made on the site and cannot be undone by the extension.</li>
-  <li><strong>Export files:</strong> they are in your downloads folder. Delete them yourself.</li>
-  <li>The author holds no copy of anything, so there is nothing to request from the author.</li>
-</ul>
-
-<div class="reading-footer"><a class="prev" href="../guides/keyboard-and-shortcuts.html"><small>Previous</small>Keyboard and shortcuts</a><a class="next" href="../privacy.html"><small>Next</small>Privacy policy</a></div>
-<p class="edit-line"><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/edit/main/docs/guides/privacy-and-permissions.html" rel="noopener">Edit this page on GitHub &#8599;</a> &middot; Last updated 2026-10-08</p>
-</article>
-<nav class="toc" aria-label="On this page"><p>On this page</p><ol><li><a href="#the-short-version">The short version</a></li><li><a href="#what-it-reads">What it reads</a></li><li><a href="#what-it-stores">What it stores</a></li><li><a href="#what-it-sends">What it sends</a></li><li><a href="#permissions-and-why">Permissions and why</a></li><li><a href="#export-files-reports-and-diagnostics">Export files, reports and diagnostics</a></li><li><a href="#third-parties">Third parties</a></li><li><a href="#removing-your-data">Removing your data</a></li></ol></nav>
-</div>
-</main>
-<footer class="footer"><div class="shell footer-inner"><p>AI Bulk Chat Manager user guide &middot; MIT licensed &middot; Made by Ehsan Enaloo &middot; <a href="https://www.enaloo.com" rel="noopener">www.enaloo.com</a></p><div><a href="../guides/troubleshooting-faq.html">Troubleshooting</a><a href="../guides/limits.html">Limits</a><a href="../privacy.html">Privacy</a><a href="https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager" rel="noopener">Source repository &#8599;</a></div></div><div class="shell footer-legal"><p>Independent project. Not affiliated with, endorsed by or sponsored by OpenAI, Anthropic, Google or xAI. ChatGPT, Claude, Gemini and Grok are trademarks of their owners.</p><p>Guide for version 9.0.0. Last updated 2026-10-08.</p></div></footer>
+<p>This page moved to <a href="https://enaloo.com/apps/ai-bulk-chat-manager/docs/privacy-and-permissions/">https://enaloo.com/apps/ai-bulk-chat-manager/docs/privacy-and-permissions/</a>.</p>
 </body>
 </html>
