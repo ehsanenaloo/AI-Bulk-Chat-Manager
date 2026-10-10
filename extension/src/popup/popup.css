@@ -29,7 +29,10 @@ body { width: 340px; min-height: 120px; } /* a fixed width: a popup sizes itself
 .prefs { margin-top: 10px; padding-top: 4px; border-top: 1px solid var(--line); }
 .prefs .setting + .setting { border-top: 1px solid var(--line); }
 
-.nudge { margin-top: 10px; padding: 12px; border-radius: var(--radius); background: var(--accent-soft); border: 1px solid var(--accent-line); }
+/* the support reminder is a dialog over the popup: a scrim covers the popup and the card sits in the middle */
+body.has-dialog { min-height: 300px; }
+.nudge-scrim { position: fixed; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center; padding: 14px; background: var(--scrim); }
+.nudge { box-sizing: border-box; width: 100%; padding: 14px; border-radius: var(--radius-lg, 14px); background: var(--surface); border: 1px solid var(--accent-line); box-shadow: var(--shadow-3); }
 .nudge-head { display: flex; align-items: center; gap: 8px; font-weight: 700; }
 .nudge-head .icon { color: var(--danger-text); }
 .nudge p { margin: 6px 0 10px; color: var(--text-2); font-size: var(--text-sm); line-height: 1.5; }

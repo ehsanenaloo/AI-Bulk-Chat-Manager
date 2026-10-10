@@ -36,6 +36,33 @@ test('popup on an unsupported page lists the supported sites', async () => {
   } finally { await ui.close(); }
 });
 
+test('the monthly support note is a dialog over the popup and does not move the popup content', async () => {
+  const ui = await openScenario('claude');
+  try {
+    const before = await ui.ext.openPopup(ui.page, 'https://claude.ai/');
+    await before.getByText('Ready on Claude').waitFor();
+    const plainHeight = (await before.locator('#app').boundingBox()).height;
+    await before.close();
+
+    const day = 86400000;
+    await ui.ext.worker.evaluate((old) => new Promise((r) => chrome.storage.local.set({ supportNudge: { installedAt: old, lastShownAt: old } }, r)), Date.now() - 60 * day);
+    const popup = await ui.ext.openPopup(ui.page, 'https://claude.ai/');
+    const dialog = popup.getByRole('dialog');
+    await dialog.waitFor();
+
+    assert.equal(await popup.locator('.nudge-scrim').evaluate((el) => getComputedStyle(el).position), 'fixed', 'a scrim over the popup');
+    assert.equal((await popup.locator('#app').boundingBox()).height, plainHeight, 'the popup content did not move or grow');
+    const card = await dialog.boundingBox();
+    const view = popup.viewportSize();
+    assert.ok(card.x >= 0 && card.y >= 0 && card.x + card.width <= 340 && card.y + card.height <= view.height + 1, 'the dialog fits inside the popup');
+    assert.equal(await popup.evaluate(() => document.activeElement?.textContent), 'Not now', 'focus starts on the harmless button');
+
+    await popup.keyboard.press('Escape');
+    await dialog.waitFor({ state: 'detached' });
+    assert.equal(await popup.evaluate(() => document.body.classList.contains('has-dialog')), false);
+  } finally { await ui.close(); }
+});
+
 test('popup switches write to the shared settings', async () => {
   const ui = await openScenario('chatgpt');
   try {

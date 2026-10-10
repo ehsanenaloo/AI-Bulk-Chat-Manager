@@ -113,12 +113,17 @@
       await ABCM.nudge.markShown();
       try { g.chrome.action.setBadgeText({ text: '' }); } catch (_) { /* optional */ }
 
+      // A dialog over the popup (a scrim and a card), so it never pushes the popup's own content around.
+      const scrim = make('div', 'nudge-scrim');
       const banner = make('section', 'nudge');
+      banner.setAttribute('role', 'dialog');
+      banner.setAttribute('aria-modal', 'true');
       banner.setAttribute('aria-label', t('nudge.label'));
+      scrim.append(banner);
       const head = make('div', 'nudge-head');
       head.append(ABCM.icons.icon('heart'), make('span', '', t('nudge.title')));
       const actions = make('div', 'nudge-actions');
-      const dismiss = () => banner.remove();
+      const dismiss = () => { g.document.body.classList.remove('has-dialog'); scrim.remove(); };
       const action = (className, label, onClick) => {
         const button = make('button', className, label);
         button.type = 'button';
@@ -132,7 +137,11 @@
       );
       const never = action('link nudge-off', t('nudge.never'), async () => { await ABCM.nudge.optOut(); dismiss(); });
       banner.append(head, make('p', '', t('nudge.body')), actions, never);
-      $('nudge-mount').append(banner);
+      g.document.body.classList.add('has-dialog');
+      $('nudge-mount').append(scrim);
+      scrim.addEventListener('mousedown', (event) => { if (event.target === scrim) dismiss(); });
+      scrim.addEventListener('keydown', (event) => { if (event.key === 'Escape') { event.preventDefault(); dismiss(); } });
+      actions.lastElementChild.focus();
     } catch (_) { /* the reminder is optional */ }
   }
 
