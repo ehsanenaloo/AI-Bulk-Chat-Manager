@@ -6,6 +6,10 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+### Fixed
+
+- The monthly support note now opens as a dialog over the popup. Before, it opened inside the popup and pushed the other content out of place.
+
 ## [9.0.0] - 2026-10-08
 
 Version 9.0.0 is a full rebuild. It does the same job (select many chats on ChatGPT, Claude, Gemini and Grok, then delete, archive or export them), and it now also runs in Edge and Firefox. The permissions are the same: `activeTab`, `scripting` and `storage`, on the same five sites.

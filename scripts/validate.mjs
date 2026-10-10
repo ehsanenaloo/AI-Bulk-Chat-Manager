@@ -173,7 +173,7 @@ export function validate(root = repoRoot) {
   // ── repository ─────────────────────────────────────────────────────────────────────────────
   // agent instruction files are allowed only in the development tree (recognised by technical-docs/); the public repository must never contain them
   const developmentTree = fs.existsSync(path.join(root, 'technical-docs'));
-  for (const name of fs.readdirSync(root)) if (!ROOT_ALLOWED.has(name) && !(developmentTree && (name === 'CLAUDE.md' || name === '.claude'))) err(`unexpected file or folder in the repository root: ${name}`);
+  for (const name of fs.readdirSync(root)) if (!ROOT_ALLOWED.has(name) && !(developmentTree && (name === 'CLAUDE.md' || name === '.claude' || name === 'guides'))) err(`unexpected file or folder in the repository root: ${name}`);
   const changelog = fs.existsSync(path.join(root, 'CHANGELOG.md')) ? fs.readFileSync(path.join(root, 'CHANGELOG.md'), 'utf8') : '';
   if (changelog && !new RegExp(`^## \\[?${manifest.version.replace(/\./g, '\\.')}\\]?`, 'm').test(changelog)) err(`CHANGELOG.md has no section for version ${manifest.version}`);
 
