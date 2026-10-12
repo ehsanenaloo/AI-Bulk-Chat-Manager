@@ -17,7 +17,7 @@
     store: {
       chrome: 'https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc',
       firefox: 'https://addons.mozilla.org/firefox/addon/ai-bulk-chat-manager/',
-      edge: 'https://microsoftedge.microsoft.com/addons/search/AI%20Bulk%20Chat%20Manager'
+      edge: 'https://microsoftedge.microsoft.com/addons/detail/ihncdaihigbgnmiobihpnmijeaicbpjn'
     },
     shortcuts: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' }
   };

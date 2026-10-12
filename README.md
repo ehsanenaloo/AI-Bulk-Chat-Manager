@@ -64,8 +64,8 @@ These sites change their pages without notice. When one does, an action may stop
 ## Install
 
 - **Chrome** and other Chromium browsers: [Chrome Web Store](https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc).
-- **Microsoft Edge**: open the Chrome Web Store link above and choose *Allow extensions from other stores*, or load the Chrome package from the [latest release](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/releases/latest).
-- **Firefox** (140 or newer): download `ai-bulk-chat-manager-<version>-firefox.zip` from the [latest release](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/releases/latest) and load it in `about:debugging` as a temporary add-on until it is listed on Firefox Add-ons.
+- **Microsoft Edge**: [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/ihncdaihigbgnmiobihpnmijeaicbpjn).
+- **Firefox** (140 or newer): [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/ai-bulk-chat-manager/). A release package can also be loaded in `about:debugging` as a temporary add-on.
 - **From source**: clone this repository and load the `extension/` folder (Chrome/Edge: `chrome://extensions` → Developer mode → *Load unpacked*).
 
 The first time, open a chat tab that was already open before you installed and click the toolbar icon: the extension attaches itself to that tab without a reload.
