@@ -4,7 +4,7 @@ AI Bulk Chat Manager is a free project kept by one volunteer. This page tells yo
 
 ## Read the user guide first
 
-The [user guide](https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/) covers installing, selecting chats, deleting, archiving and exporting, the settings, and what to do when a site stops working.
+The [user guide](https://enaloo.com/apps/ai-bulk-chat-manager/) covers installing, selecting chats, deleting, archiving and exporting, the settings, and what to do when a site stops working.
 
 ## Ask a question
 
