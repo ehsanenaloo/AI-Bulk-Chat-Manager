@@ -8,7 +8,7 @@
   const REPO = 'https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager';
 
   const links = {
-    guide: 'https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/',
+    guide: 'https://enaloo.com/apps/ai-bulk-chat-manager/',
     repo: REPO,
     issues: `${REPO}/issues/new/choose`,
     privacy: `${REPO}/blob/main/docs/PRIVACY.md`,

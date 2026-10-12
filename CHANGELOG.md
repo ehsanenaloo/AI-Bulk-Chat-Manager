@@ -6,9 +6,12 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+## [9.0.1] - 2026-10-12
+
 ### Changed
 
 - The links to rate the extension and to install it now open the Edge Add-ons and Firefox Add-ons pages.
+- The guide link now opens the user guide at enaloo.com.
 
 ### Fixed
 
@@ -69,5 +72,6 @@ These versions were published without a changelog. The last one, 8.10.6, was a p
 - New 16, 48 and 128 pixel icons.
 - The MIT license.
 
-[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.0...HEAD
+[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.1...HEAD
+[9.0.1]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/releases/tag/v9.0.0

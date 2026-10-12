@@ -223,7 +223,7 @@ check('F02', 'content scripts run on all four fake sites and stay out of the pag
       assert.equal(reply.ok, true, `${site}: ${JSON.stringify(reply)}`);
       assert.equal(reply.ready, true);
       assert.equal(reply.site, site);
-      assert.equal(reply.version, '9.0.0');
+      assert.equal(reply.version, '9.0.1');
       assert.equal(reply.active, false);
       const world = await ui.page.ev(() => ({ abcm: typeof window.ABCM, chromeApi: typeof window.chrome?.runtime?.id, roots: document.querySelectorAll('[data-abcm-root]').length, boxes: document.querySelectorAll('[data-abcm-checkbox]').length }));
       assert.deepEqual(world, { abcm: 'undefined', chromeApi: 'undefined', roots: 0, boxes: 0 }, `${site}: nothing is added until selection starts`);
@@ -467,7 +467,7 @@ check('F10', 'popup page renders, reports the active chat tab, and its Start/Fin
     const ready = await read();
     assert.equal(ready.title, 'Ready on ChatGPT');
     assert.equal(ready.start, 'Start selecting chats');
-    assert.equal(ready.version, 'v9.0.0');
+    assert.equal(ready.version, 'v9.0.1');
     assert.match(ready.shortcut, /Alt\+Shift\+B/i, `shortcut hint: ${ready.shortcut}`);
     assert.notEqual(ready.bodyBg, 'rgba(0, 0, 0, 0)');
     assert.equal(ready.icon, 1, 'status icon SVG rendered');
