@@ -6,6 +6,10 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+### Changed
+
+- The links to rate the extension and to install it now open the Edge Add-ons and Firefox Add-ons pages.
+
 ### Fixed
 
 - The monthly support note now opens as a dialog over the popup. Before, it opened inside the popup and pushed the other content out of place.
