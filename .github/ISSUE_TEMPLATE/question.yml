@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please check the user guide first (https://ehsanenaloo.github.io/AI-Bulk-Chat-Manager/).
+        Please check the user guide first (https://enaloo.com/apps/ai-bulk-chat-manager/).
         This is a volunteer project, so replies are best effort. Do not paste chat titles, chat links or conversation text.
   - type: textarea
     id: question
