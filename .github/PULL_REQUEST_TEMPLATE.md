@@ -18,8 +18,8 @@
 ## How I tested it
 
 <!-- Browser and version, the site you tried, steps you followed, what you saw, and one failure case you tried.
-Use a test account or the mock site in the browser tests, and never paste real chat titles.
-Say what you ran, such as `node scripts/test.mjs`, and what you tried by hand. -->
+Use a test account, and never paste real chat titles.
+Say what you ran, such as `node scripts/validate.mjs`, and what you tried by hand. -->
 
 ## Screenshots (no real chat titles)
 
@@ -31,8 +31,7 @@ Say what you ran, such as `node scripts/test.mjs`, and what you tried by hand. -
 
 ## Checklist
 
-- [ ] `node scripts/validate.mjs` and `node scripts/test.mjs` pass
-- [ ] I added or updated a test, or I explained why the change cannot be tested
+- [ ] `node scripts/validate.mjs` passes
 - [ ] The change is focused and does one thing
 - [ ] I tried the change in a real browser on the affected site, including a failure case (or I explained why not)
 - [ ] Commit messages follow the Conventional Commits style
@@ -41,5 +40,5 @@ Say what you ran, such as `node scripts/test.mjs`, and what you tried by hand. -
 - [ ] The change works with the keyboard and in a right-to-left language
 - [ ] User-visible changes are recorded in `CHANGELOG.md`
 - [ ] `docs/PRIVACY.md` and the docs are updated if behavior or data handling changed
-- [ ] Screenshots, logs and test files contain no real chat titles or personal data
+- [ ] Screenshots and logs contain no real chat titles or personal data
 - [ ] I wrote this change or I have the right to submit it under the MIT License

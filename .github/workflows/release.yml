@@ -33,16 +33,9 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 24
-          cache: npm
-
-      - name: Install test dependencies
-        run: npm ci
 
       - name: Validate repository
         run: node scripts/validate.mjs
-
-      - name: Run unit tests
-        run: node scripts/test.mjs
 
       - name: Assert tag matches manifest version
         run: |
@@ -66,7 +59,7 @@ jobs:
             for required in manifest.json LICENSE THIRD_PARTY_NOTICES.md; do
               echo "${entries}" | grep -qx "${required}" || { echo "::error::${required} is missing at the root of ${zip}"; exit 1; }
             done
-            if echo "${entries}" | grep -qE '^(extension/|dist/|tests/|docs/|scripts/|\.github/|node_modules/)'; then
+            if echo "${entries}" | grep -qE '^(extension/|dist/|docs/|scripts/|\.github/|node_modules/)'; then
               echo "::error::${zip} contains a project folder; manifest.json must be at the zip root."
               exit 1
             fi

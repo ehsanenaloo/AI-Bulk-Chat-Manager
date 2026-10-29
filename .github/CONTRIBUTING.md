@@ -13,7 +13,6 @@ By taking part, you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 - [Project map](#project-map)
 - [Run it locally](#run-it-locally)
 - [Checks](#checks)
-- [Writing tests](#writing-tests)
 - [Code style](#code-style)
 - [When a site changes: selectors and labels](#when-a-site-changes-selectors-and-labels)
 - [Adding a site](#adding-a-site)
@@ -97,11 +96,11 @@ A change that breaks one of these needs a discussion in an issue before any code
    feat(panel): add Markdown export
    docs(guide): explain Fast mode
    i18n(de): correct the word for "archive"
-   test(bulk): cover a rate limit during the API phase
+   fix(bulk): wait for the retry time the site asks for after a rate limit
    ci(release): check the Firefox manifest
    ```
 
-   Common types are `feat`, `fix`, `docs`, `i18n`, `refactor`, `perf`, `test`, `chore` and `ci`. Common scopes are `panel`, `popup`, `options`, `sites`, `api`, `visual`, `bulk`, `export`, `i18n`, `guide` and `validate`.
+   Common types are `feat`, `fix`, `docs`, `i18n`, `refactor`, `perf`, `chore` and `ci`. Common scopes are `panel`, `popup`, `options`, `sites`, `api`, `visual`, `bulk`, `export`, `i18n`, `guide` and `validate`.
 
 5. **Keep your branch up to date by rebasing**, not by merging `main` into it.
 
@@ -124,7 +123,7 @@ AI Bulk Chat Manager has one maintainer, who works on it in spare time. Replies 
 
 ## Project map
 
-The repository root is kept small on purpose. The extension itself lives in `extension/`, and everything else (guide, tests, scripts, community files) sits beside it. The main places are:
+The repository root is kept small on purpose. The extension itself lives in `extension/`, and everything else (guide, scripts, community files) sits beside it. The main places are:
 
 | Path | What it holds |
 | --- | --- |
@@ -140,19 +139,14 @@ The repository root is kept small on purpose. The extension itself lives in `ext
 | `extension/icons/` | The toolbar and store icons. |
 | `extension/THIRD_PARTY_NOTICES.md` | Licence notices for the little third-party material that ships. |
 | `docs/` | The user guide (a static site published with GitHub Pages) and `PRIVACY.md`. |
-| `tests/` | Unit tests in `tests/unit/` (`*.test.mjs`), browser tests in `tests/e2e/` (`*.e2e.mjs`), a fake chat site in `tests/fixtures/` and helpers in `tests/helpers/`. |
-| `scripts/` | `validate.mjs`, `test.mjs`, `build.mjs`, `build-firefox.mjs`, `list-runtime-files.mjs`, `runtime-files.json` (what ships in the package) and `sync-labels.mjs`. |
+| `scripts/` | `validate.mjs`, `build.mjs`, `build-firefox.mjs`, `list-runtime-files.mjs`, `runtime-files.json` (what ships in the package) and `sync-labels.mjs`. |
 | `.github/` | Issue forms, the pull request template, labels, workflows, and the community files (this guide, Code of Conduct, Security, Support). |
 
 ## Run it locally
 
 You need Node.js 22 or newer (CI uses 24) and one of Chrome, Edge or Firefox.
 
-```bash
-npm install
-```
-
-This installs `jsdom`, which the unit tests use. Nothing from npm ships in the extension.
+There is nothing to install. The extension has no npm dependencies and needs no build step to run.
 
 ### Chrome and Edge
 
@@ -178,40 +172,17 @@ The Firefox package is generated from the same files in `extension/`. The Chrome
 
 ## Checks
 
-Run both of these before you push:
+Run this before you push:
 
 ```bash
 node scripts/validate.mjs
-node scripts/test.mjs
 ```
 
-`npm run check` runs the two in a row, and `npm test` is a shortcut for the second one.
+`node scripts/validate.mjs` checks the manifest, the permission list, the files it references (they must all exist inside `extension/`), that only shipping files sit in `extension/`, JavaScript syntax, JSON and locale files, a few code rules (no `eval`, no `innerHTML`, no remote code, no inline scripts), the addresses the code is allowed to mention, that the repository root stays small, and that `CHANGELOG.md` has a section for the current version.
 
-- **`node scripts/validate.mjs`** checks the manifest, the permission list, the files it references (they must all exist inside `extension/`), that only shipping files sit in `extension/`, JavaScript syntax, JSON and locale files, a few code rules (no `eval`, no `innerHTML`, no remote code, no inline scripts), the addresses the code is allowed to mention, that the repository root stays small, and that `CHANGELOG.md` has a section for the current version.
-- **`node scripts/test.mjs`** runs every `tests/unit/*.test.mjs` file with the built-in Node test runner. Pass a word to run only the files whose name contains it, for example `node scripts/test.mjs i18n`.
-- **Browser tests (optional, but run them for changes to selection, deleting, archiving or the panel).** They load `extension/` into a real Chromium with a throwaway profile and drive a fake ChatGPT, Claude, Gemini and Grok page, so no account is needed:
+CI runs `validate` on every pull request and lints the Firefox package. The maintainer looks for a green CI run before merging a pull request, and runs the project's own test suite before a release.
 
-  ```bash
-  npm i --no-save playwright
-  npx playwright install chromium
-  node --test --test-concurrency=1 tests/e2e/*.e2e.mjs
-  ```
-
-- **Firefox tests (experimental).** `npm run test:firefox` is meant to drive a headless desktop Firefox with the generated package. It needs Firefox 140 or newer installed and does not need Playwright.
-
-CI runs `validate` and the unit tests on every pull request. It also runs the Chromium browser tests on pushes to `main`, and a Firefox job that builds and lints the Firefox package (that job is informative for now and does not block a merge). The maintainer looks for a green CI run before merging a pull request.
-
-Tests do not replace trying the change by hand. The fake pages model the structure of the real sites, but the real sites are the final judge. In the pull request, describe your manual steps: the browser and version, the site, what you clicked, and what you saw. Include a failure case, such as a cancelled dialog or a chat that no longer exists.
-
-## Writing tests
-
-A fix or a feature should come with a test when the behavior can be tested without a real site.
-
-- **Where tests live.** Unit tests are in `tests/unit/`. Name a file after the area it covers and end it with `.test.mjs`. The runner picks up every file with that ending. Use `node:test` and `node:assert/strict`, with no other test library.
-- **Name tests by behavior.** A good name reads like a sentence: "a chat unticked before its turn is skipped, and a vanished chat is reported". Put the failure cases next to the happy path.
-- **Unit-test environment.** `createEnv({ files })` in `tests/helpers/dom.mjs` loads the extension's classic scripts into a jsdom window with an in-memory fake of the `chrome.*` APIs (`fakeChrome`), so modules run without a browser. It is good for logic, state, label matching and the API engine. It is not a layout engine, so leave pixel and scroll behavior to the browser tests.
-- **Browser tests.** `openScenario(siteId, options)` in `tests/helpers/scenario.mjs` launches Chromium with the extension and serves the fake site from `tests/fixtures/mock-site.mjs`. Options let a test make chosen chats fail, trigger a rate limit, switch to dark mode or a right-to-left page, and seed settings. Add to `tests/e2e/` only when the behavior needs a real browser. Wait for a condition, never for a fixed delay.
-- **Keep tests deterministic.** No real network, no real accounts, no reliance on test order, and no data shared between tests. Create the data a test needs inside the test. Use made-up chat titles.
+Try the change by hand. In the pull request, describe your manual steps: the browser and version, the site, what you clicked, and what you saw. Include a failure case, such as a cancelled dialog or a chat that no longer exists.
 
 ## Code style
 
@@ -243,21 +214,19 @@ The sites' pages are not an API, so a redesign can break the extension. The part
 Rules for changing them:
 
 - Describe what you saw in the real page in the pull request. Open the browser's developer tools on the site (with a test account) and say which element the selector now matches. Do not paste real chat titles.
-- Keep label matching strict. A menu item is clicked only if its text, `aria-label` or `data-testid` matches a known word for that operation, and a confirm button must match the same word. Do not add words such as "remove", which would also match "Remove from project". There is a test for this. Add a case for any new look-alike you find.
+- Keep label matching strict. A menu item is clicked only if its text, `aria-label` or `data-testid` matches a known word for that operation, and a confirm button must match the same word. Do not add words such as "remove", which would also match "Remove from project". Mention any new look-alike you find in the pull request.
 - Prefer a more specific selector over a looser one. A looser selector can attach checkboxes to things that are not chats.
 - If a site's backend endpoint changed, update `config.js` and `engines/api.js`, and keep the fallback: when a request fails, the extension must still be able to use the page's menus.
-- Update `tests/fixtures/mock-site.mjs` so the fake page keeps the structure of the real one, and run the browser tests.
 
 ## Adding a site
 
 Adding a new site changes the access the extension asks for (the browser shows a new permission prompt on update), so **open an issue and agree it with the maintainer before writing code.** If it is agreed, the pieces are:
 
 1. `extension/manifest.json`: add the site's address to the `matches` of the content script.
-2. `extension/src/shared/sites.js`: add an entry (`id`, `name`, `hosts`, `url`, `color`, the selectors, `method` and `archive`). `method` is `'api'` if the extension will call the site's backend first, or `'visual'` if it only clicks through the page. A unit test checks that the manifest matches and the registry agree.
+2. `extension/src/shared/sites.js`: add an entry (`id`, `name`, `hosts`, `url`, `color`, the selectors, `method` and `archive`). `method` is `'api'` if the extension will call the site's backend first, or `'visual'` if it only clicks through the page. The manifest matches and the registry must agree.
 3. `extension/src/content/config.js` and `extension/src/content/engines/api.js`: if the site has a usable backend, add its endpoints and an action. Otherwise the visual engine (`engines/visual.js`) is used. Check that the Delete and Archive words of the site's menu are in `labels`.
 4. `scripts/validate.mjs`: add the host to `ALLOWED_HOSTS`.
-5. `tests/fixtures/mock-site.mjs` and `tests/helpers/scenario.mjs`: add a fake page and start address, then write browser tests like the existing ones.
-6. `docs/PRIVACY.md`, the user guide, the README and `CHANGELOG.md`: list the new site and any request it makes. The `scripts/build-firefox.mjs` host list is derived from the manifest, so Firefox needs no extra change.
+5. `docs/PRIVACY.md`, the user guide, the README and `CHANGELOG.md`: list the new site and any request it makes. The `scripts/build-firefox.mjs` host list is derived from the manifest, so Firefox needs no extra change.
 
 ## Adding or changing UI text
 
@@ -270,8 +239,8 @@ All interface text lives in translation files, and no sentence is built by joini
 How to add a string in code:
 
 - Add the key and English text to `en.json`, then use it with `ABCM.i18n.t('your.key')` in scripts, or `data-i18n="your.key"` in HTML (and `data-i18n-attr="title:your.key"` for attributes).
-- Add the key to every other language file as well, or the parity test fails. If you cannot translate it, copy the English text and say so in the pull request.
-- Every key in `en.json` must be used by the code, and every key the code uses must exist in `en.json`. A test checks both directions.
+- Add the key to every other language file as well, or the language check fails. If you cannot translate it, copy the English text and say so in the pull request.
+- Every key in `en.json` must be used by the code, and every key the code uses must exist in `en.json`. The maintainer checks both directions.
 
 ### Placeholders and plurals
 
@@ -291,7 +260,7 @@ The interface is available in 11 languages: English, Persian (`fa`), Spanish (`e
 
 1. Find the string in `extension/src/i18n/locales/<code>.json`. Search for the English text in `en.json` to find the key, then look for the same key in your language file.
 2. Change only the value. Keep the key, the `{placeholders}` and the plural structure unchanged.
-3. Run `node scripts/test.mjs i18n` to make sure the file is still consistent with English.
+3. Check that the file is still valid JSON and has the same keys as `en.json`.
 4. Open a pull request. In the description, name the screen where you saw the string and say whether you are a native speaker.
 
 If you would rather not edit files, open a [translation fix issue](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/issues/new?template=translation_fix.yml) with the current text and your suggestion.
@@ -304,7 +273,7 @@ Please open an issue first so we can agree on the language code and avoid duplic
 2. Create `extension/_locales/<code>/messages.json` by copying `extension/_locales/en/messages.json` and translating the `message` values. The folder name is the browser's format: `pt_BR` and `zh_CN` use an underscore. `app_description` can be at most 132 characters and `app_name` at most 45 (`validate.mjs` checks both).
 3. Add the language to the `LANGUAGES` list in `extension/src/shared/i18n.js`: `code`, `name` (the language's own name, as its speakers write it) and `dir` (`'rtl'` for right-to-left languages, otherwise `'ltr'`).
 4. Add the words your language uses for **Delete** and **Archive** in the menus of ChatGPT, Claude, Gemini and Grok to `labels` in `extension/src/content/config.js`. This is what lets the extension find the right menu item when the site is shown in your language. Some words are already there; check first.
-5. Run `node scripts/validate.mjs` and `node scripts/test.mjs`.
+5. Run `node scripts/validate.mjs`.
 6. Load the extension, choose your language in the Options page, and look at the popup, the panel, the confirmation dialog and the result screen. Check for text that is cut off, overlaps, or points the wrong way.
 7. Open a pull request. The maintainer will update language counts in the docs.
 
@@ -349,8 +318,7 @@ The pull request template has the same list.
 
 - [ ] The change is focused, and the description says why it is needed.
 - [ ] The pull request links the related issue, for example "Fixes #123".
-- [ ] `node scripts/validate.mjs` and `node scripts/test.mjs` pass.
-- [ ] I added or updated a test for the change, or I explained why it cannot be tested.
+- [ ] `node scripts/validate.mjs` passes.
 - [ ] I tried the change in a real browser on the affected site, and described the steps I took.
 - [ ] I tested a failure case, not only the happy path.
 - [ ] Commit messages follow the Conventional Commits style.
@@ -359,7 +327,7 @@ The pull request template has the same list.
 - [ ] The change works with the keyboard and in a right-to-left language.
 - [ ] User-visible changes are noted in [CHANGELOG.md](../CHANGELOG.md) under the upcoming version.
 - [ ] The docs and [docs/PRIVACY.md](../docs/PRIVACY.md) are updated if behavior or data handling changed.
-- [ ] Screenshots, logs and test files contain no real chat titles or personal data.
+- [ ] Screenshots and logs contain no real chat titles or personal data.
 - [ ] I wrote this change or I have the right to submit it (see [License and sign-off](#license-and-sign-off)).
 
 ## Reporting bugs well
@@ -396,7 +364,7 @@ If you disagree with a decision, say so in the issue. Give your reasons and your
 
 Releases are made by the maintainer. The maintainer updates the version in `extension/manifest.json` and `package.json`, adds a section to `CHANGELOG.md`, and pushes a tag named `vX.Y.Z`. The [release workflow](workflows/release.yml) then:
 
-1. runs `node scripts/validate.mjs` and the unit tests,
+1. runs `node scripts/validate.mjs`,
 2. checks that the tag matches the version in `extension/manifest.json`,
 3. builds both packages with `node scripts/build.mjs`: `ai-bulk-chat-manager-X.Y.Z.zip` (Chrome and Edge, with `manifest.json` at the zip root) and `ai-bulk-chat-manager-X.Y.Z-firefox.zip`, each with the `LICENSE` and a SHA-256 checksum,
 4. creates a GitHub Release with both zips and both checksums attached, and uses the matching section of `CHANGELOG.md` as the notes.

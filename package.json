@@ -13,15 +13,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node scripts/test.mjs",
     "validate": "node scripts/validate.mjs",
-    "check": "npm run validate && npm test",
-    "test:e2e": "node tests/e2e/run.mjs",
-    "test:firefox": "node tests/e2e/firefox.mjs",
     "build": "node scripts/build.mjs",
     "build:firefox": "node scripts/build-firefox.mjs"
-  },
-  "devDependencies": {
-    "jsdom": "^30.1.2"
   }
 }

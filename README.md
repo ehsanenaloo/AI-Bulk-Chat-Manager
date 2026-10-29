@@ -114,12 +114,12 @@ Deleting is permanent, so the code is strict about it. The page-menu route choos
 | [User guide](https://enaloo.com/apps/ai-bulk-chat-manager/) | Every feature, settings, privacy, troubleshooting |
 | [Privacy policy](docs/PRIVACY.md) | What is stored and what is not |
 | [Changelog](CHANGELOG.md) | What changed in each release |
-| [Contributing](.github/CONTRIBUTING.md) | Setup, tests, translations, adding a site |
+| [Contributing](.github/CONTRIBUTING.md) | Setup, translations, adding a site |
 | [Security](.github/SECURITY.md) | How to report a vulnerability |
 
 ## Contributing
 
-Bug reports, site-change reports, translation fixes and small pull requests are welcome. Read [CONTRIBUTING.md](.github/CONTRIBUTING.md) first; it explains how to run the checks (`npm install`, `node scripts/validate.mjs`, `node scripts/test.mjs`, and the browser tests).
+Bug reports, site-change reports, translation fixes and small pull requests are welcome. Read [CONTRIBUTING.md](.github/CONTRIBUTING.md) first; it explains how to run the check (`node scripts/validate.mjs`).
 
 The translations (except English) are machine-assisted and have not been reviewed by native speakers. If you speak one of the 11 languages natively and can improve a translation, please [open an issue](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/issues/new/choose) or send a pull request. See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 

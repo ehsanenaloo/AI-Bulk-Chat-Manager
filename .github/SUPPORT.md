@@ -47,4 +47,4 @@ Chat titles, chat links, conversation text, session cookies or access tokens. No
 
 If you want to support the project, you can [support the project](https://enaloo.com/support/) or leave a rating in your browser's store. Neither is expected, and neither changes how issues are handled.
 
-If you want to help others, answering a question in an issue is a good way to contribute. Developers can run the unit tests with `node scripts/test.mjs`. See [CONTRIBUTING.md](CONTRIBUTING.md#checks).
+If you want to help others, answering a question in an issue is a good way to contribute. Developers can read [CONTRIBUTING.md](CONTRIBUTING.md#checks).
