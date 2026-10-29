@@ -15,20 +15,24 @@
       timeoutMs: 10000,
       throttleMs: 250,          // minimum gap between request starts, shared by all workers
       concurrency: 3,           // parallel workers in the API phase (the page-UI phase is always serial)
-      rateLimitBackoffMs: 2000, // shared cooldown after a 429 before the single retry
+      rateLimitBackoffMs: 2000, // base cooldown after a 429 without a Retry-After; doubles with every repeat
+      rateLimitMaxBackoffMs: 30000,
+      rateLimitJitter: 0.2,     // +/- share of random spread added to the backoff so workers do not retry in step
+      rateLimitRetries: 3,      // retries of one chat after 429 before it is reported as rate limited
       chatgpt: {
         conversation: '/backend-api/conversation/',
         session: '/api/auth/session',
         // Bodies the ChatGPT backend expects for "delete" (hide) and "archive".
         deleteBody: { is_visible: false },
-        archiveBody: { is_archived: true }
+        archiveBody: { is_archived: true },
+        unarchiveBody: { is_archived: false }
       },
       claude: { organizations: '/api/organizations' },
       grok: { conversations: '/rest/app-chat/conversations' }
     },
 
     delays: { short: 100, medium: 200, long: 300, extended: 500 },
-    timeouts: { elementWait: 2000, elementWaitShort: 1000 },
+    timeouts: { elementWait: 2000, elementWaitShort: 1000, rowGone: 3000 },
 
     selectors: {
       menuButton: 'button[aria-haspopup="menu"], [role="button"][aria-haspopup="menu"], button[aria-label*="options" i], button[aria-label*="more" i]',

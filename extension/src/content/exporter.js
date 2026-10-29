@@ -43,15 +43,37 @@
     throw new Error(`Unknown export format: ${format}`);
   }
 
+  /** The outcome of a run: one row per chat with its state (succeeded, failed, unknown or cancelled) and reason. */
+  function buildReport(format, summary, { siteName = '', exportedAt = new Date() } = {}) {
+    const rows = (summary?.items || []).map((item) => ({
+      title: item.title || '', url: item.url || '', id: item.id || '', status: item.status || '', reason: item.reason || '',
+      evidence: item.evidence || '', observation: item.observation?.result || '', observedAt: item.observation?.at || '',
+      observationBasis: item.observation?.basis || '', checks: item.observation?.checks || 0
+    }));
+    const counts = { succeeded: 0, failed: 0, unknown: 0, cancelled: 0 };
+    const observed = { 'no-longer-listed': 0, 'still-listed': 0, 'not-confirmed': 0 };
+    rows.forEach((row) => {
+      if (row.status in counts) counts[row.status] += 1;
+      if (row.status === 'unknown') observed[row.observation || 'not-confirmed'] += 1;
+    });
+    if (format === 'json') {
+      return JSON.stringify({ exportedAt: exportedAt.toISOString(), site: siteName, operation: summary?.operation || '', counts, observed, chats: rows }, null, 2);
+    }
+    if (format === 'csv') {
+      return `\uFEFF${['title,url,id,status,reason,evidence,observation,observed_at', ...rows.map((row) => [row.title, row.url, row.id, row.status, row.reason, row.evidence, row.observation, row.observedAt].map(csvCell).join(','))].join('\r\n')}\r\n`;
+    }
+    throw new Error(`Unknown report format: ${format}`);
+  }
+
   function filename(format, siteId, now = new Date()) {
     const stamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19);
     return `ai-chats-${siteId || 'export'}-${stamp}.${FORMATS[format].extension}`;
   }
 
   /** Builds the file and hands it to the browser as a download. Returns the file name. */
-  function download(format, items, siteName, siteId) {
-    const text = build(format, items, { siteName });
-    const name = filename(format, siteId);
+  function download(format, items, siteName, siteId, { report = null } = {}) {
+    const text = report ? buildReport(format, report, { siteName }) : build(format, items, { siteName });
+    const name = report ? filename(format, siteId).replace('ai-chats-', 'ai-chats-report-') : filename(format, siteId);
     const blob = new g.Blob([text], { type: `${FORMATS[format].mime};charset=utf-8` });
     const url = g.URL.createObjectURL(blob);
     const link = g.document.createElement('a');
@@ -65,5 +87,5 @@
     return name;
   }
 
-  ABCM.define('exporter', { FORMATS, build, filename, download, csvCell });
+  ABCM.define('exporter', { FORMATS, build, buildReport, filename, download, csvCell });
 })(globalThis);

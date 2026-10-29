@@ -131,7 +131,7 @@
         return button;
       };
       actions.append(
-        action('btn btn-primary btn-sm', t('nudge.coffee'), () => { ABCM.ext.openTab(ABCM.links.support); dismiss(); }),
+        action('btn btn-primary btn-sm', t('nudge.support'), () => { ABCM.ext.openTab(ABCM.links.support); dismiss(); }),
         action('btn btn-sm', t('nudge.rate'), () => { ABCM.ext.openTab(ABCM.links.reviewUrl()); dismiss(); }),
         action('btn btn-quiet btn-sm', t('nudge.later'), dismiss)
       );

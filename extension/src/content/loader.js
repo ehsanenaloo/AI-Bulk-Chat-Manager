@@ -4,6 +4,10 @@
   is not in the page yet. This scrolls the sidebar to the bottom again and again until no new chats
   appear, so Select all can reach every chat. It scrolls the list only (never the chat itself), puts
   the list back where it was, and can be stopped at any time.
+
+  Progress is counted in distinct chat ids seen, not in rows mounted: a list that recycles its rows
+  keeps a constant number of nodes while it loads more chats. The result says whether the end of the
+  list was actually reached ("complete") or the loading just stopped producing chats ("stalled").
 */
 (function (g) {
   'use strict';
@@ -26,41 +30,74 @@
 
   const state = { running: false, stop: false };
 
-  async function waitForGrowth(before) {
+  /** Adds the ids of the rows now mounted to `seen` and returns how many distinct chats have been seen. */
+  function collect(seen) {
+    for (const row of ABCM.dom.getAllConversations()) {
+      const id = ABCM.dom.idFromElement(row);
+      if (id) seen.add(id);
+    }
+    return seen.size;
+  }
+
+  async function waitForGrowth(seen, before) {
     const until = Date.now() + STEP_WAIT_MS;
     while (Date.now() < until && !state.stop) {
       await ABCM.util.delay(POLL_MS);
-      if (ABCM.dom.getAllConversations().length > before) { await ABCM.util.delay(120); return; }
+      if (collect(seen) > before) { await ABCM.util.delay(120); return; }
     }
   }
 
-  /** Resolves with { loaded, total, stopped }. onProgress receives the current number of chats. */
+  const heightOf = (scroller) => scroller.scrollHeight;
+  const atBottom = (scroller) => scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 4;
+  const stillLoading = (scroller) => !!scroller.querySelector?.('[aria-busy="true"], [role="progressbar"]');
+
+  /**
+   * Resolves with { loaded, total, stopped, complete, status }. onProgress receives the number of
+   * distinct chats seen so far. status is 'complete' (end of list reached, nothing loading, every
+   * chat seen is still on the page), 'recycled' (the site unmounts rows, so fewer chats are selectable
+   * than were seen), 'stalled' (no new chats, but the end was not confirmed), 'stopped' or 'limit'.
+   */
   async function loadAll({ onProgress } = {}) {
-    if (state.running) return { loaded: 0, total: ABCM.dom.getAllConversations().length, stopped: false };
+    if (state.running) return { loaded: 0, total: ABCM.dom.getAllConversations().length, stopped: false, complete: false, status: 'busy' };
     const first = ABCM.dom.getAllConversations()[0];
-    if (!first) return { loaded: 0, total: 0, stopped: false };
+    if (!first) return { loaded: 0, total: 0, stopped: false, complete: false, status: 'stalled' };
     state.running = true;
     state.stop = false;
     const scroller = scrollerOf(first);
     const startTop = scroller.scrollTop;
-    const startCount = ABCM.dom.getAllConversations().length;
+    const seen = new Set();
+    const startCount = collect(seen);
     let count = startCount;
     let stable = 0;
+    let status = 'limit';
+    let lastHeight = heightOf(scroller);
     try {
-      for (let round = 0; round < MAX_ROUNDS && stable < STABLE_ROUNDS && !state.stop; round += 1) {
+      for (let round = 0; round < MAX_ROUNDS && !state.stop; round += 1) {
         scroller.scrollTop = scroller.scrollHeight;
-        await waitForGrowth(count);
+        await waitForGrowth(seen, count);
         ABCM.checkboxes.attachAll();
-        const now = ABCM.dom.getAllConversations().length;
-        stable = now > count ? 0 : stable + 1;
+        const now = collect(seen);
+        // A list that keeps growing taller is still loading, even when this round added no new id.
+        const height = heightOf(scroller);
+        stable = now > count || height > lastHeight ? 0 : stable + 1;
+        lastHeight = height;
         count = Math.max(count, now);
         onProgress?.(count);
+        if (stable >= STABLE_ROUNDS) {
+          if (!atBottom(scroller) || stillLoading(scroller)) status = 'stalled';
+          // More ids seen than rows now mounted: the site recycles rows, so only the mounted ones can be selected.
+          else status = count > ABCM.dom.getAllConversations().length ? 'recycled' : 'complete';
+          break;
+        }
       }
+      if (state.stop) status = 'stopped';
     } finally {
       scroller.scrollTop = startTop;
       state.running = false;
     }
-    return { loaded: count - startCount, total: count, stopped: state.stop };
+    ABCM.state.listing = { status, at: Date.now() };
+    // total = distinct chats seen; actionable = rows on the page now, the only ones Select all can reach.
+    return { loaded: count - startCount, total: count, actionable: ABCM.dom.getAllConversations().length, stopped: state.stop, complete: status === 'complete', status };
   }
 
   ABCM.define('loader', { loadAll, stop: () => { state.stop = true; }, isRunning: () => state.running, scrollerOf });

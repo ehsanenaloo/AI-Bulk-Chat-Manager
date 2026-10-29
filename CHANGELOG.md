@@ -6,6 +6,38 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+## [9.1.0] - 2026-10-29
+
+### Changed
+
+- The Support button and the monthly support note now open the support page at enaloo.com, and their text no longer mentions coffee.
+
+### Fixed
+
+- A chat that could not be confirmed (the site timed out, the connection dropped, or the chat stayed in the list) is no longer counted as done. It is deselected and listed as not confirmed, so it is not repeated by mistake. Retry only repeats chats that failed for sure.
+- Archive no longer reports success when the chat is still in the list.
+- A server error or a lost connection no longer makes the extension try the same chat a second time through the page menus.
+- Stop now also stops chats that were waiting for their turn or for a rate limit to end.
+- Requests to the site now time out instead of waiting forever.
+- After a rate limit the extension waits as long as the site asks, and gives up on a chat after a few tries.
+- On Claude accounts with several organizations, the extension uses the organization you are working in.
+- The extension only clicks a menu or dialog that it opened itself.
+- A chat counts as deleted only if it is gone from the list and does not come back.
+- Load all older chats now says when the list may not be complete, when it was stopped, and when the site hides older rows so they cannot be selected.
+- Delete now checks the confirmation window that it clicked, not any window on the page, and does not click twice when the first click may have worked.
+- Changing two settings at the same time no longer loses one of them. If saving is too slow, it reports a failure instead of writing twice.
+
+### Added
+
+- A welcome page opens once in a background tab after a fresh install.
+- A short survey page opens after you remove the extension.
+- The Options page has links to report a problem and to suggest a feature.
+- The confirmation dialog has a tick box for every chat, so you can leave single chats out before you confirm.
+- After a run, Report (JSON) and Report (CSV) save the result of every chat.
+- After a run, Check again looks at the chat list for chats that were not confirmed and tells you which are no longer listed, which are still listed and which could not be checked. It does not ask the site and does not select anything.
+- Reports say how each finished chat was confirmed and what Check again saw.
+- After archiving on ChatGPT, Undo archive restores the archived chats.
+
 ## [9.0.1] - 2026-10-12
 
 ### Changed
@@ -72,6 +104,7 @@ These versions were published without a changelog. The last one, 8.10.6, was a p
 - New 16, 48 and 128 pixel icons.
 - The MIT license.
 
-[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.1...HEAD
+[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.0...HEAD
+[9.1.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.1...v9.1.0
 [9.0.1]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/releases/tag/v9.0.0
