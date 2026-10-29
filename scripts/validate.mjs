@@ -20,7 +20,7 @@ export const ALLOWED_PERMISSIONS = ['activeTab', 'scripting', 'storage'];
 // Addresses the code may mention. Everything is https.
 export const ALLOWED_HOSTS = new Set([
   'chatgpt.com', 'chat.openai.com', 'claude.ai', 'gemini.google.com', 'grok.com',
-  'github.com', 'ehsanenaloo.github.io', 'buymeacoffee.com', 'www.enaloo.com', 'enaloo.com',
+  'github.com', 'ehsanenaloo.github.io', 'www.enaloo.com', 'enaloo.com',
   'chromewebstore.google.com', 'addons.mozilla.org', 'microsoftedge.microsoft.com',
   'www.w3.org' // XML namespaces in inline SVG
 ]);

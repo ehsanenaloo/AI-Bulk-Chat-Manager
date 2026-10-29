@@ -90,8 +90,8 @@
   }
 
   function wireLinks() {
-    const urls = { guide: ABCM.links.guide, repo: ABCM.links.repo, issues: ABCM.links.issues, rate: ABCM.links.reviewUrl(), support: ABCM.links.support, website: ABCM.links.website };
-    const labels = { guide: 'popup.guide', repo: 'popup.source', issues: 'options.reportIssue', rate: 'popup.rate', support: 'popup.support', website: 'options.website' };
+    const urls = { guide: ABCM.links.guide, repo: ABCM.links.repo, bug: ABCM.links.feedbackUrl('bug', ABCM.version), feature: ABCM.links.feedbackUrl('feature', ABCM.version), rate: ABCM.links.reviewUrl(), support: ABCM.links.support, website: ABCM.links.website };
+    const labels = { guide: 'popup.guide', repo: 'popup.source', bug: 'options.reportIssue', feature: 'options.suggestFeature', rate: 'popup.rate', support: 'popup.support', website: 'options.website' };
     g.document.querySelectorAll('[data-link]').forEach((button) => {
       const kind = button.dataset.link;
       button.textContent = t(labels[kind]);

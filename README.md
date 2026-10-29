@@ -13,7 +13,7 @@ It runs on your device only. No account, no tracking, no server.
 
 [![Get it for Chrome](https://img.shields.io/badge/Chrome%20Web%20Store-Add%20to%20Chrome-4285F4?logo=googlechrome&logoColor=white&style=for-the-badge)](https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc)
 [![User guide](https://img.shields.io/badge/User%20guide-Read%20online-0f766e?logo=readthedocs&logoColor=white&style=for-the-badge)](https://enaloo.com/apps/ai-bulk-chat-manager/)
-[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/enaloo)
+[![Support the project](https://img.shields.io/badge/Support%20the%20project-0f766e?style=for-the-badge)](https://enaloo.com/support/)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-blue)
@@ -123,7 +123,7 @@ Bug reports, site-change reports, translation fixes and small pull requests are 
 
 The translations (except English) are machine-assisted and have not been reviewed by native speakers. If you speak one of the 11 languages natively and can improve a translation, please [open an issue](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/issues/new/choose) or send a pull request. See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
-If AI Bulk Chat Manager saves you time, you can [buy me a coffee](https://buymeacoffee.com/enaloo). A rating on the [Chrome Web Store](https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc) also helps other people find it.
+If AI Bulk Chat Manager saves you time, you can [support the project](https://enaloo.com/support/). A rating on the [Chrome Web Store](https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc) also helps other people find it.
 
 ### Contributors
 

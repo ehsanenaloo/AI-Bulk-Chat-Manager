@@ -123,7 +123,7 @@ test('every key the code uses exists in English, and every English key is used',
   for (const m of text.matchAll(/\bt\(\s*'([\w.-]+)'/g)) used.add(m[1]);
   for (const m of text.matchAll(/data-i18n="([\w.-]+)"/g)) used.add(m[1]);
   for (const m of text.matchAll(/data-i18n-attr="([^"]+)"/g)) m[1].split(';').forEach((pair) => used.add(pair.split(':')[1].trim()));
-  for (const m of text.matchAll(/'(popup|panel|options|settings|nudge|toast|confirm|result|running|launcher|page)\.[\w.-]+'/g)) used.add(m[0].slice(1, -1));
+  for (const m of text.matchAll(/'(popup|panel|options|settings|nudge|toast|confirm|result|running|launcher|page|observe)\.[\w.-]+'/g)) used.add(m[0].slice(1, -1));
   // keys built from a template: t(`export.${format}`), t(`result.${verb}`), t(`running.${verb}`), reason.*
   ['export.json', 'export.csv', 'export.md', 'result.deleted', 'result.archived', 'running.deleting', 'running.archiving'].forEach((k) => used.add(k));
   for (const id of ['about', 'github', 'rate', 'support']) for (const part of ['label', 'message', 'cta']) used.add(`footer.${id}.${part}`);

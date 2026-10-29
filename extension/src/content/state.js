@@ -21,6 +21,8 @@
     stopRequested: false,
     shiftPressed: false,
     lastChecked: null,
+    /** How the last Load all ended ({ status, at }), or null. Check again needs it to judge the page list. */
+    listing: null,
     diagnostics: { failures: {}, apiFallbacks: 0, anchorRebinds: 0, retries: 0, runs: 0 },
 
     // ── change notification ────────────────────────────────────────────────────────────────
@@ -96,6 +98,12 @@
     },
 
     isLive: (record) => !!record?.anchor?.isConnected,
+
+    /** Whether any registered record points at a row that is no longer on the page. */
+    hasStaleRecord() {
+      for (const record of records.values()) if (!record.anchor?.isConnected) return true;
+      return false;
+    },
 
     /** Live records in the order they appear on the page. */
     ordered() {

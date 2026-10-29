@@ -7,6 +7,11 @@
   backend. It must never act on the wrong item, so it matches menu items and buttons by label
   (in many interface languages), refuses candidates that do not match anything, and for deletes
   checks that the row really went away before it reports success.
+
+  Menus and dialogs live in page-wide overlays, so the engine never takes "the last one on the page".
+  It notes what is open before it clicks, accepts only an overlay that appeared because of its own
+  click (or the one the trigger's aria-controls names), and refuses to act when that is not exactly one.
+  An outcome it cannot confirm is returned as { ok: false, unknown: true }, never as success.
 */
 (function (g) {
   'use strict';
@@ -19,6 +24,28 @@
 
   const labelsFor = (operation) => cfg().labels[operation === 'DELETE' ? 'delete' : 'archive'].map(norm);
   const isVisible = (el, fast = false) => ABCM.dom.isVisible(el, { fast });
+
+  const ROW_GONE_STABLE_MS = 400; // the row must stay gone this long before a deletion counts
+
+  const visibleAll = (selector) => Array.from(g.document.querySelectorAll(selector)).filter((el) => isVisible(el));
+  /** Drops overlays that contain another candidate (a wrapper pane around the real menu or dialog). */
+  const innermost = (list) => list.filter((el) => !list.some((other) => other !== el && el.contains(other)));
+  const snapshotMenus = () => new Set(visibleAll(cfg().selectors.menu));
+  const snapshotDialogs = () => new Set(visibleAll(cfg().selectors.dialog));
+
+  /**
+   * The overlay this action opened: the one the trigger's aria-controls names, else the only one that
+   * was not open before the click. Anything else (none, or several) returns null so nothing is clicked.
+   */
+  function pickOverlay(candidates, before, trigger) {
+    const controls = trigger?.getAttribute?.('aria-controls');
+    if (controls) {
+      const bound = candidates.filter((el) => el.id === controls);
+      if (bound.length === 1) return bound[0];
+    }
+    const fresh = before ? candidates.filter((el) => !before.has(el)) : candidates;
+    return fresh.length === 1 ? fresh[0] : null;
+  }
 
   /**
    * How well an element's text, aria-label and test id match the operation's words.
@@ -95,11 +122,11 @@
     return primary;
   }
 
-  function waitForMenu(scope, timeout, strategy) {
-    return util().waitForCondition(() => {
-      const menus = findVisibleMenus(scope, strategy);
-      return menus[menus.length - 1] || null;
-    }, { root: g.document, timeout, pollMs: strategy === 'aggressive' ? 100 : 160 });
+  function waitForMenu(scope, timeout, strategy, { before = null, trigger = null } = {}) {
+    return util().waitForCondition(
+      () => pickOverlay(innermost(findVisibleMenus(scope, strategy)), before, trigger),
+      { root: g.document, timeout, pollMs: strategy === 'aggressive' ? 100 : 160 }
+    );
   }
 
   /** Dispatches the full pointer/mouse/click sequence frameworks listen for. */
@@ -156,22 +183,43 @@
     return score;
   }
 
-  function findConfirmButton(operation, timeout, strategy) {
+  function findConfirmButton(operation, timeout, strategy, before = null) {
     return util().waitForCondition(() => {
-      const dialogs = Array.from(g.document.querySelectorAll(cfg().selectors.dialog)).filter((el) => isVisible(el));
-      const dialog = dialogs[dialogs.length - 1];
-      if (!dialog) return null;
-      const best = Array.from(dialog.querySelectorAll(cfg().selectors.confirmButton))
-        .map((candidate) => ({ candidate, score: scoreConfirm(candidate, operation) }))
-        .filter((entry) => entry.score > 0)
-        .sort((a, b) => b.score - a.score)[0];
-      return best ? { dialog, button: best.candidate } : null;
+      const open = innermost(visibleAll(cfg().selectors.dialog));
+      const fresh = before ? open.filter((dialog) => !before.has(dialog)) : open;
+      const matches = fresh.map((dialog) => ({
+        dialog,
+        best: Array.from(dialog.querySelectorAll(cfg().selectors.confirmButton))
+          .map((candidate) => ({ candidate, score: scoreConfirm(candidate, operation) }))
+          .filter((entry) => entry.score > 0)
+          .sort((a, b) => b.score - a.score)[0]
+      })).filter((entry) => entry.best);
+      // More than one dialog offering the action: it is not clear which one is ours.
+      return matches.length === 1 ? { dialog: matches[0].dialog, button: matches[0].best.candidate } : null;
     }, { root: g.document, timeout: timeout || cfg().timeouts.elementWaitShort, pollMs: strategy === 'aggressive' ? 90 : 140 });
   }
 
-  /** Waits until the row left the list or was hidden by the site. */
-  async function waitForRowGone(anchor, timeout) {
-    const gone = await util().waitForCondition(() => (!anchor.isConnected || !isVisible(anchor, true) ? true : null), { timeout, pollMs: 120 });
+  /** Whether the chat is still listed: its own row, or a re-rendered row carrying the same id. */
+  function rowStillListed(record) {
+    const anchor = record?.anchor;
+    if (anchor?.isConnected && isVisible(anchor, true)) return true;
+    const live = record?.id ? ABCM.bulk?.findLiveAnchor?.(record.id) : null;
+    return !!(live && live !== anchor && live.isConnected && isVisible(live, true));
+  }
+
+  const rowGoneNow = (record) => !!record && !rowStillListed(record);
+
+  /**
+   * Waits until the chat has been absent for a short, unbroken stretch. A node swapped by the site's
+   * re-render, or hidden for a moment, is not a deletion: the chat's id must be absent as well.
+   */
+  async function waitForRowGone(record, timeout) {
+    let goneSince = 0;
+    const gone = await util().waitForCondition(() => {
+      if (rowStillListed(record)) { goneSince = 0; return null; }
+      goneSince = goneSince || Date.now();
+      return Date.now() - goneSince >= ROW_GONE_STABLE_MS ? true : null;
+    }, { timeout, pollMs: 60 });
     return !!gone;
   }
 
@@ -192,10 +240,11 @@
       .find((el) => (el.getAttribute('aria-label') || '').toLowerCase().includes(wanted) && isVisible(el, true)) || null,
     { root: row, timeout: strategy === 'aggressive' ? 700 : 450, pollMs: 90 });
     if (!button) return { ok: false, reason: 'direct-action-not-available' };
+    const dialogsBefore = snapshotDialogs();
     await activate(button, { aggressive: strategy !== 'primary' });
     await util().delay(cfg().delays.medium);
-    const confirm = await confirmAction(operation, strategy, record);
-    if (!confirm?.ok) return { ok: false, reason: confirm?.reason || 'confirm-not-found' };
+    const confirm = await confirmAction(operation, strategy, record, dialogsBefore);
+    if (!confirm?.ok) return { ok: false, unknown: !!confirm?.unknown, reason: confirm?.reason || 'confirm-not-found' };
     return { ok: true, via: 'direct-row-action' };
   }
 
@@ -206,9 +255,10 @@
     await util().delay(strategy === 'aggressive' ? 70 : cfg().delays.short);
     const button = resolveMenuButton(record, strategy);
     if (!button) return { ok: false, reason: 'menu-button-not-found' };
+    const before = snapshotMenus();
     await activate(button, { aggressive: strategy !== 'primary' });
     await util().delay(strategy === 'aggressive' ? cfg().delays.long : cfg().delays.medium);
-    const menu = await waitForMenu(sidebarScope(record), cfg().timeouts.elementWaitShort, strategy);
+    const menu = await waitForMenu(sidebarScope(record), cfg().timeouts.elementWaitShort, strategy, { before, trigger: button });
     if (!menu) return { ok: false, reason: 'menu-not-opened' };
     return { ok: true, menu, menuButton: button };
   }
@@ -224,36 +274,37 @@
    * Confirms the action. Archive has no dialog, so success means the row left the list. Delete
    * clicks the dialog's matching button, waits for the dialog to close and then for the row to go.
    */
-  async function confirmAction(operation, strategy = 'primary', record = null) {
-    const anchor = record?.anchor;
+  async function confirmAction(operation, strategy = 'primary', record = null, dialogsBefore = null) {
     if (operation !== 'DELETE') {
-      if (anchor?.isConnected) {
-        if (await waitForRowGone(anchor, cfg().timeouts.elementWaitShort)) return { ok: true, verified: true };
-        ABCM.state.diagnostics.unverifiedArchives = (ABCM.state.diagnostics.unverifiedArchives || 0) + 1;
-        return { ok: true, verified: false };
-      }
-      await util().delay(cfg().delays.extended);
-      return { ok: true };
+      // Without a row to watch there is nothing to confirm against.
+      if (record && await waitForRowGone(record, cfg().timeouts.rowGone)) return { ok: true, verified: true };
+      ABCM.state.diagnostics.unverifiedArchives = (ABCM.state.diagnostics.unverifiedArchives || 0) + 1;
+      return { ok: false, unknown: true, reason: 'archive-unverified' };
     }
 
-    const found = await findConfirmButton(operation, cfg().timeouts.elementWaitShort, strategy);
+    const found = await findConfirmButton(operation, cfg().timeouts.elementWaitShort, strategy, dialogsBefore);
     if (!found?.button) return { ok: false, reason: 'confirm-not-found' };
     await activate(found.button, { aggressive: strategy !== 'primary' });
     await util().delay(cfg().delays.medium);
-    let closed = await util().waitForGone(cfg().selectors.dialog, cfg().timeouts.elementWaitShort);
+    // Only the dialog that was clicked counts: an unrelated dialog staying open says nothing about ours.
+    const dialog = found.dialog;
+    const dialogClosed = () => util().waitForCondition(() => (!dialog.isConnected || !isVisible(dialog, true) ? true : null), { timeout: cfg().timeouts.elementWaitShort, pollMs: 80 });
+    let closed = await dialogClosed();
     if (!closed) {
-      // One aggressive retry against whatever confirm button is present now.
-      const retry = await findConfirmButton(operation, 320, 'aggressive');
-      if (retry?.button) {
+      // The same dialog is still open with the same enabled button: the click most likely did not register.
+      const retry = await findConfirmButton(operation, 320, 'aggressive', dialogsBefore);
+      if (retry?.dialog === dialog && retry.button === found.button && !rowGoneNow(record)) {
         await activate(retry.button, { aggressive: true });
         await util().delay(cfg().delays.medium);
-        closed = await util().waitForGone(cfg().selectors.dialog, cfg().timeouts.elementWaitShort);
+        closed = await dialogClosed();
       }
     }
-    if (!closed) return { ok: false, reason: 'confirm-not-completed' };
+    // The confirm button was clicked, so the site may have started the change: unknown, not a clean failure.
+    if (!closed) return { ok: false, unknown: true, reason: 'confirm-not-completed' };
     // A closed dialog is not proof of deletion (it may have been cancelled): the row must be gone too.
-    if (anchor && !(await waitForRowGone(anchor, 3000))) return { ok: false, reason: 'delete-unconfirmed' };
-    return { ok: true };
+    // The confirm was clicked, so the site may still be working: the outcome is unknown, not a clean failure.
+    if (record && !(await waitForRowGone(record, cfg().timeouts.rowGone))) return { ok: false, unknown: true, reason: 'delete-unconfirmed' };
+    return { ok: true, verified: true };
   }
 
   /** Gemini has no usable REST endpoint, so the chat is deleted through the row's Material menu. */
@@ -288,38 +339,39 @@
     }
     if (!menuButton) return { ok: false, reason: 'menu-button-not-found' };
     menuButton.focus?.();
+    const menusBefore = new Set(Array.from(g.document.querySelectorAll('[role="menu"], .mat-mdc-menu-panel, .cdk-overlay-pane')).filter(visible));
+    const dialogsBefore = new Set(Array.from(g.document.querySelectorAll('[role="dialog"], [role="alertdialog"], mat-dialog-container, .cdk-dialog-container, .mat-mdc-dialog-container')).filter(visible));
     fire(menuButton, ['pointerdown', 'mousedown', 'mouseup', 'pointerup', 'click']);
 
-    const menu = await util().waitForCondition(() => {
-      const menus = Array.from(g.document.querySelectorAll('[role="menu"], .mat-mdc-menu-panel, .cdk-overlay-pane')).filter(visible);
-      return menus[menus.length - 1] || null;
-    }, { timeout: 1600, pollMs: 70 });
-    if (!menu) return { ok: false, reason: 'menu-not-opened' };
-
-    const item = await util().waitForCondition(() => Array.from(menu.querySelectorAll('[role="menuitem"], button[mat-menu-item], .mat-mdc-menu-item, button, [role="button"]'))
+    // Only the menu this click opened, and only when exactly one new menu offers Delete.
+    const MENUS = '[role="menu"], .mat-mdc-menu-panel, .cdk-overlay-pane';
+    const DIALOGS = '[role="dialog"], [role="alertdialog"], mat-dialog-container, .cdk-dialog-container, .mat-mdc-dialog-container';
+    const bestOf = (root, selector) => Array.from(root.querySelectorAll(selector))
       .map((el) => ({ el, score: visible(el) ? labelScore(el, 'DELETE') : 0 }))
       .filter((entry) => entry.score > 0)
-      .sort((a, b) => b.score - a.score)[0]?.el || null, { timeout: 1400, pollMs: 70 });
-    if (!item) return { ok: false, reason: 'operation-item-not-found' };
-    fire(item, ['pointerdown', 'mousedown', 'mouseup', 'pointerup', 'click']);
+      .sort((a, b) => b.score - a.score)[0]?.el || null;
+    const fresh = (selector, before) => innermost(Array.from(g.document.querySelectorAll(selector)).filter((el) => visible(el) && !before.has(el)));
+
+    const hit = await util().waitForCondition(() => {
+      const hits = fresh(MENUS, menusBefore).map((menu) => ({ menu, item: bestOf(menu, '[role="menuitem"], button[mat-menu-item], .mat-mdc-menu-item, button, [role="button"]') })).filter((entry) => entry.item);
+      return hits.length === 1 ? hits[0] : null;
+    }, { timeout: 3000, pollMs: 70 });
+    if (!hit) return { ok: false, reason: fresh(MENUS, menusBefore).length ? 'operation-item-not-found' : 'menu-not-opened' };
+    fire(hit.item, ['pointerdown', 'mousedown', 'mouseup', 'pointerup', 'click']);
 
     // The confirmation dialog is a Material dialog: click its Delete button, never Cancel.
     const confirm = await util().waitForCondition(() => {
-      const dialog = Array.from(g.document.querySelectorAll('[role="dialog"], [role="alertdialog"], mat-dialog-container, .cdk-dialog-container, .mat-mdc-dialog-container')).filter(visible).pop();
-      if (!dialog) return null;
-      return Array.from(dialog.querySelectorAll('button, [role="button"]'))
-        .map((el) => ({ el, score: visible(el) ? labelScore(el, 'DELETE') : 0 }))
-        .filter((entry) => entry.score > 0)
-        .sort((a, b) => b.score - a.score)[0]?.el || null;
+      const hits = fresh(DIALOGS, dialogsBefore).map((dialog) => bestOf(dialog, 'button, [role="button"]')).filter(Boolean);
+      return hits.length === 1 ? hits[0] : null;
     }, { timeout: 1800, pollMs: 70 });
     if (confirm) {
       confirm.focus?.();
       fire(confirm, ['pointerdown', 'mousedown', 'mouseup', 'pointerup', 'click']);
     }
 
-    const gone = await waitForRowGone(anchor, 2200);
+    const gone = await waitForRowGone(record, 2200);
     if (gone) return { ok: true, verified: true, via: 'dom' };
-    return { ok: false, reason: confirm ? 'delete-unconfirmed' : 'confirm-not-found' };
+    return confirm ? { ok: false, unknown: true, reason: 'delete-unconfirmed' } : { ok: false, reason: 'confirm-not-found' };
   }
 
   /** One complete attempt at an operation through the page UI using the given strategy. */
@@ -328,14 +380,17 @@
     if (site && site.id !== 'chatgpt') {
       const direct = await tryDirectRowAction(operation, record, strategy);
       if (direct?.ok) return { ok: true };
+      // The direct action already asked the site; trying the menu route as well could act twice.
+      if (direct?.unknown) return direct;
     }
     const opened = await openMenu(record, strategy);
     if (!opened.ok) return opened;
     const item = await resolveMenuItem(operation, opened.menu, strategy);
     if (!item) return { ok: false, reason: 'operation-item-not-found' };
+    const dialogsBefore = snapshotDialogs();
     const triggered = await triggerOperation(operation, opened.menu, strategy, item);
     if (!triggered.ok) return triggered;
-    const confirmed = await confirmAction(operation, strategy, record);
+    const confirmed = await confirmAction(operation, strategy, record, dialogsBefore);
     if (!confirmed.ok) return confirmed;
     return { ok: true };
   }

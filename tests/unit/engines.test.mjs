@@ -37,7 +37,11 @@ test('chatgpt API: tries the cookie, gets a bearer token on 401, then retries on
 test('chatgpt API: error mapping and id encoding', async () => {
   let status = 500;
   const e = setup('chatgpt', (url) => (url === '/api/auth/session' ? { status: 200, json: {} } : { status }));
-  assert.deepEqual(plain(await e.ABCM.apiEngine.run('DELETE', 'a')), { ok: false, reason: 'api-http-500' });
+  assert.deepEqual(plain(await e.ABCM.apiEngine.run('DELETE', 'a')), { ok: false, unknown: true, reason: 'api-http-500' }, 'a server error does not say whether the change was applied');
+  status = 403;
+  assert.deepEqual(plain(await e.ABCM.apiEngine.run('DELETE', 'a')), { ok: false, reason: 'api-auth-failed' });
+  status = 400;
+  assert.deepEqual(plain(await e.ABCM.apiEngine.run('DELETE', 'a')), { ok: false, reason: 'api-http-400' });
   status = 429;
   assert.equal((await e.ABCM.apiEngine.run('DELETE', 'a')).reason, 'api-rate-limited');
   status = 401;
@@ -118,7 +122,7 @@ test('bulk: API phase succeeds for everyone, no page-UI fallback, deleted chats 
 test('bulk: an API failure falls back to the page UI for that chat only', async () => {
   const e = bulkEnv('chatgpt', 4);
   const bad = e.ABCM.state.visible()[1].id;
-  e.ABCM.apiEngine.run = async (op, id) => (id === bad ? { ok: false, reason: 'api-http-500' } : { ok: true });
+  e.ABCM.apiEngine.run = async (op, id) => (id === bad ? { ok: false, reason: 'api-http-400' } : { ok: true });
   const viaUi = [];
   e.ABCM.visualEngine.attempt = async (op, record) => { viaUi.push(record.id); return { ok: true }; };
   const summary = await e.ABCM.bulk.run('DELETE');

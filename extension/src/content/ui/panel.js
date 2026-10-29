@@ -196,32 +196,99 @@
     return text === key ? t('reason.unknown', { code: raw }) : text;
   }
 
+  /** Success wording only for a list whose end was reached and whose rows are all on the page. */
+  function loadedMessage(result) {
+    const mounted = { count: result.actionable ?? result.total };
+    switch (result.status) {
+      case 'complete': return t('toast.loaded', { count: result.total });
+      case 'stopped': return t('toast.loadStopped', mounted);
+      case 'busy': return t('toast.loadBusy');
+      default: return t('toast.loadedPartial', mounted); // stalled, recycled, limit
+    }
+  }
+
+  const OBSERVED_ITEM = { 'no-longer-listed': 'observe.item.noLongerListed', 'still-listed': 'observe.item.stillListed', 'not-confirmed': 'observe.item.notConfirmed' };
+  const OBSERVED_COUNT = [['no-longer-listed', 'observe.noLongerListed'], ['still-listed', 'observe.stillListed'], ['not-confirmed', 'observe.notConfirmed']];
+
   function summaryTitle(summary) {
     const failed = summary.failures.length;
+    const unknown = (summary.unknown || []).length;
     const verb = summary.operation === 'DELETE' ? 'deleted' : 'archived';
     if (summary.stopped) return t('result.stopped', { done: summary.succeeded, total: summary.total });
-    if (!failed) return t(`result.${verb}`, { count: summary.succeeded });
-    if (!summary.succeeded) return t('result.allFailed', { count: failed });
+    if (!failed && !unknown) return t(`result.${verb}`, { count: summary.succeeded });
+    if (!summary.succeeded && !unknown) return t('result.allFailed', { count: failed });
+    if (!summary.succeeded && !failed) return t('result.unknown', { count: unknown });
+    if (unknown && failed) return `${t('result.partial', { succeeded: summary.succeeded, total: summary.total, failed })}; ${t('result.unknown', { count: unknown })}`;
+    if (unknown) return t('result.partialUnknown', { succeeded: summary.succeeded, total: summary.total, unknown });
     return t('result.partial', { succeeded: summary.succeeded, total: summary.total, failed });
   }
 
   function showResult(summary) {
     ui.summary = summary;
     const r = ui.refs;
-    const failed = summary.failures.length;
+    const problems = [...summary.failures, ...(summary.unknown || [])];
+    const failed = problems.length;
     const good = !failed && !summary.stopped;
     r.resultHead.className = `result-head ${good ? 'ok' : 'warn'}`;
     r.resultIcon.replaceChildren(icon(good ? 'checkCircle' : 'alert', 'result-icon'));
     r.resultTitle.textContent = summaryTitle(summary);
-    r.resultSub.textContent = summary.stopped ? t('result.stoppedHint') : failed ? t('result.failedHint') : '';
+    const checked = (summary.items || []).filter((item) => item.status === 'unknown' && item.observation);
+    const untrusted = checked.some((item) => item.observation.basis !== 'page-list');
+    r.resultSub.textContent = summary.stopped ? t('result.stoppedHint')
+      : checked.length ? `${t('result.observedHint')}${untrusted ? ` ${t('result.observedUntrusted')}` : ''}`
+        : (summary.unknown || []).length ? t('result.unknownHint') : failed ? t('result.failedHint') : '';
     r.resultSub.hidden = !r.resultSub.textContent;
-    r.failList.replaceChildren(...summary.failures.map((item) => h('li', {}, h('div', { class: 'fail-title', text: item.title || t('panel.untitled') }), h('div', { class: 'fail-reason', text: reasonText(item.reason) }))));
+    const observedOf = new Map((summary.items || []).filter((item) => item.observation).map((item) => [item.id, item.observation.result]));
+    r.failList.replaceChildren(...problems.map((item) => h('li', {},
+      h('div', { class: 'fail-title', text: item.title || t('panel.untitled') }),
+      h('div', { class: 'fail-reason', text: reasonText(item.reason) }),
+      observedOf.has(item.id) ? h('div', { class: 'fail-observed', text: t(OBSERVED_ITEM[observedOf.get(item.id)]) }) : null)));
+    const counts = ABCM.bulk.observedCounts(summary);
+    const lines = checked.length ? OBSERVED_COUNT.filter(([key]) => counts[key]).map(([key, text]) => h('li', { text: t(text, { count: counts[key] }) })) : [];
+    r.observed.replaceChildren(...lines);
+    r.observed.hidden = !lines.length;
     r.failList.hidden = !failed;
-    r.retry.hidden = !failed;
+    r.retry.hidden = !summary.failures.length; // only confirmed failures are retried; unconfirmed chats are deselected
     r.copyReport.hidden = !failed;
+    const hasItems = (summary.items || []).length > 0;
+    r.reportJson.hidden = !hasItems;
+    r.reportCsv.hidden = !hasItems;
+    r.recheck.hidden = !(summary.unknown || []).length;
+    r.undo.hidden = !(summary.operation === 'ARCHIVE' && summary.succeeded > 0 && ABCM.apiEngine.canUndoArchive());
+    r.undo.disabled = false;
+    r.resultTools.hidden = [r.reportJson, r.reportCsv, r.recheck, r.undo].every((button) => button.hidden);
     setView('result');
     announce(`${r.resultTitle.textContent}. ${r.resultSub.textContent}`.trim());
     r.done.focus({ preventScroll: true });
+  }
+
+  function exportReport(format) {
+    const summary = ui.summary;
+    if (!summary?.items?.length) return;
+    const site = ABCM.sites.current();
+    ABCM.exporter.download(format, [], site?.name || '', site?.id || '', { report: summary });
+    toast(t('toast.exported', { count: summary.items.length, format: t(`export.${format}`) }));
+  }
+
+  /** Looks at the page list again for chats that were not confirmed. Reads only: no request, no selection change. */
+  function recheckUnknown() {
+    const summary = ui.summary;
+    if (!summary?.unknown?.length) return;
+    ABCM.bulk.applyObservations(summary, ABCM.bulk.recheck(summary.unknown));
+    const counts = summary.observed;
+    showResult(summary);
+    toast(t('result.recheckDone', { gone: counts['no-longer-listed'], listed: counts['still-listed'], unconfirmed: counts['not-confirmed'] }));
+  }
+
+  async function undoArchive() {
+    const summary = ui.summary;
+    const ids = (summary?.items || []).filter((item) => item.status === 'succeeded').map((item) => item.id);
+    if (!ids.length) return;
+    ui.refs.undo.disabled = true;
+    const result = await ABCM.bulk.undoArchive(ids);
+    if (result.failed.length) { toast(t('result.undoFailed', { count: result.failed.length })); ui.refs.undo.disabled = false; return; }
+    ui.refs.undo.hidden = true;
+    toast(t('result.undone', { count: result.restored.length }));
   }
 
   async function runOperation(operation) {
@@ -252,7 +319,7 @@
         }
       });
     } catch (error) {
-      summary = { operation, requested: 0, total: 0, succeeded: 0, stopped: false, failures: [{ id: '', title: '', reason: error?.message || 'operation-failed' }] };
+      summary = { operation, requested: 0, total: 0, succeeded: 0, stopped: false, unknown: [], failures: [{ id: '', title: '', reason: error?.message || 'operation-failed' }] };
     }
     showResult(summary);
   }
@@ -267,41 +334,59 @@
   }
 
   function openConfirm(operation) {
-    const items = ABCM.state.selectedItems();
-    if (!items.length) return;
+    const initial = ABCM.state.selectedItems();
+    if (!initial.length) return;
     const site = ABCM.sites.current();
     const isDelete = operation === 'DELETE';
-    const count = items.length;
-    const needsAck = isDelete && count > ABCM.settings.get().confirmThreshold;
+    const keep = new Set(initial.map((item) => item.id)); // chats still ticked in this dialog
+    const threshold = ABCM.settings.get().confirmThreshold;
 
-    const search = count > 8 ? h('input', { class: 'input', type: 'search', placeholder: t('confirm.search'), 'aria-label': t('confirm.search') }) : null;
+    const search = initial.length > 8 ? h('input', { class: 'input', type: 'search', placeholder: t('confirm.search'), 'aria-label': t('confirm.search') }) : null;
     const list = h('ul', { class: 'chat-list', tabindex: '0', 'aria-label': t('confirm.listLabel') });
+    const title = h('h2', { id: 'abcm-dlg-title' });
+    const ack = isDelete ? h('input', { type: 'checkbox', id: 'abcm-ack' }) : null;
+    const ackRow = ack ? h('label', { class: 'ack', for: 'abcm-ack' }, ack, h('span', { text: t('confirm.ack') })) : null;
+    const confirmBtn = h('button', { class: `btn ${isDelete ? 'btn-danger' : 'btn-primary'}`, type: 'button' });
+
+    // Title, button and the extra confirmation follow the number of chats still ticked.
+    const refresh = () => {
+      const count = keep.size;
+      const needsAck = isDelete && count > threshold;
+      title.textContent = isDelete ? t('confirm.deleteTitle', { count }) : t('confirm.archiveTitle', { count });
+      confirmBtn.textContent = isDelete ? t('confirm.deleteAction', { count }) : t('confirm.archiveAction', { count });
+      if (ackRow) ackRow.hidden = !needsAck;
+      confirmBtn.disabled = count === 0 || (needsAck && !ack.checked);
+    };
     const paint = (query = '') => {
       const q = query.trim().toLowerCase();
-      list.replaceChildren(...items.filter((item) => !q || `${item.title} ${item.id}`.toLowerCase().includes(q))
-        .map((item) => h('li', { text: item.title || t('panel.untitled'), title: item.title })));
+      list.replaceChildren(...initial.filter((item) => !q || `${item.title} ${item.id}`.toLowerCase().includes(q)).map((item) => {
+        const label = item.title || t('panel.untitled');
+        const box = h('input', { type: 'checkbox', checked: keep.has(item.id), 'aria-label': label });
+        box.addEventListener('change', () => { if (box.checked) keep.add(item.id); else keep.delete(item.id); refresh(); });
+        return h('li', { title: item.title }, h('label', { class: 'chat-pick' }, box, h('span', { text: label })));
+      }));
     };
     paint();
     search?.addEventListener('input', () => paint(search.value));
-
-    const ack = needsAck ? h('input', { type: 'checkbox', id: 'abcm-ack' }) : null;
-    const confirmBtn = h('button', {
-      class: `btn ${isDelete ? 'btn-danger' : 'btn-primary'}`, type: 'button', disabled: needsAck,
-      text: isDelete ? t('confirm.deleteAction', { count }) : t('confirm.archiveAction', { count }),
-      on: { click: () => { closeDialog(false); runOperation(operation); } }
+    ack?.addEventListener('change', refresh);
+    confirmBtn.addEventListener('click', () => {
+      // Chats unticked here leave the selection, so the run touches only what the user still sees ticked.
+      initial.forEach((item) => { if (!keep.has(item.id)) ABCM.state.setSelected(item.id, false); });
+      closeDialog(false);
+      runOperation(operation);
     });
-    ack?.addEventListener('change', () => { confirmBtn.disabled = !ack.checked; });
     const cancelBtn = h('button', { class: 'btn', type: 'button', text: t('confirm.cancel'), on: { click: () => closeDialog() } });
 
     const dialog = h('div', {
       class: `dialog${isDelete ? ' is-danger' : ''}`, role: 'alertdialog', 'aria-modal': 'true', 'aria-labelledby': 'abcm-dlg-title', 'aria-describedby': 'abcm-dlg-body'
     },
     h('div', { class: 'dialog-main' },
-      h('h2', { id: 'abcm-dlg-title', text: isDelete ? t('confirm.deleteTitle', { count }) : t('confirm.archiveTitle', { count }) }),
+      title,
       h('p', { id: 'abcm-dlg-body', text: isDelete ? t('confirm.deleteBody', { site: site?.name || '' }) : t('confirm.archiveBody', { site: site?.name || '' }) }),
       search, list,
-      needsAck ? h('label', { class: 'ack', for: 'abcm-ack' }, ack, h('span', { text: t('confirm.ack') })) : null),
+      ackRow),
     h('div', { class: 'dialog-actions' }, cancelBtn, confirmBtn));
+    refresh();
 
     let pressedOnScrim = false;
     const scrim = h('div', { class: 'scrim', on: {
@@ -388,10 +473,16 @@
       if (ui.loading) { ABCM.loader.stop(); return; }
       ui.loading = true;
       r.loadAllLabel.textContent = t('panel.loadingAll', { count: ABCM.dom.getAllConversations().length });
-      const result = await ABCM.loader.loadAll({ onProgress: (n) => { r.loadAllLabel.textContent = t('panel.loadingAll', { count: n }); } });
-      ui.loading = false;
-      r.loadAllLabel.textContent = t('panel.loadAll');
-      toast(t('toast.loaded', { count: result.total }));
+      let result = null;
+      try {
+        result = await ABCM.loader.loadAll({ onProgress: (n) => { r.loadAllLabel.textContent = t('panel.loadingAll', { count: n }); } });
+      } catch (error) {
+        ABCM.warn('load all failed', error);
+      } finally {
+        ui.loading = false;
+        r.loadAllLabel.textContent = t('panel.loadAll');
+      }
+      if (result) toast(loadedMessage(result));
       render();
     }) }, icon('chevronsDown'), r.loadAllLabel);
     r.empty = h('div', { class: 'empty', role: 'status', text: t('panel.empty') });
@@ -422,7 +513,13 @@
     r.resultSub = h('div', { class: 'run-sub' });
     r.resultHead = h('div', { class: 'result-head' }, r.resultIcon, h('div', {}, r.resultTitle, r.resultSub));
     r.failList = h('ul', { class: 'fail-list', tabindex: '0', 'aria-label': t('result.failures') });
-    r['view-result'] = h('div', { class: 'view', hidden: true }, r.resultHead, r.failList);
+    r.observed = h('ul', { class: 'observed', hidden: true });
+    r.reportJson = h('button', { class: 'btn btn-quiet btn-sm', type: 'button', hidden: true, on: act(() => exportReport('json')) }, icon('download'), h('span', { text: t('result.reportJson') }));
+    r.reportCsv = h('button', { class: 'btn btn-quiet btn-sm', type: 'button', hidden: true, on: act(() => exportReport('csv')) }, icon('download'), h('span', { text: t('result.reportCsv') }));
+    r.recheck = h('button', { class: 'btn btn-quiet btn-sm', type: 'button', hidden: true, on: act(recheckUnknown) }, icon('search'), h('span', { text: t('result.recheck') }));
+    r.undo = h('button', { class: 'btn btn-quiet btn-sm', type: 'button', hidden: true, on: act(undoArchive) }, icon('retry'), h('span', { text: t('result.undo') }));
+    r.resultTools = h('div', { class: 'result-tools', hidden: true }, r.recheck, r.undo, r.reportJson, r.reportCsv);
+    r['view-result'] = h('div', { class: 'view', hidden: true }, r.resultHead, r.observed, r.failList, r.resultTools);
 
     r.body = h('div', { class: 'body' }, r['view-select'], r['view-running'], r['view-result']);
 
@@ -447,7 +544,7 @@
 
     r.retry = h('button', { class: 'btn', type: 'button', hidden: true, on: act(() => { setView('select'); openConfirm(ui.summary?.operation || 'DELETE'); }) }, icon('retry'), h('span', { text: t('result.retry') }));
     r.copyReport = h('button', { class: 'btn btn-quiet', type: 'button', hidden: true, on: act(async () => {
-      const text = (ui.summary?.failures || []).map((f) => `${f.title || f.id} — ${reasonText(f.reason)}`).join('\n');
+      const text = ([...(ui.summary?.failures || []), ...(ui.summary?.unknown || [])]).map((f) => `${f.title || f.id} — ${reasonText(f.reason)}`).join('\n');
       try { await g.navigator.clipboard.writeText(text); toast(t('result.copied')); } catch (_) { toast(t('result.copyFailed')); }
     }) }, icon('copy'), h('span', { text: t('result.copy') }));
     r.done = h('button', { class: 'btn btn-primary', type: 'button', text: t('result.done'), on: act(() => { setView('select'); r.selectAll.focus({ preventScroll: true }); }) });

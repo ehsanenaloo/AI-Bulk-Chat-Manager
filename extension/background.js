@@ -6,12 +6,13 @@
     - serves the content scripts the files they cannot read themselves (translations, panel styles),
     - opens the options page and links on their behalf,
     - turns the keyboard shortcut into "toggle the panel in this tab",
-    - shows the monthly support heart on the toolbar icon.
+    - shows the monthly support heart on the toolbar icon,
+    - opens the welcome page once after a fresh install and sets the page the browser opens after removal.
   It has no host permissions, reads no pages and makes no network requests.
 */
 if (typeof importScripts === 'function') {
   // Service worker: pull in the shared modules. In Firefox the manifest lists them as background scripts.
-  importScripts('src/shared/namespace.js', 'src/shared/ext.js', 'src/shared/sites.js', 'src/shared/nudge.js', 'src/shared/inject.js');
+  importScripts('src/shared/namespace.js', 'src/shared/ext.js', 'src/shared/settings.js', 'src/shared/sites.js', 'src/shared/links.js', 'src/shared/nudge.js', 'src/shared/inject.js');
 }
 
 (function (g) {
@@ -47,8 +48,39 @@ if (typeof importScripts === 'function') {
     } catch (_) { /* the badge is a convenience */ }
   }
 
-  api.runtime.onInstalled.addListener(() => { ABCM.nudge.seed().then(refreshBadge).catch(() => {}); });
-  api.runtime.onStartup.addListener(refreshBadge);
+  // ── enaloo.com pages ───────────────────────────────────────────────────────────────────────
+  // The links carry only version, language, browser, system and install age. Nothing is sent from here.
+  const platformOs = () => new Promise((resolve) => {
+    try { api.runtime.getPlatformInfo((info) => { void api.runtime.lastError; resolve(info?.os); }); } catch (_) { resolve(undefined); }
+  });
+
+  async function setSurveyUrl() {
+    try {
+      const nudge = await ABCM.nudge.read();
+      const url = ABCM.links.uninstallUrl({
+        version: api.runtime.getManifest().version,
+        lang: ABCM.ext.uiLanguage(),
+        os: await platformOs(),
+        installedAt: nudge?.installedAt
+      });
+      await ABCM.ext.call(api.runtime.setUninstallURL, api.runtime, url);
+    } catch (_) { /* the survey is optional */ }
+  }
+
+  async function onInstalled(details) {
+    try { await ABCM.nudge.seed(); } catch (_) { /* the badge is a convenience */ }
+    refreshBadge();
+    if (details?.reason === 'install') {
+      try {
+        await ABCM.ext.tabsCreate({ url: ABCM.links.welcomeUrl({ version: api.runtime.getManifest().version, lang: ABCM.ext.uiLanguage() }), active: false });
+      } catch (_) { /* the welcome page is optional */ }
+    }
+    setSurveyUrl();
+  }
+
+  api.runtime.onInstalled.addListener(onInstalled);
+  api.runtime.onStartup.addListener(() => { refreshBadge(); setSurveyUrl(); });
+  setSurveyUrl(); // the URL is read only when the extension is removed, so set it on every worker start
   api.storage.onChanged.addListener((changes, area) => { if (area === 'local' && changes[ABCM.nudge.KEY]) refreshBadge(); });
 
   // ── messages from content scripts and pages ────────────────────────────────────────────────
@@ -74,6 +106,14 @@ if (typeof importScripts === 'function') {
       case 'ABCM_OPEN_OPTIONS':
         api.runtime.openOptionsPage(() => { void api.runtime.lastError; sendResponse({ ok: true }); });
         return true;
+      case 'ABCM_SAVE_SETTINGS': {
+        // The single writer for the settings: one change at a time, so pages cannot overwrite each other.
+        if (!message.patch || typeof message.patch !== 'object' || Array.isArray(message.patch)) { sendResponse({ ok: false, error: 'invalid patch' }); return false; }
+        ABCM.settings.commit(message.patch)
+          .then((settings) => sendResponse({ ok: true, settings }))
+          .catch((error) => sendResponse({ ok: false, error: error.message }));
+        return true;
+      }
       case 'ABCM_SUPPORT_PING':
         refreshBadge();
         sendResponse({ ok: true });

@@ -57,14 +57,58 @@
     return current;
   }
 
+  // Writes in this context run one after another, so two quick saves cannot read the same old value.
+  let writeQueue = Promise.resolve();
+
+  /** Reads the stored settings, merges the patch and writes the result. Callers in one context are serialized. */
+  function commit(patch) {
+    const run = writeQueue.then(async () => {
+      const stored = await ABCM.ext.storageGet([KEY]);
+      const base = normalize(stored?.[KEY]);
+      const next = normalize({ ...base, ...(patch && typeof patch === 'object' ? patch : {}) });
+      await ABCM.ext.storageSet({ [KEY]: next });
+      current = next;
+      return next;
+    });
+    writeQueue = run.catch(() => {});
+    return run;
+  }
+
+  const WRITER_TIMEOUT_MS = 8000;
+
+  /**
+   * Asks the background worker, the one writer shared by every page, to save the patch.
+   * Returns the saved settings, or null when there is no worker to ask (no receiver, no reply).
+   * Throws when the worker was reached but did not finish in time or refused: it may still write,
+   * so the page must not write the same change itself.
+   */
+  async function saveViaWriter(patch) {
+    let timer = null;
+    const timeout = new Promise((resolve) => { timer = setTimeout(() => resolve('timeout'), WRITER_TIMEOUT_MS); });
+    let reply;
+    try {
+      reply = await Promise.race([ABCM.ext.sendMessage({ type: 'ABCM_SAVE_SETTINGS', patch }), timeout]);
+    } catch (_) {
+      return null; // nobody is listening
+    } finally {
+      clearTimeout(timer);
+    }
+    if (reply === 'timeout') throw new Error('settings-save-timeout');
+    if (reply == null) return null;
+    if (!reply.ok || !reply.settings) throw new Error('settings-save-failed');
+    return normalize(reply.settings);
+  }
+
+  /**
+   * Saves a partial change. The popup, the options page and every content script send it to the
+   * background worker, which applies them one at a time, so two pages changing different fields at
+   * once both keep their change. Only when there is no worker at all does the page save by itself; if
+   * the worker is slow or fails, the save is reported as failed and can be tried again.
+   */
   async function save(patch) {
-    // Re-read first: another page (the popup, the options page, another tab) may have changed a different field.
-    const stored = await ABCM.ext.storageGet([KEY]);
-    const base = normalize(stored?.[KEY]);
-    const next = normalize({ ...base, ...patch });
-    await ABCM.ext.storageSet({ [KEY]: next });
-    current = next;
-    return next;
+    const viaWriter = await saveViaWriter(patch);
+    if (viaWriter) { current = viaWriter; return viaWriter; }
+    return commit(patch);
   }
 
   function onChange(listener) {
@@ -90,6 +134,7 @@
     normalize,
     load,
     save,
+    commit,
     onChange,
     get: () => current
   });

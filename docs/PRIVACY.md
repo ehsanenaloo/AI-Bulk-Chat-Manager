@@ -48,7 +48,7 @@ Nothing else is stored. In particular, the extension does not keep a history of 
 
 ## What the extension sends over the network
 
-The extension has no server of its own and makes no requests to its author or to any third party. Its translations and style files are packaged inside it and are read from the extension itself.
+The extension has no server of its own and makes no requests of its own to its author or to any third party. The only pages it opens on enaloo.com are described below. Its translations and style files are packaged inside it and are read from the extension itself.
 
 The only network requests it causes are the following. They happen only after you have selected chats and confirmed **Delete** or **Archive**. They are sent from the chat page to the same site, using the session you are already signed in with (the same way the site's own buttons work). They contain no chat titles. The ones that change a chat contain only that chat's id and, for ChatGPT, a short flag saying "hidden" or "archived":
 
@@ -63,7 +63,8 @@ The sites' own privacy policies apply to what they do with these requests and wi
 
 Two more things use the network, but not on the extension's initiative:
 
-- **Links you choose to open.** The popup and the Options page contain links to this project's user guide, its GitHub page, the privacy policy, the developer's website (www.enaloo.com), a donation page (Buy Me a Coffee) and the page where you can rate the extension in your browser's store. They open in a new tab only when you click them. Those websites have their own privacy policies.
+- **Links you choose to open.** The popup and the Options page contain links to this project's user guide, its GitHub page, the privacy policy, the developer's website (www.enaloo.com), a support page (enaloo.com/support) and the page where you can rate the extension in your browser's store. They open in a new tab only when you click them. Those websites have their own privacy policies.
+- **Pages on enaloo.com.** After a fresh install, the extension opens a welcome page once, in a background tab. After you remove the extension, your browser opens a short survey page. The Options page has links to report a problem or suggest a feature. These addresses carry only the extension version, your interface language, your browser name and version, your operating system and how long ago you installed the extension. The extension sends nothing itself: it only opens the address, and the page is a normal web page.
 - **Your browser's update service.** Like all store extensions, your browser checks for new versions itself. That is a browser feature, not the extension's.
 
 ## Exporting
@@ -91,7 +92,7 @@ The extension does not request access to your browsing history, bookmarks, downl
 
 ## Monthly support reminder
 
-AI Bulk Chat Manager is free and has no ads. About two weeks after you install it, and then at most once every 30 days, the extension shows a small heart on its toolbar icon and, when you open the popup, a short note with links to Buy Me a Coffee and to rate the extension. It only ever stores the timer described above, on your device. You can dismiss it with "Not now" or turn it off for good with "Don't show again". Nothing is sent when it is shown. The links open a third-party website only when you click them.
+AI Bulk Chat Manager is free and has no ads. About two weeks after you install it, and then at most once every 30 days, the extension shows a small heart on its toolbar icon and, when you open the popup, a short note with links to the support page and to rate the extension. It only ever stores the timer described above, on your device. You can dismiss it with "Not now" or turn it off for good with "Don't show again". Nothing is sent when it is shown. The links open a third-party website only when you click them.
 
 ## Third parties
 

@@ -28,6 +28,7 @@
   const api = () => g.chrome;
 
   const ext = {
+    call,
     isAlive: () => ABCM.isAlive(),
     getURL: (path) => api().runtime.getURL(path),
     getManifest: () => api().runtime.getManifest(),

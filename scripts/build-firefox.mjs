@@ -23,7 +23,7 @@ export const FIREFOX_ADDON_ID = 'ai-bulk-chat-manager@enaloo.com';
 export const FIREFOX_MIN_VERSION = '140.0';
 /** Same list as the importScripts() call at the top of background.js (a unit test keeps them equal). */
 export const BACKGROUND_SCRIPTS = [
-  'src/shared/namespace.js', 'src/shared/ext.js', 'src/shared/sites.js', 'src/shared/nudge.js', 'src/shared/inject.js', 'background.js'
+  'src/shared/namespace.js', 'src/shared/ext.js', 'src/shared/settings.js', 'src/shared/sites.js', 'src/shared/links.js', 'src/shared/nudge.js', 'src/shared/inject.js', 'background.js'
 ];
 const CHROME_ONLY_KEYS = ['minimum_chrome_version'];
 

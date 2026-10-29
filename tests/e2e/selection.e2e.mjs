@@ -106,8 +106,12 @@ test('the panel can be minimized, dragged and keeps its place', async () => {
     await ui.page.mouse.up();
     const moved = await ui.panel.boundingBox();
     assert.ok(moved.x < box.x - 200, 'moved left');
-    const stored = await ui.ext.worker.evaluate(() => new Promise((r) => chrome.storage.local.get('settings', (v) => r(v.settings))));
-    assert.ok(stored.panelPosition, 'position saved');
+    let stored = null;
+    for (let i = 0; i < 30 && !stored?.panelPosition; i += 1) {
+      stored = await ui.ext.worker.evaluate(() => new Promise((r) => chrome.storage.local.get('settings', (v) => r(v.settings))));
+      if (!stored?.panelPosition) await ui.page.waitForTimeout(100); // the background worker writes settings
+    }
+    assert.ok(stored?.panelPosition, 'position saved');
   } finally { await ui.close(); }
 });
 

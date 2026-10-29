@@ -8,7 +8,7 @@ test('popup on a supported page shows the site, starts selection and rotates its
   try {
     const popup = await ui.ext.openPopup(ui.page, 'https://claude.ai/');
     await popup.getByText('Ready on Claude').waitFor();
-    assert.equal(await popup.locator('#version').textContent(), 'v9.0.1');
+    assert.equal(await popup.locator('#version').textContent(), 'v9.1.0');
     assert.equal(await popup.locator('#sw-fast').getAttribute('aria-checked'), 'true');
 
     // footer: About is first, tabs switch the message, and it rotates by itself

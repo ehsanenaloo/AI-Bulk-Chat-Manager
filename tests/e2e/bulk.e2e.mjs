@@ -120,7 +120,7 @@ test('chatgpt menu route never picks "Remove from project" and archives through 
   } finally { await ui.close(); }
 });
 
-test('failures are reported with a reason, stay selected, and can be retried', async () => {
+test('a chat the site did not confirm is listed, deselected, and only repeated on purpose', async () => {
   const chats = makeChats(5);
   const ui = await openScenario('chatgpt', { chats, failIds: [makeChats(5)[1].id] });
   try {
@@ -128,17 +128,62 @@ test('failures are reported with a reason, stay selected, and can be retried', a
     await ui.button('Select all').click();
     await ui.button('Delete 5').click();
     await ui.confirmDelete();
-    assert.equal(await ui.waitForResult(), '4 of 5 done, 1 failed');
+    assert.equal(await ui.waitForResult(), '4 of 5 done, 1 not confirmed');
     assert.match(await ui.page.locator('.fail-list').textContent(), /Project notes 2/);
-    assert.match(await ui.page.locator('.fail-list').textContent(), /still in the list/);
-    await ui.button('Retry failed').waitFor();
+    assert.match(await ui.page.locator('.fail-list').textContent(), /refused the request \(500\)/);
+    assert.equal(await ui.page.getByRole('button', { name: 'Retry failed' }).count(), 0, 'no Retry for an unconfirmed chat');
     assert.equal(ui.server.deleted.length, 4);
 
+    // Check again only reads the list: the chat is reported as still listed and stays unselected.
+    await ui.page.getByRole('button', { name: 'Check again' }).click();
+    await ui.page.locator('.observed').waitFor();
+    assert.match(await ui.page.locator('.observed').textContent(), /Chats still in your chat list: 1/);
+    assert.match(await ui.page.locator('.fail-list').textContent(), /Still in your chat list/);
+    assert.equal(ui.server.deleted.length, 4, 'Check again sends nothing');
+
     ui.server.failIds.clear();
-    await ui.button('Retry failed').click();
-    await ui.page.getByRole('alertdialog').getByRole('button', { name: /Delete 1 chat/ }).click();
+    await ui.button('Done').click();
+    assert.equal(await ui.page.getByRole('button', { name: /^Delete \d/ }).count(), 0, 'Check again selected nothing');
+    await ui.button('Select all').click();
+    await ui.button('Delete 1').click();
+    await ui.confirmDelete();
     assert.equal(await ui.waitForResult(), '1 chat deleted');
     assert.equal(ui.server.deleted.length, 5);
+  } finally { await ui.close(); }
+});
+
+test('a chat unticked in the confirmation dialog is left alone, and the counts follow', async () => {
+  const chats = makeChats(4);
+  const ui = await openScenario('chatgpt', { chats });
+  try {
+    await ui.start();
+    await ui.button('Select all').click();
+    await ui.button('Delete 4').click();
+    const dialog = ui.page.getByRole('alertdialog');
+    await dialog.getByRole('checkbox', { name: chats[1].title }).uncheck();
+    assert.match(await dialog.locator('h2').textContent(), /Delete 3 chats\?/);
+    await dialog.getByRole('button', { name: /Delete 3 chats/ }).click();
+    assert.equal(await ui.waitForResult(), '3 chats deleted');
+    assert.equal(ui.server.deleted.length, 3);
+    assert.ok(!ui.server.deleted.includes(chats[1].id), 'the unticked chat was not deleted');
+  } finally { await ui.close(); }
+});
+
+test('a finished run offers a report with every chat', async () => {
+  const chats = makeChats(3);
+  const ui = await openScenario('chatgpt', { chats });
+  try {
+    await ui.start();
+    await ui.button('Select all').click();
+    await ui.button('Delete 3').click();
+    await ui.confirmDelete();
+    await ui.waitForResult();
+    const [download] = await Promise.all([ui.page.waitForEvent('download'), ui.button('Report (JSON)').click()]);
+    const text = await (await import('node:fs/promises')).readFile(await download.path(), 'utf8');
+    const report = JSON.parse(text);
+    assert.equal(report.operation, 'DELETE');
+    assert.deepEqual(report.counts, { succeeded: 3, failed: 0, unknown: 0, cancelled: 0 });
+    assert.equal(report.chats.length, 3);
   } finally { await ui.close(); }
 });
 

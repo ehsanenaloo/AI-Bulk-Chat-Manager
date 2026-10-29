@@ -4,8 +4,9 @@
 
   A MutationObserver on the sidebar queues new rows and forgets removed ones; a debounced pass then
   adds checkboxes to the new rows only. The sidebar can also be replaced wholesale when the site
-  re-renders, so a slow check re-finds the container and, if the number of rows no longer matches,
-  runs a full pass.
+  re-renders, so a slow safety check re-finds the container and runs a full pass when a row on the
+  page is not registered or a registered row left the page. Rows are compared by their stamp, not by
+  count, so a re-render that swaps nodes without changing their number is still caught.
 */
 (function (g) {
   'use strict';
@@ -13,7 +14,7 @@
   const ABCM = g.ABCM;
 
   const DEBOUNCE_MS = 150;
-  const HEALTH_CHECK_MS = 1500;
+  const HEALTH_CHECK_MS = 4000;
 
   const auto = {
     enabled: false,
@@ -44,13 +45,16 @@
     auto.observer.observe(root, { childList: true, subtree: true });
   }
 
+  /** A row on the page that carries no stamp was added or replaced since the last pass. */
+  function hasUnregisteredRow() {
+    return ABCM.dom.getAllConversations().some((row) => !row.hasAttribute('data-abcm-id') && !row.closest('[data-abcm-retired]'));
+  }
+
   function healthCheck() {
     if (!auto.enabled || g.document.hidden) return;
     const root = ABCM.dom.getHistoryRoot();
     if (root && root !== auto.root) { observe(root); auto.dirty = true; }
-    const rows = ABCM.dom.getAllConversations().length;
-    const known = ABCM.state.ordered().length;
-    if (auto.dirty || rows !== known) reconcile();
+    if (auto.dirty || hasUnregisteredRow() || ABCM.state.hasStaleRecord()) reconcile();
   }
 
   function enable() {

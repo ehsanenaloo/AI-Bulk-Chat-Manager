@@ -149,6 +149,13 @@
 .chat-list { margin: 14px 0 0; padding: 0; list-style: none; overflow-y: auto; max-height: 190px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); }
 .chat-list li { padding: 7px 10px; border-top: 1px solid var(--line); font-size: var(--text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chat-list li:first-child { border-top: 0; }
+.chat-list li { padding: 0; }
+.chat-pick { display: flex; align-items: center; gap: 8px; padding: 7px 10px; cursor: pointer; min-width: 0; }
+.chat-pick input { margin: 0; flex: none; width: 15px; height: 15px; accent-color: var(--danger); }
+.chat-pick span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.observed { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 13px; }
+.fail-observed { font-size: 12px; font-weight: 600; margin-top: 2px; }
+.result-tools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 .dialog .input { margin-top: 12px; }
 .ack { display: flex; align-items: flex-start; gap: 10px; margin-top: 14px; padding: 10px 12px; border-radius: var(--radius); background: var(--danger-soft); border: 1px solid var(--danger-line); font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
 .ack input { margin: 2px 0 0; width: 16px; height: 16px; accent-color: var(--danger); flex: none; }
