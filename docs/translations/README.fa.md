@@ -69,7 +69,7 @@
 
 ## مشارکت و حمایت
 
-گزارش خطا، اصلاح ترجمه و Pull Request خوش‌آمد است؛ [CONTRIBUTING](../../.github/CONTRIBUTING.md). اگر افزونه وقتتان را گرفت، می‌توانید از پروژه حمایت کنید: [enaloo.com/support](https://enaloo.com/support/).
+گزارش خطا، اصلاح ترجمه و Pull Request استقبال میکنم؛ [CONTRIBUTING](../../.github/CONTRIBUTING.md). اگر افزونه باعث صرفه جویی در زمان شما شد، می‌توانید از پروژه حمایت کنید: [enaloo.com/support](https://enaloo.com/support/).
 
 مجوز: [MIT](../../LICENSE) © ۲۰۲۶ [Ehsan Enaloo](https://www.enaloo.com)
 
