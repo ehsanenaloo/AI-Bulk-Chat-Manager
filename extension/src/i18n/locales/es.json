@@ -108,6 +108,8 @@
   "result.reportCsv": "Informe (CSV)",
   "result.undo": "Deshacer archivado",
   "result.undone": "Chats restaurados: {count}. Recarga la página para verlos en la lista.",
+  "result.restored": "Chats restaurados: {count}",
+  "result.undoHint": "Deshacer solo está disponible con el modo rápido activado. Para restaurar, abre los ajustes de ChatGPT y luego Chats archivados.",
   "result.undoFailed": "Chats sin restaurar: {count}. Siguen archivados.",
   "result.failedHint": "Los chats con error siguen seleccionados para que puedas reintentar.",
   "result.failures": "Chats con error",

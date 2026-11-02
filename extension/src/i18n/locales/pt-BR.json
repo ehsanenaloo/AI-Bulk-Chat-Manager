@@ -108,6 +108,8 @@
   "result.reportCsv": "Relatório (CSV)",
   "result.undo": "Desfazer arquivamento",
   "result.undone": "{count} chats restaurados. Recarregue a página para vê-los na lista.",
+  "result.restored": "Conversas restauradas: {count}",
+  "result.undoHint": "Desfazer só está disponível com o modo rápido ligado. Para restaurar, abra as configurações do ChatGPT e depois Conversas arquivadas.",
   "result.undoFailed": "Chats não restaurados: {count}. Eles continuam arquivados.",
   "result.failedHint": "As conversas com falha continuam selecionadas para você tentar de novo.",
   "result.failures": "Conversas com falha",

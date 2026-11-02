@@ -120,9 +120,12 @@
   function hostFor(anchor) {
     const row = ABCM.dom.rowOf(anchor) || anchor;
     for (let el = anchor.parentElement; el; el = el.parentElement) {
+      if (el.tagName === 'TR') break; // a table row ignores padding: the cell is used below
       if (g.getComputedStyle(el).position !== 'static') return el;
       if (el === row) break;
     }
+    // A table row ignores padding, so the box goes into the cell that holds the link.
+    if (row.tagName === 'TR' || anchor.closest('tr') === row) return anchor.closest('td, th') || row;
     return row === anchor ? anchor.parentElement || anchor : row;
   }
 

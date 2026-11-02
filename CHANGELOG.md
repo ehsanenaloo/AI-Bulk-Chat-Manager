@@ -6,6 +6,30 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+## [9.1.1] - 2026-11-02
+
+### Added
+
+- Claude Code and Cowork sessions on Claude can be selected and deleted, also on the Code page. With Fast mode on they are deleted through the site's own request.
+- Chats inside ChatGPT and Grok Projects, and the chats listed on a Claude Project page, get a checkbox.
+
+### Changed
+
+- With Fast mode off, the Archive result on ChatGPT tells you where to restore a chat, because Undo archive needs Fast mode.
+
+### Fixed
+
+- Grok: Delete with Fast mode on now uses the address the site itself uses.
+- Grok: a chat that the site deletes as soon as you choose Delete, with no dialog, is now counted as deleted. Before, it could be reported as not confirmed or failed.
+- A chat is no longer reported twice, or as failed, when something goes wrong after the site has already confirmed it.
+- A page attempt that fails but leaves the chat gone from the list is now shown as not confirmed, and is not tried again.
+- A reply that came through a redirect, for example a sign-in page, is no longer taken as a confirmation.
+- Check again no longer trusts a Load all that ran more than ten minutes ago.
+- After Undo archive, the result shows the chats as restored, in the card and in the JSON and CSV reports.
+- The panel no longer lists the archived chats in ChatGPT Settings as chats.
+- Chat titles no longer include hidden status text, and a chat link without text takes its title from its label.
+- The checkbox sits in the table cell on pages that list chats in a table.
+
 ## [9.1.0] - 2026-10-29
 
 ### Changed
@@ -104,7 +128,8 @@ These versions were published without a changelog. The last one, 8.10.6, was a p
 - New 16, 48 and 128 pixel icons.
 - The MIT license.
 
-[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.0...HEAD
+[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.1...HEAD
+[9.1.1]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.0...v9.1.1
 [9.1.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.1...v9.1.0
 [9.0.1]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/releases/tag/v9.0.0

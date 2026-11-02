@@ -53,7 +53,8 @@
     const counts = { succeeded: 0, failed: 0, unknown: 0, cancelled: 0 };
     const observed = { 'no-longer-listed': 0, 'still-listed': 0, 'not-confirmed': 0 };
     rows.forEach((row) => {
-      if (row.status in counts) counts[row.status] += 1;
+      if (row.status === 'restored') counts.restored = (counts.restored || 0) + 1; // only after Undo archive
+      else if (row.status in counts) counts[row.status] += 1;
       if (row.status === 'unknown') observed[row.observation || 'not-confirmed'] += 1;
     });
     if (format === 'json') {

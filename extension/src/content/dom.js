@@ -40,8 +40,22 @@
   function getAllConversations() {
     const current = site();
     if (!current) return [];
+    if (current.offPaths?.test(g.location.pathname)) return [];
     const scoped = getHistoryRoot()?.querySelectorAll(current.conversation);
-    if (scoped && scoped.length) return Array.from(scoped);
+    if (scoped && scoped.length) {
+      const rows = Array.from(scoped);
+      if (current.extraRows) {
+        // One row per chat: a chat already in the sidebar keeps its sidebar row.
+        const seen = new Set(rows.map((row) => idFromHref(row.getAttribute('href'))));
+        g.document.querySelectorAll(current.extraRows).forEach((row) => {
+          const id = idFromHref(row.getAttribute('href'));
+          if (!id || seen.has(id)) return;
+          seen.add(id);
+          rows.push(row);
+        });
+      }
+      return rows;
+    }
     // Virtualised or portal-rendered sidebars can place rows outside every structural candidate.
     // The selector only applies on this site, so the worst case is an extra checkbox on a chat link.
     return Array.from(g.document.querySelectorAll(current.conversation));
@@ -65,6 +79,16 @@
     return idFromHref(anchor?.getAttribute?.('href') || anchor?.href || '');
   }
 
+  /** The text of a node without screen-reader-only and tooltip parts (a status or environment label is not the title). */
+  function visibleText(node) {
+    let out = '';
+    for (const child of node.childNodes) {
+      if (child.nodeType === 3) out += child.nodeValue;
+      else if (child.nodeType === 1 && !child.matches?.('.sr-only, [role="tooltip"]')) out += visibleText(child);
+    }
+    return out;
+  }
+
   function titleOf(anchor) {
     if (!anchor) return '';
     const current = site();
@@ -73,7 +97,9 @@
       const text = (node?.textContent || '').replace(/\s+/g, ' ').trim();
       if (text) return text;
     }
-    return (anchor.textContent || '').replace(/\s+/g, ' ').trim();
+    const text = visibleText(anchor).replace(/\s+/g, ' ').trim();
+    // A link that only covers its row has no text of its own; its label carries the title.
+    return text || (anchor.getAttribute?.('aria-label') || '').replace(/\s+/g, ' ').trim();
   }
 
   /** The absolute address of a chat, so exports stay useful outside the page. */

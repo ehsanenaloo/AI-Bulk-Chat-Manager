@@ -19,9 +19,12 @@
       url: 'https://chatgpt.com/',
       color: '#10a37f',
       // Rows in the history sidebar and how to read an id out of their link.
-      conversation: 'a[href^="/c/"]',
+      // Chats inside a Project are listed as /g/<project>/c/<id>.
+      conversation: 'a[href^="/c/"], a[href^="/g/"][href*="/c/"]',
       anchorMatch: 'a[href*="/c/"]',
       idRe: /\/c\/([a-zA-Z0-9-]+)/,
+      // Pages whose chat links are not the sidebar list (the archived chats list in Settings).
+      offPaths: /^\/settings(\/|$)/,
       title: '.relative.grow.overflow-hidden.whitespace-nowrap',
       // Candidates for the sidebar container, most specific first.
       history: ['[data-testid="history"]', '[id^="history"]', 'nav[aria-label*="chat" i]', 'nav'],
@@ -35,9 +38,13 @@
       hosts: ['claude.ai'],
       url: 'https://claude.ai/',
       color: '#d97757',
-      conversation: 'a[href*="/chat/"]',
-      anchorMatch: 'a[href*="/chat/"]',
-      idRe: /\/chat\/([0-9a-fA-F-]{8,})/,
+      // Chats (/chat/<uuid>) and sessions: Cowork (/cowork/cse_<id>) and Claude Code (/code/session_<id>).
+      // Sessions have no delete endpoint known here, so they only ever go through the page UI.
+      conversation: 'a[href*="/chat/"], a[href^="/cowork/cse_"], a[href^="/code/session_"]',
+      anchorMatch: 'a[href*="/chat/"], a[href^="/cowork/cse_"], a[href^="/code/session_"]',
+      idRe: /\/(?:chat|cowork|code)\/([0-9a-fA-F-]{8,}|cse_[A-Za-z0-9]+|session_[A-Za-z0-9]+)/,
+      // Rows listed in the page itself (the chats and sessions table of a Project), beside the sidebar.
+      extraRows: 'main a[href*="/chat/"], main a[href^="/cowork/cse_"], main a[href^="/code/session_"]',
       title: null,
       history: ['nav', 'aside', '[data-testid*="menu" i]', '[class*="sidebar" i]'],
       method: 'api',
@@ -63,10 +70,11 @@
       hosts: ['grok.com'],
       url: 'https://grok.com/',
       color: '#6b7280',
-      // Conversations live at /c/{uuid}. Same prefix as ChatGPT, but sites are matched by host so they never collide.
-      conversation: 'a[href^="/c/"]',
-      anchorMatch: 'a[href*="/c/"]',
-      idRe: /\/c\/([\w-]+)/,
+      // Conversations live at /c/{uuid}; those inside a Project at /project/{id}?tab=conversations&chat={uuid}.
+      // Same prefix as ChatGPT, but sites are matched by host so they never collide.
+      conversation: 'a[href^="/c/"], a[href*="/project/"][href*="chat="]',
+      anchorMatch: 'a[href*="/c/"], a[href*="/project/"][href*="chat="]',
+      idRe: /(?:\/c\/|[?&]chat=)([\w-]+)/,
       title: null,
       // The Grok sidebar is not a <nav>/<aside>, so class-based candidates come first.
       history: ['[class*="sidebar" i]', '[class*="history" i]', '[role="navigation"]', 'nav', 'aside'],

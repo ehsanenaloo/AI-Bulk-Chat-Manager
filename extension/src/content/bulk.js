@@ -115,6 +115,9 @@
       if (live.checkbox && !live.checkbox.checked) return { ok: false, reason: 'selection-cleared' };
       last = await ABCM.visualEngine.attempt(operation, live, strategy);
       if (last.ok || last.unknown) return last; // an unknown outcome must not be repeated with another strategy
+      // The attempt failed but the row left the list while it ran: a click may have worked. That is not a
+      // clean failure and must not be tried again.
+      if (!ABCM.visualEngine.rowStillListed(live)) return { ok: false, unknown: true, reason: 'delete-unconfirmed' };
       if (['conversation-detached', 'stale-target', 'selection-cleared', 'delete-unconfirmed'].includes(last.reason)) return last;
       if (strategy !== 'aggressive') {
         ABCM.state.diagnostics.retries += 1;
@@ -184,9 +187,12 @@
       return reportItem({ id: failure.id, title: failure.title, url: known.url }, 'failed', failure.reason);
     });
     const ctx = { operation, total, done: failures.length, succeeded: 0, failures, stopped: false, cancelled: 0 };
-    const report = (title = '') => onProgress?.({
-      operation, total, done: ctx.done, succeeded: ctx.succeeded, failed: failures.length, unknown: unknown.length, currentTitle: title
-    });
+    // A failing progress callback must not turn a finished change into an error.
+    const report = (title = '') => {
+      try {
+        onProgress?.({ operation, total, done: ctx.done, succeeded: ctx.succeeded, failed: failures.length, unknown: unknown.length, currentTitle: title });
+      } catch (error) { ABCM.warn('progress callback failed', error); }
+    };
 
     if (!entries.length) {
       report();
@@ -200,6 +206,8 @@
     report();
 
     const record = (entry, outcome) => {
+      if (entry.recorded) return; // a chat is reported once, whatever throws afterwards
+      entry.recorded = true;
       const status = classify(outcome);
       finalize(operation, entry.target, outcome, status);
       const item = { id: entry.target.id, title: entry.target.title, reason: outcome?.reason || 'operation-failed' };
@@ -250,7 +258,11 @@
           if (!pre.ok) { record(entry, pre); return; }
           if (live.checkbox && !live.checkbox.checked) { record(entry, { ok: false, reason: 'selection-cleared' }); return; }
           const outcome = await dispatch(live);
-          if (outcome.ok) { api.retireRow(live); record(entry, outcome); return; }
+          if (outcome.ok) {
+            try { api.retireRow(live); } catch (_) { /* hiding the row is cosmetic; the change is confirmed */ }
+            record(entry, outcome);
+            return;
+          }
           // Cancelled, unknown, rate limited for good, or no id: the page UI must not act on these.
           if (outcome.cancelled || outcome.unknown || outcome.reason === 'api-rate-limited' || outcome.reason === 'conversation-id-missing') { record(entry, outcome); return; }
           // A definite refusal changed nothing, so the page UI may try the same chat.
@@ -298,10 +310,13 @@
    * Whether the page list can say that a chat is no longer listed: rows must be on the page, and a
    * Load all that ended early or on a site that recycles rows means the list may be incomplete.
    */
+  const LISTING_MAX_AGE_MS = 10 * 60 * 1000; // an older Load all says nothing about the list now
+
   function listTrust() {
     if (!ABCM.dom.getAllConversations().length) return { trusted: false, basis: 'list-empty' };
     const listing = ABCM.state.listing;
     if (listing && listing.status !== 'complete') return { trusted: false, basis: `list-${listing.status}` };
+    if (listing && Date.now() - listing.at > LISTING_MAX_AGE_MS) return { trusted: false, basis: 'list-stale' };
     return { trusted: true, basis: 'page-list' };
   }
 
@@ -347,6 +362,21 @@
     return summary;
   }
 
+  /** Marks chats put back by Undo archive as restored, so the card and the reports stop calling them archived. */
+  function applyRestored(summary, ids) {
+    const back = new Set(ids || []);
+    let count = 0;
+    for (const item of summary?.items || []) {
+      if (item.status !== 'succeeded' || !back.has(item.id)) continue;
+      item.status = 'restored';
+      item.evidence = 'api';
+      count += 1;
+    }
+    summary.succeeded = Math.max(0, summary.succeeded - count);
+    summary.restored = (summary.restored || 0) + count;
+    return summary;
+  }
+
   /** Puts archived chats back (ChatGPT only). Returns the ids that were restored and the ones that were not. */
   async function undoArchive(ids) {
     const api = ABCM.apiEngine;
@@ -373,5 +403,5 @@
     return { restored, failed };
   }
 
-  ABCM.define('bulk', { run, resolveLive, preflight, findLiveAnchor, classify, recheck, applyObservations, observedCounts, undoArchive });
+  ABCM.define('bulk', { run, resolveLive, preflight, findLiveAnchor, classify, recheck, applyObservations, applyRestored, observedCounts, undoArchive });
 })(globalThis);

@@ -1,7 +1,7 @@
 # Privacy Policy
 
 **AI Bulk Chat Manager** (the "extension")
-Last updated: 2026-10-08
+Last updated: 2026-11-02
 
 AI Bulk Chat Manager is a browser extension for Chrome, Edge and Firefox. It lets you select many chats at once on ChatGPT, Claude, Gemini and Grok, and then delete, archive or export them. This policy explains what the extension reads, what it stores, and what leaves your device. The short version: **the extension has no server, collects nothing about you, and sends no data to its author or to any third party.**
 
@@ -53,8 +53,8 @@ The extension has no server of its own and makes no requests of its own to its a
 The only network requests it causes are the following. They happen only after you have selected chats and confirmed **Delete** or **Archive**. They are sent from the chat page to the same site, using the session you are already signed in with (the same way the site's own buttons work). They contain no chat titles. The ones that change a chat contain only that chat's id and, for ChatGPT, a short flag saying "hidden" or "archived":
 
 - **ChatGPT**: a request to `/api/auth/session` to obtain the short-lived access token that the site's own page uses, kept in the page's memory for up to five minutes and never stored; then a `PATCH` request to `/backend-api/conversation/<chat id>` to hide (delete) or archive the chat.
-- **Claude**: a request to `/api/organizations` to find your organization id, then a `DELETE` request to `/api/organizations/<organization id>/chat_conversations/<chat id>`. Claude has no archive in this extension.
-- **Grok**: a `DELETE` request to `/rest/app-chat/conversations/<chat id>`. Grok has no archive in this extension.
+- **Claude**: a request to `/api/organizations` to find your organization id, then a `DELETE` request to `/api/organizations/<organization id>/chat_conversations/<chat id>`. For a Claude Code or Cowork session it sends a `DELETE` request to `/v1/code/sessions/<session id>`, with your organization id and two fixed version headers, the way the site's own page does. Claude has no archive in this extension.
+- **Grok**: a `DELETE` request to `/rest/app-chat/conversations/soft/<chat id>`, with a random request id, the way the site's own page does. Grok has no archive in this extension.
 - **Gemini**: none. Deleting on Gemini is done by clicking through the page's own menu and confirmation dialog, as a person would.
 
 These are the sites' own internal endpoints, which are not public or documented, and they can change without notice. This is **Fast mode**, which is on by default. You can turn it off in the Options page (Behavior) or in the panel's settings. With Fast mode off, or when a request fails, the extension performs the action by clicking through the site's own menus and dialogs instead, one chat at a time, and no extra request is made.

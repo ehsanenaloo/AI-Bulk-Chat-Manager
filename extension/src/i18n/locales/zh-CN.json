@@ -108,6 +108,8 @@
   "result.reportCsv": "报告 (CSV)",
   "result.undo": "撤销归档",
   "result.undone": "已恢复 {count} 个对话。重新加载页面即可在列表中看到它们。",
+  "result.restored": "已恢复{count}个对话",
+  "result.undoHint": "只有开启快速模式时才能撤销。要恢复，请打开 ChatGPT 设置中的“已归档的对话”。",
   "result.undoFailed": "有 {count} 个对话无法恢复，它们仍处于归档状态。",
   "result.failedHint": "失败的对话仍保持选中，方便你重试。",
   "result.failures": "处理失败的对话",

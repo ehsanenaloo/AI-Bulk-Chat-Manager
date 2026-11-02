@@ -214,6 +214,7 @@
     const failed = summary.failures.length;
     const unknown = (summary.unknown || []).length;
     const verb = summary.operation === 'DELETE' ? 'deleted' : 'archived';
+    if (summary.restored && !summary.succeeded && !failed && !unknown) return t('result.restored', { count: summary.restored });
     if (summary.stopped) return t('result.stopped', { done: summary.succeeded, total: summary.total });
     if (!failed && !unknown) return t(`result.${verb}`, { count: summary.succeeded });
     if (!summary.succeeded && !unknown) return t('result.allFailed', { count: failed });
@@ -221,6 +222,13 @@
     if (unknown && failed) return `${t('result.partial', { succeeded: summary.succeeded, total: summary.total, failed })}; ${t('result.unknown', { count: unknown })}`;
     if (unknown) return t('result.partialUnknown', { succeeded: summary.succeeded, total: summary.total, unknown });
     return t('result.partial', { succeeded: summary.succeeded, total: summary.total, failed });
+  }
+
+  /** Undo needs the site's own request, so with Fast mode off the card says where to restore by hand. */
+  function archiveUndoHint(summary) {
+    const site = ABCM.sites.current();
+    const offered = summary.operation === 'ARCHIVE' && summary.succeeded > 0 && site?.archive;
+    return offered && !ABCM.apiEngine.canUndoArchive() ? t('result.undoHint') : '';
   }
 
   function showResult(summary) {
@@ -236,7 +244,7 @@
     const untrusted = checked.some((item) => item.observation.basis !== 'page-list');
     r.resultSub.textContent = summary.stopped ? t('result.stoppedHint')
       : checked.length ? `${t('result.observedHint')}${untrusted ? ` ${t('result.observedUntrusted')}` : ''}`
-        : (summary.unknown || []).length ? t('result.unknownHint') : failed ? t('result.failedHint') : '';
+        : (summary.unknown || []).length ? t('result.unknownHint') : failed ? t('result.failedHint') : archiveUndoHint(summary);
     r.resultSub.hidden = !r.resultSub.textContent;
     const observedOf = new Map((summary.items || []).filter((item) => item.observation).map((item) => [item.id, item.observation.result]));
     r.failList.replaceChildren(...problems.map((item) => h('li', {},
@@ -286,9 +294,9 @@
     if (!ids.length) return;
     ui.refs.undo.disabled = true;
     const result = await ABCM.bulk.undoArchive(ids);
-    if (result.failed.length) { toast(t('result.undoFailed', { count: result.failed.length })); ui.refs.undo.disabled = false; return; }
-    ui.refs.undo.hidden = true;
-    toast(t('result.undone', { count: result.restored.length }));
+    ABCM.bulk.applyRestored(summary, result.restored);
+    showResult(summary);
+    toast(result.failed.length ? t('result.undoFailed', { count: result.failed.length }) : t('result.undone', { count: result.restored.length }));
   }
 
   async function runOperation(operation) {

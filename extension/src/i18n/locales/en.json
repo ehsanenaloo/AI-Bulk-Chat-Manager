@@ -108,6 +108,8 @@
   "result.reportCsv": "Report (CSV)",
   "result.undo": "Undo archive",
   "result.undone": "Chats restored: {count}. Reload the page to see them in the list.",
+  "result.restored": "Chats restored: {count}",
+  "result.undoHint": "Undo is only available with Fast mode on. To restore, open ChatGPT Settings, then Archived chats.",
   "result.undoFailed": "Chats not restored: {count}. They are still archived.",
   "result.failedHint": "Failed chats are still selected so you can retry.",
   "result.failures": "Chats that failed",

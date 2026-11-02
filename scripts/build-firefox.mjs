@@ -21,6 +21,8 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 
 export const FIREFOX_ADDON_ID = 'ai-bulk-chat-manager@enaloo.com';
 export const FIREFOX_MIN_VERSION = '140.0';
+/** Firefox for Android understands data_collection_permissions only from 142, so its minimum is declared apart from the desktop one. */
+export const FIREFOX_ANDROID_MIN_VERSION = '142.0';
 /** Same list as the importScripts() call at the top of background.js (a unit test keeps them equal). */
 export const BACKGROUND_SCRIPTS = [
   'src/shared/namespace.js', 'src/shared/ext.js', 'src/shared/settings.js', 'src/shared/sites.js', 'src/shared/links.js', 'src/shared/nudge.js', 'src/shared/inject.js', 'background.js'
@@ -40,7 +42,8 @@ export function toFirefoxManifest(chromeManifest) {
       id: FIREFOX_ADDON_ID,
       strict_min_version: FIREFOX_MIN_VERSION,
       data_collection_permissions: { required: ['none'] }
-    }
+    },
+    gecko_android: { strict_min_version: FIREFOX_ANDROID_MIN_VERSION }
   };
   return manifest;
 }

@@ -108,6 +108,8 @@
   "result.reportCsv": "Rapport (CSV)",
   "result.undo": "Annuler l’archivage",
   "result.undone": "Conversations restaurées : {count}. Rechargez la page pour les voir dans la liste.",
+  "result.restored": "Conversations restaurées : {count}",
+  "result.undoHint": "Annuler n’est possible qu’avec le mode rapide activé. Pour restaurer, ouvrez les paramètres de ChatGPT, puis Conversations archivées.",
   "result.undoFailed": "Conversations non restaurées : {count}. Elles sont toujours archivées.",
   "result.failedHint": "Les conversations en échec restent sélectionnées pour que vous puissiez réessayer.",
   "result.failures": "Conversations en échec",

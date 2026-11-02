@@ -27,8 +27,8 @@
         archiveBody: { is_archived: true },
         unarchiveBody: { is_archived: false }
       },
-      claude: { organizations: '/api/organizations' },
-      grok: { conversations: '/rest/app-chat/conversations' }
+      claude: { organizations: '/api/organizations', sessions: '/v1/code/sessions', sessionHeaders: { 'anthropic-version': '2023-06-01', 'anthropic-beta': 'ccr-byoc-2025-07-29' } },
+      grok: { conversations: '/rest/app-chat/conversations/soft' }
     },
 
     delays: { short: 100, medium: 200, long: 300, extended: 500 },

@@ -108,6 +108,8 @@
   "result.reportCsv": "レポート (CSV)",
   "result.undo": "アーカイブを元に戻す",
   "result.undone": "{count}件のチャットを復元しました。一覧に表示するにはページを再読み込みしてください。",
+  "result.restored": "{count}件のチャットを元に戻しました",
+  "result.undoHint": "元に戻すには高速モードをオンにする必要があります。復元するには、ChatGPT の設定でアーカイブ済みチャットを開いてください。",
   "result.undoFailed": "{count}件のチャットを復元できませんでした。まだアーカイブされています。",
   "result.failedHint": "失敗したチャットは選択されたままなので、再試行できます。",
   "result.failures": "失敗したチャット",

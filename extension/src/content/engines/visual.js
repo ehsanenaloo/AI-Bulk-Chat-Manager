@@ -244,7 +244,11 @@
     await activate(button, { aggressive: strategy !== 'primary' });
     await util().delay(cfg().delays.medium);
     const confirm = await confirmAction(operation, strategy, record, dialogsBefore);
-    if (!confirm?.ok) return { ok: false, unknown: !!confirm?.unknown, reason: confirm?.reason || 'confirm-not-found' };
+    if (!confirm?.ok) {
+      // The site may delete on the first click without asking: a row that stays gone means it worked.
+      if (operation === 'DELETE' && confirm?.reason === 'confirm-not-found' && await waitForRowGone(record, cfg().timeouts.rowGone)) return { ok: true, via: 'direct-row-action' };
+      return { ok: false, unknown: !!confirm?.unknown, reason: confirm?.reason || 'confirm-not-found' };
+    }
     return { ok: true, via: 'direct-row-action' };
   }
 
@@ -283,7 +287,11 @@
     }
 
     const found = await findConfirmButton(operation, cfg().timeouts.elementWaitShort, strategy, dialogsBefore);
-    if (!found?.button) return { ok: false, reason: 'confirm-not-found' };
+    if (!found?.button) {
+      // Some sites (Grok) delete on the menu click without asking: a row that stays gone means it worked.
+      if (record && await waitForRowGone(record, cfg().timeouts.rowGone)) return { ok: true, verified: true };
+      return { ok: false, reason: 'confirm-not-found' };
+    }
     await activate(found.button, { aggressive: strategy !== 'primary' });
     await util().delay(cfg().delays.medium);
     // Only the dialog that was clicked counts: an unrelated dialog staying open says nothing about ours.
@@ -397,6 +405,6 @@
 
   ABCM.define('visualEngine', {
     labelScore, resolveMenuButton, findMenuItem, resolveMenuItem, findConfirmButton, confirmAction,
-    tryDirectRowAction, openMenu, triggerOperation, geminiDelete, attempt, activate
+    tryDirectRowAction, openMenu, triggerOperation, geminiDelete, attempt, activate, rowStillListed
   });
 })(globalThis);

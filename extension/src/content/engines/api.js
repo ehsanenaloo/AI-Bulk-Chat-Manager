@@ -20,7 +20,7 @@
 
   const TOKEN_TTL_MS = 5 * 60 * 1000;
   const MAX_RETRY_AFTER_MS = 60 * 1000;
-  const memo = { token: null, tokenAt: 0, claudeOrg: null, grokBroken: false };
+  const memo = { token: null, tokenAt: 0, claudeOrg: null, grokBroken: false, sessionsBroken: false };
 
   const siteId = () => ABCM.sites.current()?.id || '';
   const cfg = () => ABCM.config.api;
@@ -43,6 +43,8 @@
 
   function result(res, okStatuses = [200, 201, 204]) {
     if (res.status === 429) return { ok: false, reason: 'api-rate-limited', retryAfterMs: parseRetryAfter(res.headers?.get?.('retry-after')) };
+    // A reply that came through a redirect (for example a sign-in page) is not the endpoint's acknowledgement.
+    if (res.redirected) return { ok: false, unknown: true, reason: 'api-redirected' };
     if (res.ok || okStatuses.includes(res.status)) return { ok: true, verified: true, via: 'api' };
     // A server error does not say whether the change was applied before it failed.
     if (res.status >= 500) return { ok: false, unknown: true, reason: `api-http-${res.status}` };
@@ -168,8 +170,32 @@
     }
   }
 
+  /**
+   * Claude Code and Cowork session: the site itself sends DELETE /v1/code/sessions/<id> with the page's cookies and
+   * the version, beta and organisation headers (read from its own requests on 2026-11-01). A refusal that says the
+   * request shape differs stops further tries on this page, so the page UI takes over without a wasted request per session.
+   */
+  async function claudeSessionDelete(id) {
+    if (memo.sessionsBroken) return { ok: false, reason: 'api-unsupported' };
+    const org = await getClaudeOrg();
+    if (!org) return { ok: false, reason: 'claude-no-org' };
+    let res;
+    try {
+      res = await timedFetch(abs(`${cfg().claude.sessions}/${encodeURIComponent(id)}`), {
+        method: 'DELETE', credentials: 'include',
+        headers: { 'Content-Type': 'application/json', ...cfg().claude.sessionHeaders, 'x-organization-uuid': org }
+      });
+    } catch (error) {
+      return failure(error);
+    }
+    if ([400, 401, 403, 404, 405, 422].includes(res.status)) memo.sessionsBroken = true;
+    return result(res);
+  }
+
   async function claudeAction(operation, id) {
     if (operation !== 'DELETE') return { ok: false, reason: 'archive-unsupported' };
+    // Claude Code (session_) and Cowork (cse_) sessions share one endpoint and are not chats.
+    if (/^(session|cse)_/.test(id)) return claudeSessionDelete(id);
     let attempt = await claudeDeleteOnce(id);
     // 403/404 can mean the cached organisation went stale (the user switched organisation): refresh it once.
     if (attempt.kind === 'response' && (attempt.res.status === 403 || attempt.res.status === 404)) {
@@ -186,7 +212,9 @@
     if (operation !== 'DELETE') return { ok: false, reason: 'archive-unsupported' };
     let res;
     try {
-      res = await timedFetch(abs(`${cfg().grok.conversations}/${encodeURIComponent(id)}`), { method: 'DELETE', credentials: 'include' });
+      // The site sends DELETE .../conversations/soft/<id> with only a fresh request id (read from its own request on 2026-11-02).
+      const headers = typeof g.crypto?.randomUUID === 'function' ? { 'x-xai-request-id': g.crypto.randomUUID() } : {};
+      res = await timedFetch(abs(`${cfg().grok.conversations}/${encodeURIComponent(id)}`), { method: 'DELETE', credentials: 'include', headers });
     } catch (error) {
       return failure(error);
     }

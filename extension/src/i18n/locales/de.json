@@ -122,6 +122,8 @@
   "result.reportCsv": "Bericht (CSV)",
   "result.undo": "Archivierung rückgängig",
   "result.undone": "Wiederhergestellte Chats: {count}. Laden Sie die Seite neu, um sie in der Liste zu sehen.",
+  "result.restored": "Chats wiederhergestellt: {count}",
+  "result.undoHint": "Rückgängig ist nur mit eingeschaltetem Schnellmodus möglich. Zum Wiederherstellen öffne die ChatGPT-Einstellungen und dann Archivierte Chats.",
   "result.undoFailed": "Nicht wiederhergestellte Chats: {count}. Sie sind weiterhin archiviert.",
   "result.failedHint": "Fehlgeschlagene Chats bleiben ausgewählt, damit Sie es erneut versuchen können.",
   "result.failures": "Fehlgeschlagene Chats",
