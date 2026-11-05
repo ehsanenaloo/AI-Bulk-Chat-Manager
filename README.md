@@ -8,7 +8,7 @@
 
 **Select many chats. Delete, archive or export them in one go.**
 
-A free, open-source browser extension for ChatGPT, Claude, Gemini and Grok.<br>
+A free, open-source browser extension for ChatGPT, Claude, Gemini, Grok, DeepSeek, Perplexity, Copilot, Meta AI, Kimi, Qwen and Z.ai.<br>
 It runs on your device only. No account, no tracking, no server.
 
 [![Get it for Chrome](https://img.shields.io/badge/Chrome%20Web%20Store-Add%20to%20Chrome-4285F4?logo=googlechrome&logoColor=white&style=for-the-badge)](https://chromewebstore.google.com/detail/eppokcmemgiphpegpighpfnhpjggpmoc)
@@ -58,6 +58,13 @@ Deleting chats one by one means open the menu, click Delete, confirm, repeat. Af
 | Claude (claude.ai) | yes | – | yes |
 | Gemini (gemini.google.com) | yes | – | yes |
 | Grok (grok.com) | yes | – | yes |
+| DeepSeek (chat.deepseek.com) | yes | – | yes |
+| Perplexity (perplexity.ai) | yes | – | yes |
+| Copilot (copilot.com) | yes | – | – |
+| Meta AI (meta.ai) | yes | – | – |
+| Kimi (kimi.ai) | yes | – | – |
+| Qwen (chat.qwen.ai) | yes | – | – |
+| Z.ai (chat.z.ai) | yes | – | – |
 
 These sites change their pages without notice. When one does, an action may stop working until the extension is updated; see [FAQ](#faq) and the [issue form for site changes](https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/issues/new/choose).
 
@@ -72,7 +79,7 @@ The first time, open a chat tab that was already open before you installed and c
 
 ## How to use it
 
-1. Open ChatGPT, Claude, Gemini or Grok and click the toolbar icon (or press **Alt+Shift+B**), then **Start selecting chats**.
+1. Open one of the supported sites and click the toolbar icon (or press **Alt+Shift+B**), then **Start selecting chats**.
 2. Tick chats in the sidebar. Click a row, or use **Select all**, a title filter, the oldest N, or Shift-click a range.
 3. Press **Delete**, check the list, confirm. Or **Archive**, or **Export** a file first.
 
@@ -81,8 +88,8 @@ The [user guide](https://enaloo.com/apps/ai-bulk-chat-manager/) walks through ev
 ## Privacy and permissions
 
 - Everything runs in your browser. There is **no server, no account, no analytics, no ads and no remote code**.
-- It reads only what a chat list shows (title and link) and only when you start selecting. It never reads your conversations.
-- Permissions: `activeTab` and `scripting` (to attach to a tab that was open before install, when you click the icon) and `storage` (your settings). It acts only on `chatgpt.com`, `chat.openai.com`, `claude.ai`, `gemini.google.com` and `grok.com`.
+- It reads what a chat list shows (title and link) when you start selecting. It reads the text of a conversation only when you click Export on that conversation, or choose Chat contents for the chats you ticked, and keeps nothing. It works locally, sends your data nowhere and does not analyze or understand that text.
+- Permissions: `activeTab` and `scripting` (to attach to a tab that was open before install, when you click the icon) and `storage` (your settings). It acts only on `chatgpt.com`, `chat.openai.com`, `claude.ai`, `gemini.google.com`, `grok.com`, `chat.deepseek.com`, `perplexity.ai` (and `www.perplexity.ai`), `copilot.com` (also `copilot.microsoft.com`), `meta.ai`, `kimi.ai`, `chat.qwen.ai` and `chat.z.ai` (also `kimi.com`).
 - Fast mode sends the same kind of request the site's own interface sends, from the page, with the session you are already signed in with.
 
 Full text: [Privacy policy](docs/PRIVACY.md).

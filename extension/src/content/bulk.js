@@ -285,7 +285,8 @@
         pending = fallbacks;
       }
 
-      // Page-UI phase: strictly serial.
+      // Page-UI phase: strictly serial. The page is locked against the user's own clicks and keys meanwhile.
+      if (pending.length) ABCM.shield.on();
       for (const entry of pending) {
         if (state.stopRequested) break;
         report(entry.target.title);
@@ -296,6 +297,7 @@
       const reported = new Set(items.map((item) => item.id));
       for (const entry of entries) if (!reported.has(entry.target.id)) items.push(reportItem(entry.target, 'cancelled'));
     } finally {
+      ABCM.shield.off();
       state.clearStop();
       state.setStatus('ready');
     }

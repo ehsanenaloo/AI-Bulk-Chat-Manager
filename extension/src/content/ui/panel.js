@@ -128,10 +128,11 @@
   function setView(view) {
     ui.view = view;
     ui.refs.panel.dataset.view = view;
-    ['select', 'running', 'result'].forEach((name) => {
+    ['select', 'running', 'result', 'pick'].forEach((name) => {
       ui.refs[`view-${name}`].hidden = name !== view;
       ui.refs[`footer-${name}`].hidden = name !== view;
     });
+    if (view !== 'pick') { ui.pick = null; ui.refs['view-pick'].querySelector('.pick-list')?.replaceChildren(); } // the conversation text lives only while its list is on screen
     render();
   }
 
@@ -163,13 +164,17 @@
     r.archive.disabled = none;
     r.delete.disabled = none;
     r.export.disabled = none;
+    r.convo.hidden = !ABCM.reader.canRead();
+    r.menuContents.hidden = !ABCM.reader.canReadMany();
+    r.convoHint.hidden = r.convoFormat.value !== 'pdf';
     r.deleteLabel.textContent = none ? t('panel.delete') : t('panel.deleteN', { count: selected });
     r.clear.disabled = none;
     r.selectAll.disabled = shown === 0;
     r.invert.disabled = shown === 0;
     r.switchAuto.setAttribute('aria-checked', String(ABCM.autoAttach.isEnabled()));
     r.switchFast.setAttribute('aria-checked', String(ABCM.settings.get().fastMode));
-    r.switchFast.disabled = !(site && site.method === 'api');
+    // Sites with no request of their own have nothing to switch.
+    r.rowFast.hidden = !(site && site.method === 'api');
   }
 
   function menuClose() {
@@ -178,6 +183,115 @@
   }
 
   // ── actions ──────────────────────────────────────────────────────────────────────────────
+  const READ_REASONS = ['auth', 'not-found', 'rate-limited', 'network', 'no-org', 'bad-answer', 'unsupported', 'not-a-conversation', 'empty'];
+
+  /** Reads the open conversation now, on the user's click. Returns it, or null after telling the user why not. */
+  async function readConversation() {
+    try {
+      const result = await ABCM.reader.read({ onProgress: () => toast(t('export.loading')) });
+      if (result.ok) return result.conversation;
+      toast(t('export.fail', { reason: t(`export.reason.${READ_REASONS.includes(result.reason) ? result.reason : 'other'}`) }));
+    } catch (error) {
+      ABCM.warn('conversation read failed', error);
+      toast(t('export.fail', { reason: t('export.reason.other') }));
+    }
+    return null;
+  }
+
+  const EXPORT_FORMATS = ['md', 'txt', 'json', 'docx', 'pdf', 'png'];
+
+  const exportOptions = (extra = {}) => {
+    const s = ABCM.settings.get();
+    return { thinking: s.exportThinking, metadata: s.exportMetadata, sourceUrl: s.exportSourceUrl, ...extra };
+  };
+
+  const exportedToast = (format) => toast(format === 'pdf' ? t('export.pdfHint') : t('export.done', { format: t(`export.${format}`) }));
+
+  /** Exports the whole conversation open in this tab. The text is held only until the file is made. */
+  async function doExportConversation(format) {
+    const buttons = ui.refs.convoButtons;
+    if (buttons.some((b) => b.disabled)) return;
+    buttons.forEach((b) => { b.disabled = true; });
+    ui.refs.convoExport.textContent = t('export.working');
+    try {
+      const conversation = await readConversation();
+      if (!conversation) return;
+      await ABCM.conversation.download(format, conversation, exportOptions());
+      exportedToast(format);
+    } catch (error) {
+      ABCM.warn('conversation export failed', error);
+      toast(t('export.fail', { reason: t('export.reason.other') }));
+    } finally {
+      buttons.forEach((b) => { b.disabled = false; });
+      ui.refs.convoExport.textContent = t('export.action');
+    }
+  }
+
+  /** Opens the list of messages of the open conversation, each with a checkbox. */
+  async function openPicker() {
+    const buttons = ui.refs.convoButtons;
+    if (buttons.some((b) => b.disabled)) return;
+    buttons.forEach((b) => { b.disabled = true; });
+    try {
+      const conversation = await readConversation();
+      if (!conversation) return;
+      ui.pick = { conversation, selected: new Set(conversation.messages.map((_m, i) => i)) };
+      buildPickList();
+      setView('pick');
+      ui.refs.pickBack.focus({ preventScroll: true });
+    } finally {
+      buttons.forEach((b) => { b.disabled = false; });
+    }
+  }
+
+  const firstLine = (message) => {
+    const part = message.parts.find((p) => p.kind === 'markdown' || p.kind === 'code');
+    const text = String(part?.text || message.parts[0]?.text || message.parts[0]?.name || '').replace(/\s+/g, ' ').trim();
+    return text.length > 90 ? `${text.slice(0, 90)}…` : text;
+  };
+
+  function pickCount() {
+    const total = ui.pick ? ui.pick.conversation.messages.length : 0;
+    const n = ui.pick ? ui.pick.selected.size : 0;
+    ui.refs.pickCount.textContent = t('export.pickSelected', { count: ABCM.i18n.format(n), total: ABCM.i18n.format(total) });
+    ui.refs.pickFormats.forEach((b) => { b.disabled = n === 0; });
+  }
+
+  function buildPickList() {
+    const { conversation, selected } = ui.pick;
+    const rows = conversation.messages.map((message, index) => {
+      const box = h('input', { type: 'checkbox', checked: true, on: { change: () => {
+        if (box.checked) selected.add(index); else selected.delete(index);
+        pickCount();
+      } } });
+      box.dataset.index = String(index);
+      const who = message.role === 'user' ? t('export.roleUser') : conversation.siteName;
+      return h('li', {}, h('label', { class: 'pick-row' }, box, h('span', { class: 'pick-text' }, h('span', { class: 'pick-who', text: who }), h('span', { class: 'pick-line', text: firstLine(message) }))));
+    });
+    ui.refs.pickList.replaceChildren(...rows);
+    pickCount();
+  }
+
+  function pickSet(predicate) {
+    const { conversation, selected } = ui.pick;
+    selected.clear();
+    conversation.messages.forEach((m, i) => { if (predicate(m)) selected.add(i); });
+    ui.refs.pickList.querySelectorAll('input[type="checkbox"]').forEach((box) => { box.checked = selected.has(Number(box.dataset.index)); });
+    pickCount();
+  }
+
+  async function exportPicked(format) {
+    if (!ui.pick || !ui.pick.selected.size) return;
+    try {
+      await ABCM.conversation.download(format, ui.pick.conversation, exportOptions({ pick: [...ui.pick.selected] }));
+    } catch (error) {
+      ABCM.warn('conversation export failed', error);
+      toast(t('export.fail', { reason: t('export.reason.other') }));
+      return;
+    }
+    exportedToast(format);
+  }
+
   function doExport(format) {
     menuClose();
     const items = ABCM.state.selectedItems();
@@ -194,6 +308,15 @@
     const key = `reason.${raw}`;
     const text = t(key);
     return text === key ? t('reason.unknown', { code: raw }) : text;
+  }
+
+  function exportReasonText(reason) {
+    const raw = String(reason || 'other');
+    const http = raw.match(/^http-(\d+)$/);
+    if (http) return t('reason.api-http', { code: http[1] });
+    const key = `export.reason.${raw}`;
+    const text = t(key);
+    return text === key ? t('export.reason.other') : text;
   }
 
   /** Success wording only for a list whose end was reached and whose rows are all on the page. */
@@ -213,7 +336,7 @@
   function summaryTitle(summary) {
     const failed = summary.failures.length;
     const unknown = (summary.unknown || []).length;
-    const verb = summary.operation === 'DELETE' ? 'deleted' : 'archived';
+    const verb = summary.operation === 'DELETE' ? 'deleted' : summary.operation === 'EXPORT' ? 'exported' : 'archived';
     if (summary.restored && !summary.succeeded && !failed && !unknown) return t('result.restored', { count: summary.restored });
     if (summary.stopped) return t('result.stopped', { done: summary.succeeded, total: summary.total });
     if (!failed && !unknown) return t(`result.${verb}`, { count: summary.succeeded });
@@ -249,14 +372,14 @@
     const observedOf = new Map((summary.items || []).filter((item) => item.observation).map((item) => [item.id, item.observation.result]));
     r.failList.replaceChildren(...problems.map((item) => h('li', {},
       h('div', { class: 'fail-title', text: item.title || t('panel.untitled') }),
-      h('div', { class: 'fail-reason', text: reasonText(item.reason) }),
+      h('div', { class: 'fail-reason', text: summary.operation === 'EXPORT' ? exportReasonText(item.reason) : reasonText(item.reason) }),
       observedOf.has(item.id) ? h('div', { class: 'fail-observed', text: t(OBSERVED_ITEM[observedOf.get(item.id)]) }) : null)));
     const counts = ABCM.bulk.observedCounts(summary);
     const lines = checked.length ? OBSERVED_COUNT.filter(([key]) => counts[key]).map(([key, text]) => h('li', { text: t(text, { count: counts[key] }) })) : [];
     r.observed.replaceChildren(...lines);
     r.observed.hidden = !lines.length;
     r.failList.hidden = !failed;
-    r.retry.hidden = !summary.failures.length; // only confirmed failures are retried; unconfirmed chats are deselected
+    r.retry.hidden = !summary.failures.length || summary.operation === 'EXPORT'; // only confirmed failures are retried; unconfirmed chats are deselected
     r.copyReport.hidden = !failed;
     const hasItems = (summary.items || []).length > 0;
     r.reportJson.hidden = !hasItems;
@@ -299,35 +422,53 @@
     toast(result.failed.length ? t('result.undoFailed', { count: result.failed.length }) : t('result.undone', { count: result.restored.length }));
   }
 
-  async function runOperation(operation) {
+  function showRunning(title) {
     const r = ui.refs;
-    const verb = operation === 'DELETE' ? 'deleting' : 'archiving';
-    r.runTitle.textContent = t(`running.${verb}`);
+    r.runTitle.textContent = title;
     r.runSub.textContent = '';
     r.runCurrent.textContent = '';
     r.runFailed.hidden = true;
     r.barFill.style.transform = 'scaleX(0)';
     r.bar.setAttribute('aria-valuenow', '0');
     setView('running');
-    announce(r.runTitle.textContent);
+    announce(title);
     r.stop.disabled = false;
     r.stop.focus({ preventScroll: true });
+    return (p) => {
+      const pct = p.total ? Math.round((p.done / p.total) * 100) : 0;
+      r.runSub.textContent = t('running.progress', { done: p.done, total: p.total });
+      r.barFill.style.transform = `scaleX(${pct / 100})`;
+      r.bar.setAttribute('aria-valuenow', String(pct));
+      r.bar.setAttribute('aria-valuetext', t('running.progress', { done: p.done, total: p.total }));
+      r.runCurrent.textContent = p.currentTitle || '';
+      r.runFailed.hidden = !p.failed;
+      r.runFailed.textContent = t('running.failed', { count: p.failed });
+    };
+  }
+
+  async function runOperation(operation) {
+    const onProgress = showRunning(t(`running.${operation === 'DELETE' ? 'deleting' : 'archiving'}`));
     let summary;
     try {
-      summary = await ABCM.bulk.run(operation, {
-        onProgress: (p) => {
-          const pct = p.total ? Math.round((p.done / p.total) * 100) : 0;
-          r.runSub.textContent = t('running.progress', { done: p.done, total: p.total });
-          r.barFill.style.transform = `scaleX(${pct / 100})`;
-          r.bar.setAttribute('aria-valuenow', String(pct));
-          r.bar.setAttribute('aria-valuetext', t('running.progress', { done: p.done, total: p.total }));
-          r.runCurrent.textContent = p.currentTitle || '';
-          r.runFailed.hidden = !p.failed;
-          r.runFailed.textContent = t('running.failed', { count: p.failed });
-        }
-      });
+      summary = await ABCM.bulk.run(operation, { onProgress });
     } catch (error) {
       summary = { operation, requested: 0, total: 0, succeeded: 0, stopped: false, unknown: [], failures: [{ id: '', title: '', reason: error?.message || 'operation-failed' }] };
+    }
+    showResult(summary);
+  }
+
+  /** Saves the text of every ticked chat as files in one ZIP. The ticks stay as they are. */
+  async function runExportChats(format) {
+    menuClose();
+    const items = ABCM.state.selectedItems();
+    if (!items.length) return;
+    const onProgress = showRunning(t('running.exporting'));
+    let summary;
+    try {
+      summary = await ABCM.bulkExport.run(items, { format, options: exportOptions(), onProgress });
+    } catch (error) {
+      ABCM.warn('bulk export failed', error);
+      summary = { operation: 'EXPORT', requested: items.length, total: items.length, succeeded: 0, stopped: false, unknown: [], failures: [{ id: '', title: '', reason: 'other' }] };
     }
     showResult(summary);
   }
@@ -456,7 +597,7 @@
     });
     r.settings = h('div', { class: 'settings', hidden: true },
       h('div', { class: 'setting' }, h('div', { class: 'setting-text' }, h('div', { class: 'setting-title', id: 'abcm-s-auto', text: t('settings.autoLoad') }), h('div', { class: 'setting-hint', text: t('settings.autoLoadHint') })), r.switchAuto),
-      h('div', { class: 'setting' }, h('div', { class: 'setting-text' }, h('div', { class: 'setting-title', id: 'abcm-s-fast', text: t('settings.fastMode') }), h('div', { class: 'setting-hint', text: t('settings.fastModeHint') })), r.switchFast),
+      r.rowFast = h('div', { class: 'setting' }, h('div', { class: 'setting-text' }, h('div', { class: 'setting-title', id: 'abcm-s-fast', text: t('settings.fastMode') }), h('div', { class: 'setting-hint', text: t('settings.fastModeHint') })), r.switchFast),
       h('button', { class: 'link more', type: 'button', text: t('settings.all'), on: act(() => ABCM.ext.sendMessage({ type: 'ABCM_OPEN_OPTIONS' }).catch(() => {})) }));
 
     // select view
@@ -490,12 +631,35 @@
         ui.loading = false;
         r.loadAllLabel.textContent = t('panel.loadAll');
       }
-      if (result) toast(loadedMessage(result));
+      if (result && !r.panel.hidden) toast(loadedMessage(result));
       render();
     }) }, icon('chevronsDown'), r.loadAllLabel);
     r.empty = h('div', { class: 'empty', role: 'status', text: t('panel.empty') });
     r.hint = h('p', { class: 'hint', text: t('panel.hint') });
+    const formatSelect = () => {
+      const select = h('select', { class: 'input fmt', 'aria-label': t('export.format') }, ...EXPORT_FORMATS.map((f) => h('option', { value: f, text: t(`export.${f}`) })));
+      select.value = ABCM.settings.get().exportFormat;
+      select.addEventListener('change', () => {
+        ABCM.settings.save({ exportFormat: select.value }).catch(() => {});
+        r.convoFormat.value = select.value;
+        r.pickFormat.value = select.value;
+        r.convoHint.hidden = select.value !== 'pdf';
+      });
+      return select;
+    };
+    r.convoFormat = formatSelect();
+    r.pickFormat = formatSelect();
+    r.convoExport = h('button', { class: 'btn btn-primary', type: 'button', text: t('export.action'), on: act(() => doExportConversation(r.convoFormat.value)) });
+    r.pickOpen = h('button', { class: 'btn btn-sm', type: 'button', on: act(openPicker) }, icon('listChecks'), h('span', { text: t('export.choose') }));
+    r.convoHint = h('p', { class: 'hint', text: t('export.pdfNote'), hidden: true });
+    r.convoButtons = [r.convoFormat, r.convoExport, r.pickOpen];
+    r.convo = h('div', { class: 'convo', role: 'group', 'aria-label': t('export.conversation'), hidden: true },
+      h('div', { class: 'more-label', text: t('export.conversation') }),
+      h('div', { class: 'convo-row' }, r.convoFormat, r.convoExport),
+      r.convoHint,
+      r.pickOpen);
     r['view-select'] = h('div', { class: 'view' },
+      r.convo,
       h('div', { class: 'count' }, r.count, h('span', { class: 'count-word', text: t('panel.selectedWord') })),
       r.countSub,
       h('div', { class: 'quick' }, r.selectAll, r.clear, r.invert),
@@ -529,18 +693,34 @@
     r.resultTools = h('div', { class: 'result-tools', hidden: true }, r.recheck, r.undo, r.reportJson, r.reportCsv);
     r['view-result'] = h('div', { class: 'view', hidden: true }, r.resultHead, r.observed, r.failList, r.resultTools);
 
-    r.body = h('div', { class: 'body' }, r['view-select'], r['view-running'], r['view-result']);
+    // message picker
+    r.pickCount = h('div', { class: 'pick-count', role: 'status' });
+    r.pickList = h('ul', { class: 'pick-list', tabindex: '0', 'aria-label': t('export.choose') });
+    r['view-pick'] = h('div', { class: 'view', hidden: true },
+      r.pickCount,
+      h('div', { class: 'quick' },
+        h('button', { class: 'btn btn-sm', type: 'button', text: t('export.pickAll'), on: act(() => pickSet(() => true)) }),
+        h('button', { class: 'btn btn-sm', type: 'button', text: t('export.pickNone'), on: act(() => pickSet(() => false)) }),
+        h('button', { class: 'btn btn-sm', type: 'button', text: t('export.pickPrompts'), on: act(() => pickSet((m) => m.role === 'user')) })),
+      r.pickList);
+
+    r.body = h('div', { class: 'body' }, r['view-select'], r['view-running'], r['view-result'], r['view-pick']);
 
     // footers
     r.export = h('button', { class: 'btn', type: 'button', 'aria-expanded': 'false', on: act(() => {
       const open = r.menu.hidden;
       r.menu.hidden = !open;
       r.export.setAttribute('aria-expanded', String(open));
-      if (open) r.menu.querySelector('button')?.focus();
+      if (open) r.menu.querySelector('[role=group]:not([hidden]) button')?.focus();
     }) }, icon('download'), h('span', { text: t('panel.export') }));
+    r.menuContents = h('div', { role: 'group', 'aria-label': t('export.contentsHeading') },
+      h('div', { class: 'menu-label', text: t('export.contentsHeading') }),
+      ...ABCM.bulkExport.FORMATS.map((format) => h('button', { type: 'button', text: t(`export.${format}`), on: act(() => runExportChats(format)) })));
     r.menu = h('div', { class: 'menu', role: 'group', 'aria-label': t('panel.export'), hidden: true },
-      ...['json', 'csv', 'md'].map((format) => h('button', { type: 'button', text: t(`export.${format}`), on: act(() => doExport(format)) })));
-    // Leaving the group (Tab out, click elsewhere) closes it.
+      r.menuContents,
+      h('div', { role: 'group', 'aria-label': t('export.listHeading') },
+        h('div', { class: 'menu-label', text: t('export.listHeading') }),
+        ...['json', 'csv', 'md'].map((format) => h('button', { type: 'button', text: t(`export.${format}`), on: act(() => doExport(format)) }))));
     r.menu.addEventListener('focusout', (event) => { if (!r.menu.contains(event.relatedTarget) && event.relatedTarget !== r.export) menuClose(); });
     r.archive = h('button', { class: 'btn', type: 'button', on: act(() => openConfirm('ARCHIVE')) }, icon('archive'), h('span', { text: t('panel.archive') }));
     r.deleteLabel = h('span');
@@ -552,13 +732,18 @@
 
     r.retry = h('button', { class: 'btn', type: 'button', hidden: true, on: act(() => { setView('select'); openConfirm(ui.summary?.operation || 'DELETE'); }) }, icon('retry'), h('span', { text: t('result.retry') }));
     r.copyReport = h('button', { class: 'btn btn-quiet', type: 'button', hidden: true, on: act(async () => {
-      const text = ([...(ui.summary?.failures || []), ...(ui.summary?.unknown || [])]).map((f) => `${f.title || f.id} — ${reasonText(f.reason)}`).join('\n');
+      const text = ([...(ui.summary?.failures || []), ...(ui.summary?.unknown || [])]).map((f) => `${f.title || f.id} — ${ui.summary?.operation === 'EXPORT' ? exportReasonText(f.reason) : reasonText(f.reason)}`).join('\n');
       try { await g.navigator.clipboard.writeText(text); toast(t('result.copied')); } catch (_) { toast(t('result.copyFailed')); }
     }) }, icon('copy'), h('span', { text: t('result.copy') }));
     r.done = h('button', { class: 'btn btn-primary', type: 'button', text: t('result.done'), on: act(() => { setView('select'); r.selectAll.focus({ preventScroll: true }); }) });
     r['footer-result'] = h('div', { class: 'footer', hidden: true }, r.copyReport, r.retry, r.done);
 
-    r.panel = h('section', { class: 'panel', role: 'region', 'aria-label': t('panel.title'), dataset: { view: 'select', collapsed: 'false' } }, r.head, r.settings, r.body, r['footer-select'], r['footer-running'], r['footer-result']);
+    r.pickBack = h('button', { class: 'btn', type: 'button', on: act(() => { setView('select'); r.convo.querySelector('select')?.focus({ preventScroll: true }); }) }, icon('arrowLeft', 'flip'), h('span', { text: t('export.pickBack') }));
+    r.pickExport = h('button', { class: 'btn btn-primary', type: 'button', text: t('export.action'), on: act(() => exportPicked(r.pickFormat.value)) });
+    r.pickFormats = [r.pickFormat, r.pickExport];
+    r['footer-pick'] = h('div', { class: 'footer', hidden: true }, r.pickBack, r.pickFormat, r.pickExport);
+
+    r.panel = h('section', { class: 'panel', role: 'region', 'aria-label': t('panel.title'), dataset: { view: 'select', collapsed: 'false' } }, r.head, r.settings, r.body, r['footer-select'], r['footer-running'], r['footer-result'], r['footer-pick']);
     r.dialogHost = h('div');
     r.toastHost = h('div');
     r.live = h('div', { class: 'sr-only', role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' });
@@ -576,6 +761,14 @@
       if (!event.composedPath().includes(r.menu) && !event.composedPath().includes(r.export)) menuClose();
     });
     state.subscribe(render);
+    // Chat sites change the address without a reload, so the "This conversation" block follows the address.
+    let lastHref = g.location.href;
+    g.clearInterval(ui.hrefTimer);
+    ui.hrefTimer = g.setInterval(() => {
+      if (g.location.href === lastHref || !ui.refs.convo) return;
+      lastHref = g.location.href;
+      if (!ui.refs.panel.hidden) render();
+    }, 700);
   }
 
   function setCollapsed(on) {
@@ -590,7 +783,15 @@
   }
 
   // ── lifecycle ────────────────────────────────────────────────────────────────────────────
-  async function mount() {
+  // Two callers at once (the launcher is set up while the panel is opened) must share one mount, or the page gets two panels.
+  let mounting = null;
+  function mount() {
+    if (ui.host) return Promise.resolve();
+    if (!mounting) mounting = doMount().finally(() => { mounting = null; });
+    return mounting;
+  }
+
+  async function doMount() {
     if (ui.host) return;
     const css = await loadStyles();
     ui.host = g.document.createElement('div');
@@ -626,6 +827,7 @@
     if (!ui.host) return;
     closeDialog(false);
     menuClose();
+    if (ui.loading) ABCM.loader.stop();
     ui.refs.panel.hidden = true;
     ui.refs.launcher.hidden = !ABCM.settings.get().showLauncher;
     if (ui.view !== 'running') setView('select');
@@ -657,6 +859,7 @@
   }
 
   function destroy() {
+    g.clearInterval(ui.hrefTimer);
     ui.host?.remove();
     ui.host = null;
     ui.built = false;

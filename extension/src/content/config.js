@@ -28,7 +28,13 @@
         unarchiveBody: { is_archived: false }
       },
       claude: { organizations: '/api/organizations', sessions: '/v1/code/sessions', sessionHeaders: { 'anthropic-version': '2023-06-01', 'anthropic-beta': 'ccr-byoc-2025-07-29' } },
-      grok: { conversations: '/rest/app-chat/conversations/soft' }
+      grok: { conversations: '/rest/app-chat/conversations/soft', chat: '/rest/app-chat/conversations' },
+      // Gemini has one endpoint for all calls; the call is named by an id. GzXR5e is DeleteConversation (read from the site's own script, 2026-11-03).
+      // DeepSeek: same-origin REST with the user's own token (page storage key userToken). delete takes a list of ids.
+      deepseek: { history: '/api/v0/chat/history_messages', remove: '/api/v0/chat_session/delete' },
+      // Perplexity: same-origin REST. A thread is found by its slug in the list, then deleted by its entry id and write token.
+      perplexity: { list: '/rest/thread/list_ask_threads', thread: '/rest/thread/', remove: '/rest/thread/delete_thread_by_entry_uuid', query: 'version=2.18&source=default' },
+      gemini: { batchexecute: '/_/BardChatUi/data/batchexecute', deleteRpc: 'GzXR5e', readRpc: 'hNvQHb', readPageSize: 50, readMaxPages: 200, page: '/app' }
     },
 
     delays: { short: 100, medium: 200, long: 300, extended: 500 },

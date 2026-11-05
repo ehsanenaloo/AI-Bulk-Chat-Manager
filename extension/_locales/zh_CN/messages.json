@@ -4,7 +4,7 @@
     "description": "Extension name shown in the browser and the stores. Keep it short."
   },
   "app_description": {
-    "message": "批量选择、删除、归档和导出ChatGPT、Claude、Gemini和Grok上的对话。免费、开源，在本地运行。",
+    "message": "批量选择、删除、归档和导出常用AI聊天网站上的对话。免费、开源，在本地运行。",
     "description": "Short description shown in the stores and on the extensions page (132 characters maximum)."
   },
   "action_title": {

@@ -19,10 +19,10 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 export const ALLOWED_PERMISSIONS = ['activeTab', 'scripting', 'storage'];
 // Addresses the code may mention. Everything is https.
 export const ALLOWED_HOSTS = new Set([
-  'chatgpt.com', 'chat.openai.com', 'claude.ai', 'gemini.google.com', 'grok.com',
+  'chatgpt.com', 'chat.openai.com', 'claude.ai', 'gemini.google.com', 'grok.com', 'chat.deepseek.com', 'www.perplexity.ai', 'perplexity.ai', 'copilot.com', 'www.copilot.com', 'copilot.microsoft.com', 'www.meta.ai', 'meta.ai', 'chat.qwen.ai', 'chat.z.ai', 'www.kimi.ai', 'kimi.ai', 'www.kimi.com', 'kimi.com',
   'github.com', 'ehsanenaloo.github.io', 'www.enaloo.com', 'enaloo.com',
   'chromewebstore.google.com', 'addons.mozilla.org', 'microsoftedge.microsoft.com',
-  'www.w3.org' // XML namespaces in inline SVG
+  'www.w3.org', 'schemas.openxmlformats.org', 'purl.org' // XML namespace names (inline SVG, Word files); never fetched
 ]);
 const ROOT_ALLOWED = new Set([
   'README.md', 'LICENSE', 'CHANGELOG.md', 'package.json', 'package-lock.json', '.gitignore', '.gitattributes', '.editorconfig',

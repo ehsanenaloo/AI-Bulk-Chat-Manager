@@ -14,6 +14,7 @@
 
   const THEMES = ['system', 'light', 'dark'];
   const ACCENTS = ['teal', 'blue', 'indigo', 'neutral'];
+  const EXPORT_FORMATS = ['md', 'txt', 'json', 'docx', 'pdf', 'png'];
 
   const DEFAULTS = Object.freeze({
     language: 'auto',      // 'auto' follows the browser language, otherwise a code from i18n.LANGUAGES
@@ -22,7 +23,11 @@
     fastMode: true,        // call the site's backend first, fall back to its page UI
     autoLoad: true,        // keep adding checkboxes to chats the site loads while you scroll
     confirmThreshold: 20,  // above this many chats a delete needs an extra confirmation tick
-    showLauncher: false,   // small button on chat pages that opens the panel
+    showLauncher: true,    // small button on chat pages that opens the panel
+    exportThinking: false, // conversation export: include the model's thinking
+    exportMetadata: true,  // conversation export: site, model and times
+    exportSourceUrl: true, // conversation export: the address of the chat
+    exportFormat: 'md',    // conversation export: the format picked last
     panelPosition: null    // { x, y } in CSS pixels from the top-left of the viewport, or null for the default corner
   });
 
@@ -42,6 +47,10 @@
       autoLoad: typeof s.autoLoad === 'boolean' ? s.autoLoad : DEFAULTS.autoLoad,
       confirmThreshold: number(s.confirmThreshold, 1, 500, DEFAULTS.confirmThreshold),
       showLauncher: typeof s.showLauncher === 'boolean' ? s.showLauncher : DEFAULTS.showLauncher,
+      exportThinking: typeof s.exportThinking === 'boolean' ? s.exportThinking : DEFAULTS.exportThinking,
+      exportMetadata: typeof s.exportMetadata === 'boolean' ? s.exportMetadata : DEFAULTS.exportMetadata,
+      exportSourceUrl: typeof s.exportSourceUrl === 'boolean' ? s.exportSourceUrl : DEFAULTS.exportSourceUrl,
+      exportFormat: EXPORT_FORMATS.includes(s.exportFormat) ? s.exportFormat : DEFAULTS.exportFormat,
       panelPosition: pos && Number.isFinite(pos.x) && Number.isFinite(pos.y) ? { x: Math.round(pos.x), y: Math.round(pos.y) } : null
     };
   }

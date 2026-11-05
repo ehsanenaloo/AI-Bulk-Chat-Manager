@@ -74,8 +74,24 @@
     return element.matches?.(current.anchorMatch) ? element : element.closest?.(current.anchorMatch) || null;
   }
 
+  /**
+   * Sites whose rows carry no link or id (Qwen, Z.ai): the chat is known by its title and, among chats with
+   * the same title, by its place in the list. The row itself is what the page menu acts on, so no site id is needed.
+   */
+  function titleKey(anchor) {
+    const title = titleOf(anchor);
+    if (!title) return '';
+    let nth = 0;
+    for (const row of getAllConversations()) {
+      if (row === anchor) return `t:${title}#${nth}`;
+      if (titleOf(row) === title) nth += 1;
+    }
+    return '';
+  }
+
   function idFromElement(element) {
     const anchor = anchorOf(element);
+    if (site()?.idFromTitle) return anchor ? titleKey(anchor) : '';
     return idFromHref(anchor?.getAttribute?.('href') || anchor?.href || '');
   }
 
@@ -104,6 +120,7 @@
 
   /** The absolute address of a chat, so exports stay useful outside the page. */
   function urlOf(anchor) {
+    if (site()?.idFromTitle) return site().url;
     const raw = anchor?.getAttribute?.('href') || anchor?.href || '';
     try { return new URL(raw, g.location.href).href; } catch (_) { return raw; }
   }

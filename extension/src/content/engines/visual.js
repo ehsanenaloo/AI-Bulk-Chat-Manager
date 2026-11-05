@@ -31,7 +31,17 @@
   /** Drops overlays that contain another candidate (a wrapper pane around the real menu or dialog). */
   const innermost = (list) => list.filter((el) => !list.some((other) => other !== el && el.contains(other)));
   const snapshotMenus = () => new Set(visibleAll(cfg().selectors.menu));
-  const snapshotDialogs = () => new Set(visibleAll(cfg().selectors.dialog));
+  /**
+   * Dialogs that are open, including one that is still fading in: some sites (Qwen) keep a new dialog at opacity 0
+   * for a while, and its buttons already work.
+   */
+  const openDialogs = () => Array.from(g.document.querySelectorAll(cfg().selectors.dialog)).filter((el) => {
+    if (!el.isConnected || el.hidden || el.getAttribute('aria-hidden') === 'true') return false;
+    const style = g.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    return (el.getClientRects?.().length || 0) > 0;
+  });
+  const snapshotDialogs = () => new Set(openDialogs());
 
   /**
    * The overlay this action opened: the one the trigger's aria-controls names, else the only one that
@@ -90,6 +100,7 @@
     if (candidate.hasAttribute?.('data-abcm-checkbox')) return -1;
     let score = 0;
     if (candidate.matches?.('button[aria-haspopup="menu"], [role="button"][aria-haspopup="menu"]')) score += 10;
+    else if (ABCM.sites.current()?.menuButton && candidate.matches?.(ABCM.sites.current().menuButton)) score += 10;
     const hint = `${candidate.getAttribute?.('aria-label') || ''} ${candidate.textContent || ''}`.toLowerCase();
     if (hint.includes('more') || hint.includes('option') || hint.includes('menu')) score += 5;
     if (record?.anchor?.contains?.(candidate)) score += 3;
@@ -101,7 +112,8 @@
   function resolveMenuButton(record, strategy) {
     for (const scope of localScopes(record)) {
       if (!scope?.querySelectorAll) continue;
-      const best = Array.from(scope.querySelectorAll(cfg().selectors.menuButton))
+      const extra = ABCM.sites.current()?.menuButton;
+      const best = Array.from(scope.querySelectorAll(extra ? `${cfg().selectors.menuButton}, ${extra}` : cfg().selectors.menuButton))
         .map((candidate) => ({ candidate, score: scoreMenuButton(candidate, record) }))
         .filter((entry) => entry.score >= 0)
         .sort((a, b) => b.score - a.score)[0]?.candidate;
@@ -185,7 +197,7 @@
 
   function findConfirmButton(operation, timeout, strategy, before = null) {
     return util().waitForCondition(() => {
-      const open = innermost(visibleAll(cfg().selectors.dialog));
+      const open = innermost(openDialogs());
       const fresh = before ? open.filter((dialog) => !before.has(dialog)) : open;
       const matches = fresh.map((dialog) => ({
         dialog,
@@ -286,7 +298,8 @@
       return { ok: false, unknown: true, reason: 'archive-unverified' };
     }
 
-    const found = await findConfirmButton(operation, cfg().timeouts.elementWaitShort, strategy, dialogsBefore);
+    // Copilot opens its dialog about 1.5 s after the menu click.
+    const found = await findConfirmButton(operation, ABCM.sites.current()?.confirmWait || cfg().timeouts.elementWaitShort, strategy, dialogsBefore);
     if (!found?.button) {
       // Some sites (Grok) delete on the menu click without asking: a row that stays gone means it worked.
       if (record && await waitForRowGone(record, cfg().timeouts.rowGone)) return { ok: true, verified: true };
@@ -296,7 +309,7 @@
     await util().delay(cfg().delays.medium);
     // Only the dialog that was clicked counts: an unrelated dialog staying open says nothing about ours.
     const dialog = found.dialog;
-    const dialogClosed = () => util().waitForCondition(() => (!dialog.isConnected || !isVisible(dialog, true) ? true : null), { timeout: cfg().timeouts.elementWaitShort, pollMs: 80 });
+    const dialogClosed = () => util().waitForCondition(() => (!dialog.isConnected || !isVisible(dialog, true) ? true : null), { timeout: ABCM.sites.current()?.confirmWait || cfg().timeouts.elementWaitShort, pollMs: 80 });
     let closed = await dialogClosed();
     if (!closed) {
       // The same dialog is still open with the same enabled button: the click most likely did not register.

@@ -59,9 +59,126 @@
       conversation: 'a[href*="/app/"]',
       anchorMatch: 'a[href*="/app/"]',
       idRe: /\/app\/([\w-]+)/,
+      // Elements of a conversation page, read only when the user exports it.
+      read: { user: 'user-query', model: 'model-response', userText: '.query-text', body: 'message-content', scroller: 'infinite-scroller', images: { user: 'img.preview-image', model: 'img.image' } },
       title: null,
       history: ['nav', '[role="navigation"]', 'aside', '[class*="conversation" i]'],
+      method: 'api',
+      archive: false
+    },
+    {
+      id: 'deepseek',
+      name: 'DeepSeek',
+      hosts: ['chat.deepseek.com'],
+      url: 'https://chat.deepseek.com/',
+      color: '#4d6bfe',
+      // Chats live at /a/chat/s/{uuid}. The page's class names are hashed, so only the design system's scroll area is named.
+      conversation: 'a[href*="/a/chat/s/"]',
+      anchorMatch: 'a[href*="/a/chat/s/"]',
+      idRe: /\/a\/chat\/s\/([\w-]+)/,
+      title: null,
+      history: ['.ds-scroll-area', 'nav', 'aside'],
+      method: 'api',
+      archive: false
+    },
+    {
+      id: 'copilot',
+      name: 'Copilot',
+      hosts: ['copilot.com', 'www.copilot.com', 'copilot.microsoft.com'],
+      url: 'https://copilot.com/chat',
+      color: '#7b61ff',
+      conversation: 'a[href*="/chat/conversation/"]',
+      anchorMatch: 'a[href*="/chat/conversation/"]',
+      idRe: /\/chat\/conversation\/([\w-]+)/,
+      title: null,
+      history: ['[class*="NavSubItemGroup"]', 'nav'],
+      // No known backend call: the row menu of the page does the work, and the chat text cannot be read.
       method: 'visual',
+      confirmWait: 5000,
+      archive: false
+    },
+    {
+      id: 'meta',
+      name: 'Meta AI',
+      hosts: ['www.meta.ai', 'meta.ai'],
+      url: 'https://www.meta.ai/',
+      color: '#0a7cff',
+      conversation: 'a[href*="/prompt/"]',
+      anchorMatch: 'a[href*="/prompt/"]',
+      idRe: /\/prompt\/([\w-]+)/,
+      title: null,
+      history: ['nav', 'aside'],
+      // The site deletes through a GraphQL call with a built-in document id, so only the page menu is used.
+      method: 'visual',
+      archive: false
+    },
+    {
+      id: 'kimi',
+      name: 'Kimi',
+      hosts: ['www.kimi.ai', 'kimi.ai', 'www.kimi.com', 'kimi.com'],
+      url: 'https://www.kimi.ai/',
+      color: '#1783ff',
+      // The "All chats" link is /chat/history; chats are /chat/<uuid>.
+      conversation: 'a[href^="/chat/"]:not([href^="/chat/history"])',
+      anchorMatch: 'a[href^="/chat/"]:not([href^="/chat/history"])',
+      idRe: /\/chat\/([0-9a-f]{8}-[0-9a-f-]{27})/,
+      title: null,
+      history: ['[class*="sidebar-history-list"]', 'nav', 'aside'],
+      method: 'visual',
+      archive: false
+    },
+    {
+      id: 'qwen',
+      name: 'Qwen',
+      hosts: ['chat.qwen.ai'],
+      url: 'https://chat.qwen.ai/',
+      color: '#615ced',
+      // Rows are links without an address: a chat is known by its title and place (see dom.titleKey).
+      conversation: 'a.chat-item-drag-link',
+      anchorMatch: 'a.chat-item-drag-link',
+      idRe: /^$/,
+      idFromTitle: true,
+      title: '.chat-item-title-text',
+      history: ['.folder-content', 'nav', 'aside'],
+      menuButton: 'button[aria-label="Chat Menu"]',
+      // The confirmation dialog fades in slowly.
+      confirmWait: 5000,
+      method: 'visual',
+      archive: false
+    },
+    {
+      id: 'zai',
+      name: 'Z.ai',
+      hosts: ['chat.z.ai'],
+      url: 'https://chat.z.ai/',
+      color: '#2d6bff',
+      // Rows are buttons without an address: a chat is known by its title and place (see dom.titleKey).
+      conversation: '.AgentChatList .group > button',
+      anchorMatch: '.AgentChatList .group > button',
+      idRe: /^$/,
+      idFromTitle: true,
+      title: null,
+      history: ['.AgentChatList', 'nav', 'aside'],
+      // The menu trigger is a div, not a button.
+      menuButton: '[aria-haspopup="menu"]',
+      // The confirmation dialog fades in slowly.
+      confirmWait: 5000,
+      method: 'visual',
+      archive: false
+    },
+    {
+      id: 'perplexity',
+      name: 'Perplexity',
+      hosts: ['www.perplexity.ai', 'perplexity.ai'],
+      url: 'https://www.perplexity.ai/',
+      color: '#20808d',
+      // Threads live at /search/{uuid}. The link only covers its row; its aria-label carries the title.
+      conversation: 'a[href^="/search/"]',
+      anchorMatch: 'a[href^="/search/"]',
+      idRe: /\/search\/([\w-]+)/,
+      title: null,
+      history: ['nav', 'aside'],
+      method: 'api',
       archive: false
     },
     {

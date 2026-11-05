@@ -18,6 +18,7 @@
   const WRAP_ATTR = 'data-abcm-wrap';
   const RESERVED_PX = 26; // room kept at the start of the row for the checkbox
   const handlers = new WeakMap(); // anchor -> click listener
+  const boxOwners = new WeakMap(); // checkbox -> { id, anchor }
 
   const PAGE_CSS = `
     [data-abcm-selected]{background-color:rgba(14,124,149,.16)!important;outline:1px solid rgba(14,124,149,.55)!important;outline-offset:-1px}
@@ -226,6 +227,7 @@
       anchor.addEventListener('click', listener, true);
     }
 
+    boxOwners.set(checkbox, { id, anchor });
     const record = ABCM.state.register({ id, anchor, checkbox });
     if (ABCM.state.isSelected(id)) row.setAttribute('data-abcm-selected', '1');
     return record;
@@ -302,5 +304,31 @@
     });
   }
 
-  ABCM.define('checkboxes', { attach, attachAll, detach, removeAll, cleanupLeftovers, ensurePageStyles, relabel, paint, RESERVED_PX });
+  /**
+   * One chat can be listed twice (ChatGPT shows a Project's chat under Recents and inside its Project). The
+   * registry holds one record per chat, so the other row's box would keep an old tick. This makes every box of a
+   * chat show the selection.
+   */
+  function syncCopies() {
+    const byId = new Map();
+    g.document.querySelectorAll(`[${CHECKBOX_ATTR}]`).forEach((box) => {
+      const owner = boxOwners.get(box);
+      if (!owner) return;
+      if (!byId.has(owner.id)) byId.set(owner.id, []);
+      byId.get(owner.id).push({ box, anchor: owner.anchor });
+    });
+    for (const [id, copies] of byId) {
+      if (copies.length < 2) continue;
+      const on = ABCM.state.isSelected(id);
+      for (const { box, anchor } of copies) {
+        if (box.checked !== on) { box.checked = on; paint(box); }
+        const row = ABCM.dom.rowOf(anchor) || anchor;
+        if (on) row.setAttribute('data-abcm-selected', '1'); else row.removeAttribute('data-abcm-selected');
+      }
+    }
+  }
+
+  ABCM.state.subscribe(syncCopies);
+
+  ABCM.define('checkboxes', { attach, attachAll, detach, removeAll, cleanupLeftovers, ensurePageStyles, relabel, paint, syncCopies, RESERVED_PX });
 })(globalThis);

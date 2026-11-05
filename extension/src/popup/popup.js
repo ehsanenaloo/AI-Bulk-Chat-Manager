@@ -39,9 +39,12 @@
     const supported = !!site;
     $('supported').hidden = !supported;
     $('unsupported').hidden = supported;
+    // The two switches belong to a chat page: nothing to set elsewhere, and no Fast mode where the site has no request.
+    $('prefs').hidden = !supported;
+    $('row-fast').hidden = !(site && site.method === 'api');
 
     if (!supported) {
-      setStatus('idle', 'info', t('popup.unsupportedTitle'), t('popup.unsupportedSub'));
+      setStatus('idle', 'info', t('popup.unsupportedTitle'));
       return;
     }
     const start = $('start');

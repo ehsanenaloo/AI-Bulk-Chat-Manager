@@ -4,7 +4,7 @@
     "description": "Extension name shown in the browser and the stores. Keep it short."
   },
   "app_description": {
-    "message": "Sélectionnez, supprimez, archivez et exportez vos conversations ChatGPT, Claude, Gemini et Grok. Gratuit, open source, local.",
+    "message": "Sélectionnez, supprimez, archivez et exportez vos conversations sur les sites de chat IA courants. Gratuit, open source, local.",
     "description": "Short description shown in the stores and on the extensions page (132 characters maximum)."
   },
   "action_title": {

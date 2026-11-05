@@ -4,7 +4,7 @@
     "description": "Extension name shown in the browser and the stores. Keep it short."
   },
   "app_description": {
-    "message": "Selecciona, elimina, archiva y exporta chats en masa en ChatGPT, Claude, Gemini y Grok. Gratis, de código abierto y local.",
+    "message": "Selecciona, elimina, archiva y exporta chats en masa en sitios de chat con IA populares. Gratis, de código abierto y local.",
     "description": "Short description shown in the stores and on the extensions page (132 characters maximum)."
   },
   "action_title": {

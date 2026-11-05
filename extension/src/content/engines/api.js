@@ -20,7 +20,7 @@
 
   const TOKEN_TTL_MS = 5 * 60 * 1000;
   const MAX_RETRY_AFTER_MS = 60 * 1000;
-  const memo = { token: null, tokenAt: 0, claudeOrg: null, grokBroken: false, sessionsBroken: false };
+  const memo = { token: null, tokenAt: 0, claudeOrg: null, grokBroken: false, sessionsBroken: false, gemini: null, perplexity: null };
 
   const siteId = () => ABCM.sites.current()?.id || '';
   const cfg = () => ABCM.config.api;
@@ -226,6 +226,175 @@
     return result(res);
   }
 
+  // ── Perplexity: same-origin REST. Delete only. ───────────────────────────────────────────────
+  // The page lists a thread by its slug (the id in the sidebar link); deleting needs the thread's entry id and write token,
+  // which the thread list holds. The list is read once per run and again only when a slug is missing from it.
+  const PERPLEXITY_LIST_AGE_MS = 60 * 1000;
+
+  async function loadPerplexityThreads() {
+    const map = new Map();
+    const url = abs(`${cfg().perplexity.list}?${cfg().perplexity.query}`);
+    for (let offset = 0, pages = 0; pages < 200; pages++) {
+      const res = await timedFetch(url, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ limit: 20, ascending: false, offset, search_term: '', exclude_asi: false }) });
+      if (!res.ok) throw new Error(`list-${res.status}`);
+      const page = await res.json().catch(() => null);
+      if (!Array.isArray(page) || !page.length) break;
+      for (const item of page) if (item?.slug && item?.uuid) map.set(String(item.slug), { uuid: String(item.uuid), token: String(item.read_write_token || '') });
+      offset += page.length;
+    }
+    return map;
+  }
+
+  /** The thread list as a promise, shared by the workers of one run (they ask at the same moment). */
+  function perplexityThreads(force) {
+    const now = Date.now();
+    if (!force && memo.perplexity && now - memo.perplexity.at < PERPLEXITY_LIST_AGE_MS) return memo.perplexity.promise;
+    const promise = loadPerplexityThreads();
+    memo.perplexity = { at: now, promise };
+    promise.catch(() => { if (memo.perplexity?.promise === promise) memo.perplexity = null; });
+    return promise;
+  }
+
+  async function perplexityAction(operation, id) {
+    if (operation !== 'DELETE') return { ok: false, reason: 'archive-unsupported' };
+    let entry = null;
+    try {
+      entry = (await perplexityThreads(false)).get(id) || (await perplexityThreads(true)).get(id);
+    } catch (error) {
+      return /^list-(401|403)$/.test(error?.message) ? { ok: false, reason: 'api-auth-failed' } : failure(error);
+    }
+    if (!entry) return { ok: false, reason: 'perplexity-not-listed' };
+    let res;
+    try {
+      res = await timedFetch(abs(`${cfg().perplexity.remove}?${cfg().perplexity.query}`), { method: 'DELETE', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entry_uuid: entry.uuid, read_write_token: entry.token }) });
+    } catch (error) { return failure(error); }
+    if (res.status === 401 || res.status === 403) return { ok: false, reason: 'api-auth-failed' };
+    const verdict = result(res);
+    if (!verdict.ok) return verdict;
+    let reply = null;
+    try { reply = await res.json(); } catch (_) { return { ok: false, unknown: true, reason: 'api-bad-answer' }; }
+    if (reply?.status === 'success') { try { (await perplexityThreads(false)).delete(id); } catch (_) { /* the list is read again next time */ } return { ok: true, verified: true, via: 'api' }; }
+    return reply?.status ? { ok: false, reason: `api-status-${String(reply.status).slice(0, 20)}` } : { ok: false, unknown: true, reason: 'api-bad-answer' };
+  }
+
+  // ── DeepSeek: same-origin REST with the user's own login token. Delete only. ───────────────────
+  // The page keeps its token in its own storage (key userToken, JSON with a value). The call goes only to the page's origin.
+  function deepseekToken() {
+    try { return String(JSON.parse(g.localStorage.getItem('userToken') || 'null')?.value || ''); } catch (_) { return ''; }
+  }
+
+  const deepseekHeaders = (token, json = false) => ({
+    Authorization: `Bearer ${token}`, Accept: '*/*', 'x-client-platform': 'web', ...(json ? { 'Content-Type': 'application/json' } : {})
+  });
+
+  async function deepseekAction(operation, id) {
+    if (operation !== 'DELETE') return { ok: false, reason: 'archive-unsupported' };
+    const token = deepseekToken();
+    if (!token) return { ok: false, reason: 'deepseek-no-token' };
+    let res;
+    try {
+      res = await timedFetch(abs(cfg().deepseek.remove), { method: 'POST', credentials: 'include', headers: deepseekHeaders(token, true), body: JSON.stringify({ chat_session_ids: [id] }) });
+    } catch (error) { return failure(error); }
+    if (res.status === 401 || res.status === 403) return { ok: false, reason: 'api-auth-failed' };
+    const verdict = result(res);
+    if (!verdict.ok) return verdict;
+    let reply = null;
+    try { reply = await res.json(); } catch (_) { return { ok: false, unknown: true, reason: 'api-bad-answer' }; }
+    // The site answers HTTP 200 with its own code: 0 is done, anything else says nothing changed.
+    if (reply?.code === 0 && reply?.data?.biz_code === 0) return { ok: true, verified: true, via: 'api' };
+    if (reply && (reply.code !== 0 || reply.data?.biz_code !== 0)) return { ok: false, reason: `api-code-${reply.data?.biz_code ?? reply.code}` };
+    return { ok: false, unknown: true, reason: 'api-bad-answer' };
+  }
+
+  // ── Gemini: one batch endpoint ("batchexecute"). Delete only. ───────────────────────────────
+  // The page keeps three values the site's own calls need: the request token (SNlM0e), the build label (cfb2h)
+  // and the session id (FdrFJe). They sit in an inline script as plain text, which this script can read; it
+  // cannot read the page's JS variables. The page address (/app) is fetched only when no such script is found.
+  const GEMINI_KEYS = { at: 'SNlM0e', bl: 'cfb2h', sid: 'FdrFJe' };
+
+  function geminiTokensFrom(text) {
+    const pick = (key) => new RegExp(`"${key}":"([^"]+)"`).exec(text)?.[1] || '';
+    const tokens = { at: pick(GEMINI_KEYS.at), bl: pick(GEMINI_KEYS.bl), sid: pick(GEMINI_KEYS.sid) };
+    return tokens.at && tokens.bl ? tokens : null;
+  }
+
+  async function getGeminiTokens(force = false) {
+    if (!force && memo.gemini) return memo.gemini;
+    let tokens = null;
+    if (!force) {
+      for (const script of Array.from(g.document.scripts)) {
+        const text = script.textContent || '';
+        if (text.includes(`"${GEMINI_KEYS.at}"`)) { tokens = geminiTokensFrom(text); if (tokens) break; }
+      }
+    }
+    if (!tokens) {
+      try {
+        const res = await timedFetch(abs(cfg().gemini.page), { credentials: 'include' });
+        if (res.ok) tokens = geminiTokensFrom(await res.text());
+      } catch (_) { /* no tokens: the page UI will do it */ }
+    }
+    memo.gemini = tokens;
+    return tokens;
+  }
+
+  /** The reply is `)]}'` then length-prefixed JSON arrays. Returns the entry for the call, or null. */
+  function geminiEntry(text, rpc) {
+    for (const line of String(text).split(String.fromCharCode(10))) {
+      if (!line.startsWith('[')) continue;
+      let parsed;
+      try { parsed = JSON.parse(line); } catch (_) { continue; }
+      for (const entry of Array.isArray(parsed) ? parsed : []) if (Array.isArray(entry) && entry[0] === 'wrb.fr' && entry[1] === rpc) return entry;
+    }
+    return null;
+  }
+
+  async function geminiPost(tokens, rpc, payload, id) {
+    const url = new g.URL(abs(cfg().gemini.batchexecute));
+    url.searchParams.set('rpcids', rpc);
+    url.searchParams.set('source-path', `/app/${id}`);
+    url.searchParams.set('bl', tokens.bl);
+    if (tokens.sid) url.searchParams.set('f.sid', tokens.sid);
+    url.searchParams.set('hl', g.document.documentElement.lang || 'en');
+    url.searchParams.set('_reqid', String(100000 + Math.floor(Math.random() * 900000)));
+    url.searchParams.set('rt', 'c');
+    const body = new g.URLSearchParams({ 'f.req': JSON.stringify([[[rpc, JSON.stringify(payload), null, 'generic']]]), at: tokens.at }).toString();
+    return timedFetch(url.href, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' }, body });
+  }
+
+  /**
+   * One batchexecute call. id is the chat's id as it appears in the page address (no c_ prefix); it only names
+   * the page the call comes from. Returns { ok: true, entry } or the usual failure shapes ({ ok: false, reason }).
+   */
+  async function geminiRpc(rpc, payload, id) {
+    let tokens = await getGeminiTokens();
+    if (!tokens) return { ok: false, reason: 'gemini-no-token' };
+    let res;
+    try { res = await geminiPost(tokens, rpc, payload, id); } catch (error) { return failure(error); }
+    // An old token is refused: read fresh ones from the page address and try once more.
+    if (res.status === 400 || res.status === 401 || res.status === 403) {
+      memo.gemini = null;
+      tokens = await getGeminiTokens(true);
+      if (!tokens) return { ok: false, reason: 'api-auth-failed' };
+      try { res = await geminiPost(tokens, rpc, payload, id); } catch (error) { return failure(error); }
+    }
+    const verdict = result(res);
+    if (!verdict.ok) return verdict;
+    let text = '';
+    try { text = await res.text(); } catch (_) { return { ok: false, unknown: true, reason: 'api-bad-answer' }; }
+    const entry = geminiEntry(text, rpc);
+    // Success is a reply for this call with no error code; anything else may or may not have changed something.
+    if (entry && entry[5] == null) return { ok: true, verified: true, via: 'api', entry };
+    if (entry && Array.isArray(entry[5])) return { ok: false, reason: `api-code-${entry[5][0] ?? 'unknown'}` };
+    return { ok: false, unknown: true, reason: 'api-bad-answer' };
+  }
+
+  async function geminiAction(operation, id) {
+    if (operation !== 'DELETE') return { ok: false, reason: 'archive-unsupported' };
+    const chatId = id.startsWith('c_') ? id : `c_${id}`; // the site's links drop the prefix, its calls keep it
+    const done = await geminiRpc(cfg().gemini.deleteRpc, [chatId], id);
+    return done.ok ? { ok: true, verified: true, via: 'api' } : done;
+  }
+
   /** Whether a finished archive can be undone: only ChatGPT, and only through its backend. */
   function canUndoArchive() {
     return siteId() === 'chatgpt' && isEnabled();
@@ -234,6 +403,7 @@
   /** Does the one-time preparation a run benefits from (ChatGPT: fetch the bearer token up front). */
   async function prepare() {
     if (siteId() === 'chatgpt') await getAccessToken();
+    if (siteId() === 'gemini') await getGeminiTokens();
   }
 
   /** Runs one operation on one chat id through the site's backend. */
@@ -243,6 +413,9 @@
       case 'chatgpt': return chatgptAction(operation, id);
       case 'claude': return claudeAction(operation, id);
       case 'grok': return grokAction(operation, id);
+      case 'gemini': return geminiAction(operation, id);
+      case 'deepseek': return deepseekAction(operation, id);
+      case 'perplexity': return perplexityAction(operation, id);
       default: return { ok: false, reason: 'api-unsupported' };
     }
   }
@@ -253,14 +426,20 @@
    * site stays the owner of the node.
    */
   function retireRow(record) {
-    const anchor = record?.anchor || (record?.id ? ABCM.state.get(record.id)?.anchor : null);
-    if (!anchor) return;
-    try { ABCM.checkboxes.detach(anchor); } catch (_) { /* row already gone */ }
-    try {
-      if (!anchor.isConnected) return;
-      (ABCM.dom.rowOf(anchor) || anchor).setAttribute('data-abcm-retired', '1');
-    } catch (_) { /* row already gone */ }
+    const id = record?.id;
+    const anchors = new Set();
+    const known = record?.anchor || (id ? ABCM.state.get(id)?.anchor : null);
+    if (known) anchors.add(known);
+    // The same chat can be listed twice (for example under Recents and inside a Project): every row goes.
+    if (id) { try { for (const a of ABCM.dom.getAllConversations()) if (ABCM.dom.idFromElement(a) === id) anchors.add(a); } catch (_) { /* the list is not readable now */ } }
+    for (const anchor of anchors) {
+      try { ABCM.checkboxes.detach(anchor); } catch (_) { /* row already gone */ }
+      try {
+        if (!anchor.isConnected) continue;
+        (ABCM.dom.rowOf(anchor) || anchor).setAttribute('data-abcm-retired', '1');
+      } catch (_) { /* row already gone */ }
+    }
   }
 
-  ABCM.define('apiEngine', { isEnabled, canUndoArchive, prepare, run, retireRow, getAccessToken, parseRetryAfter, _memo: memo });
+  ABCM.define('apiEngine', { deepseekToken, deepseekHeaders, isEnabled, canUndoArchive, prepare, run, retireRow, getAccessToken, getClaudeOrg, geminiRpc, timedFetch, parseRetryAfter, _memo: memo });
 })(globalThis);

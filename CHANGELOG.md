@@ -6,6 +6,29 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+## [9.2.0] - 2026-11-05
+
+### Added
+
+- Export the text of a chat, or of many ticked chats in one ZIP, as Markdown, plain text, JSON, Word, PDF or a long image. It works on ChatGPT, Claude, Gemini, Grok, DeepSeek and Perplexity.
+- New sites: DeepSeek, Perplexity, Copilot, Meta AI, Kimi, Qwen and Z.ai. Select and delete work on all of them.
+- Gemini: Fast mode now deletes through the site's own request, and exports have the model name and time of each message.
+- Options: switches for what an export includes.
+
+### Changed
+
+- The launcher button is on by default.
+- The popup hides switches that do not apply to the page.
+- The privacy, About and store texts are updated.
+
+### Fixed
+
+- Two panels could appear when the launcher was on.
+- ChatGPT and Grok exports are cleaner: no interface markup, and Grok chats keep their title.
+- A ChatGPT chat listed twice now has the same tick in both places.
+- While the extension clicks through a site's menus, the page is locked so a stray click cannot hit another chat.
+- Closing the panel now stops "Load all older chats".
+
 ## [9.1.1] - 2026-11-02
 
 ### Added
@@ -128,7 +151,8 @@ These versions were published without a changelog. The last one, 8.10.6, was a p
 - New 16, 48 and 128 pixel icons.
 - The MIT license.
 
-[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.1...HEAD
+[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.2.0...HEAD
+[9.2.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.1...v9.2.0
 [9.1.1]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.0...v9.1.1
 [9.1.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.1...v9.1.0
 [9.0.1]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.0...v9.0.1

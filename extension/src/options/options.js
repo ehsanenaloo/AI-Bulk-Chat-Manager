@@ -15,6 +15,9 @@
     $('sw-fast').setAttribute('aria-checked', String(s.fastMode));
     $('sw-auto').setAttribute('aria-checked', String(s.autoLoad));
     $('sw-launcher').setAttribute('aria-checked', String(s.showLauncher));
+    $('sw-thinking').setAttribute('aria-checked', String(s.exportThinking));
+    $('sw-metadata').setAttribute('aria-checked', String(s.exportMetadata));
+    $('sw-source').setAttribute('aria-checked', String(s.exportSourceUrl));
     const sync = (selector, value) => g.document.querySelectorAll(selector).forEach((b) => {
       b.setAttribute('aria-checked', String(b.dataset.value === value));
       b.tabIndex = b.dataset.value === value ? 0 : -1; // roving tabindex
@@ -124,6 +127,9 @@
     bindSwitch('sw-fast', 'fastMode');
     bindSwitch('sw-auto', 'autoLoad');
     bindSwitch('sw-launcher', 'showLauncher');
+    bindSwitch('sw-thinking', 'exportThinking');
+    bindSwitch('sw-metadata', 'exportMetadata');
+    bindSwitch('sw-source', 'exportSourceUrl');
     wireLinks();
     highlightNav();
 

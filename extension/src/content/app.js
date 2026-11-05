@@ -33,6 +33,7 @@
       ABCM.panel.toast(ABCM.i18n.t('toast.stopFirst'));
       return snapshot();
     }
+    ABCM.loader.stop(); // closing the panel ends a Load all that is still scrolling the list
     active = false;
     ABCM.autoAttach.disable();
     ABCM.checkboxes.removeAll();

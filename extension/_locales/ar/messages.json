@@ -4,7 +4,7 @@
     "description": "Extension name shown in the browser and the stores. Keep it short."
   },
   "app_description": {
-    "message": "حدّد محادثاتك دفعة واحدة واحذفها أو أرشفها أو صدّرها على ChatGPT وClaude وGemini وGrok. مجاني ومفتوح المصدر ويعمل محليًا.",
+    "message": "حدّد محادثاتك دفعة واحدة واحذفها أو أرشفها أو صدّرها على مواقع محادثة الذكاء الاصطناعي الشائعة. مجاني ومفتوح المصدر ويعمل محليًا.",
     "description": "Short description shown in the stores and on the extensions page (132 characters maximum)."
   },
   "action_title": {
