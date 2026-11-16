@@ -282,6 +282,7 @@
   "export.reason.bad-answer": "сайт ответил в неизвестном виде",
   "export.reason.unsupported": "этот сайт пока не поддерживается",
   "export.reason.not-a-conversation": "сначала откройте разговор",
+  "export.reason.no-chat-id": "Grok показывает это название у нескольких чатов; откройте чат и экспортируйте его оттуда",
   "export.reason.other": "что-то пошло не так",
   "export.roleUser": "Вы",
   "export.thinking": "Рассуждение",

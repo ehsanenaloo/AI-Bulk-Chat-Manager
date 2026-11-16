@@ -40,6 +40,8 @@
     try {
       const stamped = g.document.querySelector(`[data-abcm-id="${g.CSS.escape(id)}"]`);
       if (stamped?.isConnected) return stamped;
+      // A title key moves to the next chat with that title once this one is gone, so only the stamp names it.
+      if (id.startsWith('t:')) return null;
       for (const row of ABCM.dom.getAllConversations()) if (ABCM.dom.idFromElement(row) === id) return row;
     } catch (_) { /* selector support differs; treat as not found */ }
     return null;

@@ -186,7 +186,9 @@
     // Let the site's own buttons (the "..." menu, inputs) keep working.
     const target = event.target;
     if (target?.closest?.(`[${CHECKBOX_ATTR}]`)) return;
-    if (target?.closest?.('button, [role="button"], [role="menuitem"], input, textarea, select')) return;
+    // The row itself can be a button (Grok, Z.ai): only a control other than the row is the site's own.
+    const control = target?.closest?.('button, [role="button"], [role="menuitem"], input, textarea, select');
+    if (control && control !== anchor) return;
     event.preventDefault();
     event.stopPropagation();
     if (!allowed(event)) return;

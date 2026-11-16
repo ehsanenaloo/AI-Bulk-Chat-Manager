@@ -22,7 +22,12 @@
   const util = () => ABCM.util;
   const norm = (value) => util().normalize(value);
 
-  const labelsFor = (operation) => cfg().labels[operation === 'DELETE' ? 'delete' : 'archive'].map(norm);
+  /** The menu words for an operation. A site can accept other items for it (Grok: its Archive is the delete). */
+  const labelsFor = (operation) => {
+    const key = operation === 'DELETE' ? 'delete' : 'archive';
+    const groups = ABCM.sites.current()?.menuLabels?.[key] || [key];
+    return groups.flatMap((group) => cfg().labels[group]).map(norm);
+  };
   const isVisible = (el, fast = false) => ABCM.dom.isVisible(el, { fast });
 
   const ROW_GONE_STABLE_MS = 400; // the row must stay gone this long before a deletion counts
@@ -249,7 +254,8 @@
     await util().delay(strategy === 'aggressive' ? 140 : cfg().delays.short);
     const wanted = operation === 'DELETE' ? 'delete' : 'archive';
     const button = await util().waitForCondition(() => Array.from(row.querySelectorAll('button[aria-label], [role="button"][aria-label]'))
-      .find((el) => (el.getAttribute('aria-label') || '').toLowerCase().includes(wanted) && isVisible(el, true)) || null,
+      // A menu trigger is not a direct action, even when its label holds the chat title ("Actions for <title>").
+      .find((el) => !el.hasAttribute('aria-haspopup') && (el.getAttribute('aria-label') || '').toLowerCase().includes(wanted) && isVisible(el, true)) || null,
     { root: row, timeout: strategy === 'aggressive' ? 700 : 450, pollMs: 90 });
     if (!button) return { ok: false, reason: 'direct-action-not-available' };
     const dialogsBefore = snapshotDialogs();

@@ -254,6 +254,7 @@
   "export.reason.bad-answer": "die Seite hat in unbekannter Form geantwortet",
   "export.reason.unsupported": "diese Seite wird noch nicht unterstützt",
   "export.reason.not-a-conversation": "öffnen Sie zuerst eine Unterhaltung",
+  "export.reason.no-chat-id": "Grok zeigt diesen Titel bei mehr als einem Chat; öffne den Chat und exportiere ihn dort",
   "export.reason.other": "etwas ist schiefgelaufen",
   "export.roleUser": "Sie",
   "export.thinking": "Denken",

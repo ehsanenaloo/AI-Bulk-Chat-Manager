@@ -223,6 +223,7 @@
   "export.reason.bad-answer": "el sitio respondió de forma desconocida",
   "export.reason.unsupported": "este sitio aún no es compatible",
   "export.reason.not-a-conversation": "abra primero una conversación",
+  "export.reason.no-chat-id": "Grok muestra este título en más de un chat; abre el chat y expórtalo desde allí",
   "export.reason.other": "algo salió mal",
   "export.roleUser": "Usted",
   "export.thinking": "Razonamiento",

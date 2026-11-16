@@ -81,17 +81,51 @@
   function titleKey(anchor) {
     const title = titleOf(anchor);
     if (!title) return '';
-    let nth = 0;
-    for (const row of getAllConversations()) {
-      if (row === anchor) return `t:${title}#${nth}`;
-      if (titleOf(row) === title) nth += 1;
+    const nth = (titleIndex().get(title) || []).indexOf(anchor);
+    return nth < 0 ? '' : `t:${title}#${nth}`;
+  }
+
+  // Rows grouped by title, kept while the same rows are listed and only until the current task ends:
+  // a loop over all rows would otherwise read every title once for every row.
+  let index = null;
+  const later = g.queueMicrotask ? (fn) => g.queueMicrotask(fn) : (fn) => Promise.resolve().then(fn);
+  function titleIndex() {
+    const rows = getAllConversations();
+    if (index && index.rows.length === rows.length && index.rows.every((row, i) => row === rows[i])) return index.byTitle;
+    const byTitle = new Map();
+    for (const row of rows) {
+      const title = titleOf(row);
+      if (!title) continue;
+      if (!byTitle.has(title)) byTitle.set(title, []);
+      byTitle.get(title).push(row);
     }
-    return '';
+    const built = { rows, byTitle };
+    index = built;
+    later(() => { if (index === built) index = null; });
+    return byTitle;
+  }
+
+  /** A row with no link on a site that can name it from its chat list (Grok). */
+  function isLinkless(element) {
+    return !!(site()?.titleIds && element?.getAttribute && !element.hasAttribute('href'));
+  }
+
+  /**
+   * The id of a row with no link: the site's own id when the title appears once in the sidebar and once in
+   * the site's chat list (then it can only be that chat), else the title key, which only the row menu uses.
+   */
+  function linklessId(anchor) {
+    const key = titleKey(anchor);
+    if (!key) return '';
+    const title = titleOf(anchor);
+    if ((titleIndex().get(title) || []).length !== 1) return key;
+    return ABCM.apiEngine?.idForTitle?.(title) || key;
   }
 
   function idFromElement(element) {
     const anchor = anchorOf(element);
     if (site()?.idFromTitle) return anchor ? titleKey(anchor) : '';
+    if (anchor && isLinkless(anchor)) return linklessId(anchor);
     return idFromHref(anchor?.getAttribute?.('href') || anchor?.href || '');
   }
 
@@ -121,6 +155,10 @@
   /** The absolute address of a chat, so exports stay useful outside the page. */
   function urlOf(anchor) {
     if (site()?.idFromTitle) return site().url;
+    if (isLinkless(anchor)) {
+      const id = linklessId(anchor);
+      return id && !id.startsWith('t:') ? new g.URL(`/c/${id}`, g.location.href).href : site().url;
+    }
     const raw = anchor?.getAttribute?.('href') || anchor?.href || '';
     try { return new URL(raw, g.location.href).href; } catch (_) { return raw; }
   }
@@ -148,5 +186,5 @@
     try { el.dispatchEvent(new MouseEvent('mouseover', { view: g.window, bubbles: true, cancelable: true })); } catch (_) { /* detached */ }
   }
 
-  ABCM.define('dom', { isVisible, getHistoryRoot, getAllConversations, idFromHref, idFromElement, anchorOf, titleOf, urlOf, rowOf, dispatchHover });
+  ABCM.define('dom', { isVisible, getHistoryRoot, getAllConversations, idFromHref, idFromElement, isLinkless, anchorOf, titleOf, urlOf, rowOf, dispatchHover });
 })(globalThis);

@@ -321,6 +321,7 @@
   "export.reason.bad-answer": "أجاب الموقع بصيغة غير معروفة",
   "export.reason.unsupported": "هذا الموقع غير مدعوم بعد",
   "export.reason.not-a-conversation": "افتح محادثة أولاً",
+  "export.reason.no-chat-id": "يعرض Grok هذا العنوان لأكثر من محادثة؛ افتح المحادثة وصدّرها من هناك",
   "export.reason.other": "حدث خطأ ما",
   "export.roleUser": "أنت",
   "export.thinking": "التفكير",

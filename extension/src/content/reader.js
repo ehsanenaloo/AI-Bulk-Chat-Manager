@@ -301,7 +301,8 @@
     const link = url ? abs(url) : '';
     if (site.id === 'chatgpt') return readChatgpt(id, link);
     if (site.id === 'claude') return readClaude(id, link);
-    if (site.id === 'grok') return readGrok(id, link);
+    // A Grok row without a link and with a shared title has no site id (D-023).
+    if (site.id === 'grok') return /^t:/.test(id) ? fail('no-chat-id') : readGrok(id, link);
     if (site.id === 'gemini') return readGeminiApi(id, link);
     if (site.id === 'deepseek') return readDeepseek(id, link);
     if (site.id === 'perplexity') return readPerplexity(id, link);

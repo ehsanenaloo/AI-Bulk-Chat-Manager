@@ -223,6 +223,7 @@
   "export.reason.bad-answer": "the site answered in an unknown form",
   "export.reason.unsupported": "this site is not supported yet",
   "export.reason.not-a-conversation": "open a conversation first",
+  "export.reason.no-chat-id": "Grok shows this title on more than one chat; open the chat and export it from there",
   "export.reason.other": "something went wrong",
   "export.roleUser": "You",
   "export.thinking": "Thinking",

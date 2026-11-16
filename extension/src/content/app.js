@@ -21,6 +21,9 @@
     }
     active = true;
     ABCM.state.setStatus('ready');
+    // Rows with no link get their ids from the site's chat list (Grok); read it before the first checkbox.
+    try { await ABCM.apiEngine?.loadRowIds?.(); } catch (_) { /* rows keep their title keys */ }
+    if (!active) return snapshot(); // stopped while the list was read
     ABCM.checkboxes.attachAll();
     if (ABCM.settings.get().autoLoad) ABCM.autoAttach.enable();
     await ABCM.panel.open();

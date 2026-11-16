@@ -223,6 +223,7 @@
   "export.reason.bad-answer": "le site a répondu sous une forme inconnue",
   "export.reason.unsupported": "ce site n'est pas encore pris en charge",
   "export.reason.not-a-conversation": "ouvrez d'abord une conversation",
+  "export.reason.no-chat-id": "Grok affiche ce titre pour plusieurs discussions ; ouvrez la discussion et exportez-la depuis celle-ci",
   "export.reason.other": "une erreur est survenue",
   "export.roleUser": "Vous",
   "export.thinking": "Réflexion",

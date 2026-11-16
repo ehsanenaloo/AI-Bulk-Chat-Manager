@@ -223,6 +223,7 @@
   "export.reason.bad-answer": "سایت پاسخ نامعتبر داد",
   "export.reason.unsupported": "این سایت هنوز پشتیبانی نمی‌شود",
   "export.reason.not-a-conversation": "اول یک گفت‌وگو را باز کنید",
+  "export.reason.no-chat-id": "Grok این عنوان را برای بیش از یک چت نشان می‌دهد؛ چت را باز کنید و از همان‌جا خروجی بگیرید",
   "export.reason.other": "مشکلی پیش آمد",
   "export.roleUser": "شما",
   "export.thinking": "تفکر",

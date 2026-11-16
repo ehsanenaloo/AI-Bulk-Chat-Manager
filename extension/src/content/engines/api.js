@@ -20,7 +20,7 @@
 
   const TOKEN_TTL_MS = 5 * 60 * 1000;
   const MAX_RETRY_AFTER_MS = 60 * 1000;
-  const memo = { token: null, tokenAt: 0, claudeOrg: null, grokBroken: false, sessionsBroken: false, gemini: null, perplexity: null };
+  const memo = { token: null, tokenAt: 0, claudeOrg: null, grokBroken: false, grokTitles: null, sessionsBroken: false, gemini: null, perplexity: null };
 
   const siteId = () => ABCM.sites.current()?.id || '';
   const cfg = () => ABCM.config.api;
@@ -208,8 +208,68 @@
   }
 
   // ── Grok: same-origin REST. Delete only. ───────────────────────────────────────────────────
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const GROK_LIST_PAGE = 100;
+  const GROK_LIST_MAX_PAGES = 100;
+  const GROK_LIST_AGE_MS = 60 * 1000;
+  const normTitle = (value) => String(value || '').replace(/\s+/g, ' ').trim();
+
+  /**
+   * The whole chat list as title -> id, or title -> null when more than one chat has that title.
+   * Throws when the list cannot be read to its end: a cut list cannot show that a title is unique.
+   */
+  async function loadGrokTitles() {
+    const byTitle = new Map();
+    let token = '';
+    for (let pages = 0; pages < GROK_LIST_MAX_PAGES; pages++) {
+      const query = `pageSize=${GROK_LIST_PAGE}${token ? `&pageToken=${encodeURIComponent(token)}` : ''}`;
+      const res = await timedFetch(abs(`${cfg().grok.chat}?${query}`), { credentials: 'include', headers: { Accept: 'application/json' } });
+      if (!res.ok || res.redirected) throw new Error(`list-${res.status}`);
+      const page = await res.json().catch(() => null);
+      if (!page || !Array.isArray(page.conversations)) throw new Error('list-shape');
+      for (const chat of page.conversations) {
+        const title = normTitle(chat?.title);
+        if (!title) continue;
+        const id = String(chat?.conversationId || '');
+        byTitle.set(title, byTitle.has(title) || !UUID_RE.test(id) ? null : id);
+      }
+      token = String(page.nextPageToken || '');
+      if (!token) return byTitle;
+    }
+    throw new Error('list-too-long');
+  }
+
+  /** Reads the site's chat list so rows without a link can get their ids (Grok). A failure leaves every such row on the row menu. */
+  async function loadRowIds({ force = false } = {}) {
+    if (!ABCM.sites.current()?.titleIds) return;
+    if (!ABCM.dom.getAllConversations().some((row) => ABCM.dom.isLinkless(row))) return; // link rows carry their own ids
+    if (!force && memo.grokTitles && Date.now() - memo.grokTitles.at < GROK_LIST_AGE_MS) return;
+    try {
+      memo.grokTitles = { map: await loadGrokTitles(), at: Date.now() };
+    } catch (error) {
+      memo.grokTitles = { map: new Map(), at: Date.now() };
+      ABCM.warn('the chat list was not read', error);
+    }
+  }
+
+  /** The id of the only chat with this title, or '' when none or several have it. */
+  function idForTitle(title) {
+    return memo.grokTitles?.map.get(normTitle(title)) || '';
+  }
+
+  /** A row id that came from the list must still come out the same from the latest list. A link row carries its own id. */
+  function grokIdHolds(id) {
+    let row = null;
+    try { row = g.document.querySelector(`[data-abcm-id="${g.CSS.escape(id)}"]`); } catch (_) { row = null; }
+    if (!row || !ABCM.dom.isLinkless(row)) return true;
+    return ABCM.dom.idFromElement(row) === id;
+  }
+
   async function grokAction(operation, id) {
     if (operation !== 'DELETE') return { ok: false, reason: 'archive-unsupported' };
+    // A title key is not a site id: the row menu does this chat. So does a row whose id no longer holds.
+    if (!UUID_RE.test(id)) return { ok: false, reason: 'api-no-site-id' };
+    if (!grokIdHolds(id)) return { ok: false, reason: 'api-id-changed' };
     let res;
     try {
       // The site sends DELETE .../conversations/soft/<id> with only a fresh request id (read from its own request on 2026-11-02).
@@ -404,6 +464,8 @@
   async function prepare() {
     if (siteId() === 'chatgpt') await getAccessToken();
     if (siteId() === 'gemini') await getGeminiTokens();
+    // Read again, so every id is checked against the list as it is now.
+    await loadRowIds({ force: true });
   }
 
   /** Runs one operation on one chat id through the site's backend. */
@@ -441,5 +503,5 @@
     }
   }
 
-  ABCM.define('apiEngine', { deepseekToken, deepseekHeaders, isEnabled, canUndoArchive, prepare, run, retireRow, getAccessToken, getClaudeOrg, geminiRpc, timedFetch, parseRetryAfter, _memo: memo });
+  ABCM.define('apiEngine', { deepseekToken, deepseekHeaders, isEnabled, canUndoArchive, prepare, loadRowIds, idForTitle, run, retireRow, getAccessToken, getClaudeOrg, geminiRpc, timedFetch, parseRetryAfter, _memo: memo });
 })(globalThis);

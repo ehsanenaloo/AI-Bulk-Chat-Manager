@@ -6,6 +6,14 @@ The format follows [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+## [9.2.1] - 2026-11-15
+
+### Fixed
+
+- Grok: checkboxes appear again after the site changed its chat list.
+- Grok: when the site's menu has Archive in place of Delete, the extension uses it.
+- On sites that know a chat only by its title, two chats with the same title are now both reported as deleted.
+
 ## [9.2.0] - 2026-11-05
 
 ### Added
@@ -151,7 +159,8 @@ These versions were published without a changelog. The last one, 8.10.6, was a p
 - New 16, 48 and 128 pixel icons.
 - The MIT license.
 
-[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.2.0...HEAD
+[Unreleased]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.2.1...HEAD
+[9.2.1]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.2.0...v9.2.1
 [9.2.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.1...v9.2.0
 [9.1.1]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.1.0...v9.1.1
 [9.1.0]: https://github.com/ehsanenaloo/AI-Bulk-Chat-Manager/compare/v9.0.1...v9.1.0

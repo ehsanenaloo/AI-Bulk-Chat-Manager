@@ -223,6 +223,7 @@
   "export.reason.bad-answer": "网站返回了未知格式",
   "export.reason.unsupported": "暂不支持此网站",
   "export.reason.not-a-conversation": "请先打开一个对话",
+  "export.reason.no-chat-id": "Grok 中有多个聊天使用此标题；请打开该聊天并在其中导出",
   "export.reason.other": "出了点问题",
   "export.roleUser": "你",
   "export.thinking": "思考",

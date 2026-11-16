@@ -254,6 +254,7 @@
   "export.reason.bad-answer": "साइट ने अज्ञात रूप में उत्तर दिया",
   "export.reason.unsupported": "यह साइट अभी समर्थित नहीं है",
   "export.reason.not-a-conversation": "पहले एक बातचीत खोलें",
+  "export.reason.no-chat-id": "Grok यह शीर्षक एक से ज़्यादा चैट पर दिखाता है; चैट खोलें और वहीं से एक्सपोर्ट करें",
   "export.reason.other": "कुछ गलत हो गया",
   "export.roleUser": "आप",
   "export.thinking": "सोच",

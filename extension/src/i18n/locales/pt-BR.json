@@ -223,6 +223,7 @@
   "export.reason.bad-answer": "o site respondeu de forma desconhecida",
   "export.reason.unsupported": "este site ainda não é compatível",
   "export.reason.not-a-conversation": "abra uma conversa primeiro",
+  "export.reason.no-chat-id": "O Grok mostra este título em mais de um chat; abra o chat e exporte a partir dele",
   "export.reason.other": "algo deu errado",
   "export.roleUser": "Você",
   "export.thinking": "Raciocínio",

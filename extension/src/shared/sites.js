@@ -189,9 +189,14 @@
       color: '#6b7280',
       // Conversations live at /c/{uuid}; those inside a Project at /project/{id}?tab=conversations&chat={uuid}.
       // Same prefix as ChatGPT, but sites are matched by host so they never collide.
-      conversation: 'a[href^="/c/"], a[href*="/project/"][href*="chat="]',
-      anchorMatch: 'a[href*="/c/"], a[href*="/project/"][href*="chat="]',
+      // Since 2026-11 the sidebar rows are draggable buttons with no link (the bots section is not chats).
+      conversation: 'a[href^="/c/"], a[href*="/project/"][href*="chat="], [data-reorder-item]:not([data-reorder-item="bots"]) button[draggable="true"]',
+      anchorMatch: 'a[href*="/c/"], a[href*="/project/"][href*="chat="], [data-reorder-item]:not([data-reorder-item="bots"]) button[draggable="true"]',
       idRe: /(?:\/c\/|[?&]chat=)([\w-]+)/,
+      // A row with no link is keyed by its title; it gets its real id from the site's chat list when the title names one chat only (D-023).
+      titleIds: true,
+      // Grok's menu now has Archive and no Delete; its Archive sends the same request as the API delete.
+      menuLabels: { delete: ['delete', 'archive'] },
       title: null,
       // The Grok sidebar is not a <nav>/<aside>, so class-based candidates come first.
       history: ['[class*="sidebar" i]', '[class*="history" i]', '[role="navigation"]', 'nav', 'aside'],

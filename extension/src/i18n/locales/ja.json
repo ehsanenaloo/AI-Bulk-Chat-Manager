@@ -223,6 +223,7 @@
   "export.reason.bad-answer": "サイトの応答形式が不明です",
   "export.reason.unsupported": "このサイトにはまだ対応していません",
   "export.reason.not-a-conversation": "先に会話を開いてください",
+  "export.reason.no-chat-id": "Grok ではこのタイトルのチャットが複数あります。チャットを開いて、そこからエクスポートしてください",
   "export.reason.other": "問題が発生しました",
   "export.roleUser": "あなた",
   "export.thinking": "思考",

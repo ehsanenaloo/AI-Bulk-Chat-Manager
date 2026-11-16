@@ -13,7 +13,7 @@ AI Bulk Chat Manager helps you select, delete, archive and export your chats on 
 
 ## What it reads
 
-- The list of your chats (titles and links) on the page you are on, while you select chats.
+- The list of your chats (titles and links) while you select chats, from the page you are on or, on some sites, from the chat site itself.
 - The text of a chat, only when you click an export button, and only to make your file on your device. It does not analyze or understand that text, and it does not keep it.
 
 ## What it stores
@@ -22,7 +22,7 @@ Your settings and a small reminder timer, in your browser only. Reset them in Op
 
 ## Requests
 
-When you delete, archive or export, the extension asks the chat site you are on, using your own signed-in session. Nothing is sent to anyone else.
+When you select, delete, archive or export, the extension asks the chat site you are on, using your own signed-in session. Nothing is sent to anyone else.
 
 ## Permissions
 
